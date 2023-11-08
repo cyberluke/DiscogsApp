@@ -1,0 +1,28 @@
+<!-- release.component.html -->
+
+<div class="container">
+  <ngb-carousel *ngIf="releases && releases.length">
+    <ng-template ngbSlide *ngFor="let release of releases">
+      <div class="release-item">
+        <img [src]="getPrimaryImageUrl(release)" [alt]="release.title" style="width: 600px;">
+        <div class="release-info">
+          <!-- Display other release information here -->
+          <h3>{{ release.artists_sort }}</h3>
+          <h3>{{ release.title }}</h3>
+          <!-- Add more details as needed -->
+          <p><strong>{{ release.released_formatted }} - {{ release.genres.join(', ') }}</strong></p>
+          <h3>Tracklist</h3>
+          <ul>
+            <li *ngFor="let track of release.tracklist">
+              {{ track.title }} ({{ track.duration }})
+              <button (click)="addTrackToPlaylist(release, track)">Add to Playlist</button>
+            </li>
+          </ul>
+  
+        </div>
+      </div>
+    </ng-template>
+  </ngb-carousel>
+  <!-- Right pane for playlist (assuming you have a playlist component ready) -->
+  <app-playlist></app-playlist>
+  

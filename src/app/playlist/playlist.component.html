@@ -1,0 +1,14 @@
+<!-- playlist.component.html -->
+
+<div class="playlist-container">
+    <input type="text" [(ngModel)]="playlistName" placeholder="Playlist Name">
+    <div class="playlist">
+      <!-- Implement drag-and-drop functionality here -->
+      <div *ngFor="let track of getPlaylist(); let i = index" class="playlist-item">
+        {{ track.title }}
+        <button (click)="removeFromPlaylist(i)">Remove</button>
+      </div>
+    </div>
+    <button (click)="savePlaylist()">Save Playlist</button>
+  </div>
+  

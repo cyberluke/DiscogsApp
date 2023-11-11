@@ -11,7 +11,7 @@ import logging
 from dotenv import load_dotenv
 import os
 from PIL import Image
-import cgi  
+import cgi
 
 app = Flask(__name__)
 CORS(app)
@@ -38,7 +38,9 @@ DISCOGS_API_URL = "https://api.discogs.com/releases/"
 # Replace 'your_personal_access_token' with your actual Discogs PAT
 load_dotenv()  # This loads the environment variables from .env
 DISCOGS_TOKEN = os.getenv('DISCOGS_TOKEN')
+SONY_SLINK_SERVER = os.getenv('SONY_SLINK_SERVER')
 json_db = db.getDb("discogs_data_all.json")
+playlist_db = db.getDb("playlists.json")
 
 # Constants for rate limiting
 CALLS = 55
@@ -199,10 +201,72 @@ def download_image():
     local_image_url = f'http://localhost:5000/images/{image_name}'
     return jsonify({"url": local_image_url})
 
+@app.route('/playlists', methods=['GET'])
+def playlists():
+    playlist = playlist_db.getAll()
+    return jsonify(playlist), 200
+
 @app.route('/playlist', methods=['POST'])
 def playlist():
     print(request)
+    playlist = playlist_db.getByQuery({"name": request.name})
+    if not playlist:
+        playlist_db.add(playlist)
+        slinkPlay(playlist)
+    else:
+        #playlist_db.updateById(playlist[0]["id"], playlist)
+        playlist_db.updateByQuery({"name": request.name}, playlist)
+        slinkPlaylist(playlist)
+
     return jsonify({"status": "Playlist sent"}), 200
+
+def slinkSend(slink_data):
+    # Convert the data to a JSON string
+    #json_data = json.dumps(playlist)
+
+    # Set the headers to inform the server that you are sending JSON
+    headers = {'Content-Type': 'text/plain'}
+
+    # Send the POST request
+    return requests.post(f"{SONY_SLINK_SERVER}", data=slink_data, headers=headers)    
+
+def slinkPlaylist(playlist):
+    slink_data = "PLAYLIST\r\n"
+    cd_player_id = 60
+    cd_operation_play = 50
+
+    for track in playlist.tracks:
+        slink_data += f"{cd_player_id}{cd_operation_play}" + f"{track.cd_position:02d}" + f"{track.position:02d}" + "\r\n"
+
+
+    response = slinkSend(slink_data)
+    # Check the response
+    if response.status_code == 200:
+        return jsonify({"status": "Playlist sent successfully"}), 200
+    else:
+        return jsonify(error=f"Failed to send playlist: {response.status_code} - {response.text}"), 500
+
+@app.route('/track', methods=['POST'])
+def track():
+    print(request)
+
+    slinkPlaylist(request)
+
+    return jsonify({"status": "Track sent"}), 200
+
+def slinkTrack(track):
+    slink_data = ""
+    cd_player_id = 60
+    cd_operation_play = 50
+
+    slink_data += f"{cd_player_id}{cd_operation_play}" + f"{track.cd_position:02d}" + f"{track.position:02d}" + "\r\n"
+
+    response = slinkSend(slink_data)
+    # Check the response
+    if response.status_code == 200:
+        return jsonify({"status": "Track sent successfully"}), 200
+    else:
+        return jsonify(error=f"Failed to send track: {response.status_code} - {response.text}"), 500
 
 @app.route('/images/<filename>', methods=['GET'])
 def uploaded_file(filename):

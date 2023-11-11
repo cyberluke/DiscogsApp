@@ -1,28 +1,63 @@
-<!-- release.component.html -->
-
-<div class="container">
-  <ngb-carousel *ngIf="releases && releases.length">
-    <ng-template ngbSlide *ngFor="let release of releases">
-      <div class="release-item">
-        <img [src]="getPrimaryImageUrl(release)" [alt]="release.title" style="width: 600px;">
-        <div class="release-info">
-          <!-- Display other release information here -->
-          <h3>{{ release.artists_sort }}</h3>
-          <h3>{{ release.title }}</h3>
-          <!-- Add more details as needed -->
-          <p><strong>{{ release.released_formatted }} - {{ release.genres.join(', ') }}</strong></p>
-          <h3>Tracklist</h3>
-          <ul>
-            <li *ngFor="let track of release.tracklist">
-              {{ track.title }} ({{ track.duration }})
-              <button (click)="addTrackToPlaylist(release, track)">Add to Playlist</button>
-            </li>
-          </ul>
-  
-        </div>
+<c-accordion [flush]="true">
+  <c-accordion-item #item0="cAccordionItem" [visible]="false">
+    <ng-template cTemplateId="accordionHeaderTemplate">
+      <button (click)="item0.toggleItem()" [collapsed]="!item0.visible" cAccordionButton>
+        Playlist&nbsp;&nbsp;&nbsp;
+        <c-badge color="primary" shape="rounded-pill">{{ getPlaylistSize() }}</c-badge>
+      </button>
+    </ng-template>
+    <ng-template cTemplateId="accordionBodyTemplate">
+      <div class="accordion-body">
+        <app-playlist></app-playlist>
       </div>
     </ng-template>
-  </ngb-carousel>
-  <!-- Right pane for playlist (assuming you have a playlist component ready) -->
-  <app-playlist></app-playlist>
-  
+  </c-accordion-item>
+  <c-accordion-item #item1="cAccordionItem" [visible]="true">
+    <ng-template cTemplateId="accordionHeaderTemplate">
+      <button (click)="item1.toggleItem()" [collapsed]="!item1.visible" cAccordionButton>
+        CD Browser
+      </button>
+    </ng-template>
+    <ng-template cTemplateId="accordionBodyTemplate">
+      <div class="accordion-body">
+        <c-container>
+          <c-row>
+            <c-col class="custom-width">
+                <c-carousel (itemChange)="onItemChange($event)" [interval]="0" *ngIf="releases && releases.length">
+                  <c-carousel-inner>
+                    <c-carousel-item *ngFor="let release of releases">
+                      <img [src]="getPrimaryImageUrl(release)" [alt]="release.title" class="d-block w-600" loading="lazy" />
+                    </c-carousel-item>
+                  </c-carousel-inner>
+                  <c-carousel-control #prevControl [routerLink] caption="Previous" direction="prev"></c-carousel-control>
+                  <c-carousel-control #nextControl [routerLink] caption="Next" direction="next"></c-carousel-control>
+                </c-carousel>
+            </c-col>
+            <c-col class="release-info">
+              <div *ngIf="release">
+                <!-- Display other release information here -->
+                <h3>{{ release.artists_sort }} - {{ release.title }}</h3>
+                <!-- Add more details as needed -->
+                <p><strong>{{ release.released_formatted }} - {{ release.genres.join(', ') }}</strong></p>
+                <h4>&nbsp;</h4>
+                <ul cListGroup>
+                  <li cListGroupItem *ngFor="let track of release.tracklist">
+                    <button mat-icon-button (click)="addTrackToPlaylist(release, track)" aria-label="Add to Playlist">
+                      <mat-icon>add_circle_outline</mat-icon>
+                    </button>
+                    {{ track.position }}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                    {{ track.title }} ({{ track.duration }})     
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                    <button *ngIf="track.position" mat-icon-button (click)="playSingleTrack(track)" aria-label="Play">
+                      <mat-icon>play_arrow</mat-icon>
+                    </button>   
+                  </li>
+                </ul>
+              </div>
+            </c-col>
+          </c-row>
+        </c-container>
+      </div>
+    </ng-template>
+  </c-accordion-item>
+</c-accordion>

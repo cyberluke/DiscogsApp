@@ -1,5 +1,67 @@
-img {
-    width: 200px;
+img.w-600 {
+    width: 600px;
     height: auto;
-  }
-  
+}
+.carousel {
+  width: 600px;
+  min-height: 600px;
+}
+.carousel-item {
+  width: 600px;
+}
+.custom-width {
+  width: 600px;
+}
+.release-info {
+  margin-left: 15px;
+  margin-top: 15px;
+}
+.release-info h3 {
+  font-size: xx-large;
+}
+.release-info .list-group-item {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+.carousel-control-prev,
+.carousel-control-next {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 35px;
+  height: 35px;
+  background-color: rgba(0, 0, 0, 0.5); /* semi-transparent background */
+  border: 1px solid white; /* white border */
+  border-radius: 50%; /* circular shape */
+  color: white; /* white icon */
+  text-align: center;
+  cursor: pointer;
+  z-index: 100;
+}
+
+.carousel-control-prev:hover,
+.carousel-control-next:hover {
+  background-color: rgba(0, 0, 0, 0.7); /* darker on hover */
+}
+
+.carousel-control-prev-icon,
+.carousel-control-next-icon {
+  display: inline-block;
+  width: 20px;
+  height: 20px;
+  background: no-repeat 50%/100% 100%;
+  box-shadow: 0 2px 2px rgba(0, 0, 0, 0.5); /* shadow for contrast */
+}
+
+/* Ensure the controls are always visible */
+.carousel-control-prev {
+  left: 10px;
+}
+
+.carousel-control-next {
+  right: 10px;
+}

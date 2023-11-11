@@ -1,10 +1,11 @@
 // release.component.ts
 
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, HostListener, ViewChild } from '@angular/core';
 import { ReleaseService } from './release.service';
 import { PlaylistService } from '../playlist/playlist.service';
 import { ImageService } from '../image.service';
-
+import { CarouselControlComponent } from '@coreui/angular';
+import { Track } from '../dao/track';
 
 @Component({
   selector: 'app-release',
@@ -12,15 +13,46 @@ import { ImageService } from '../image.service';
   styleUrls: ['./release.component.css']
 })
 export class ReleaseComponent implements OnInit {
+  @ViewChild('prevControl')
+  prevControl!: CarouselControlComponent;
+  @ViewChild('nextControl')
+  nextControl!: CarouselControlComponent;
+  release: any;
   releases: any[] = [];
 
   constructor(private releaseService: ReleaseService, private playlistService: PlaylistService,
     private imageService: ImageService) {}
 
+  @HostListener('window:keydown', ['$event'])
+  handleKeyboardEvent(event: KeyboardEvent) {
+    if (event.key === 'ArrowLeft') {
+      this.prevSlide();
+    } else if (event.key === 'ArrowRight') {
+      this.nextSlide();
+    }
+  }
+
+  prevSlide() {
+    this.prevControl.play();
+  }
+
+  nextSlide() {
+    this.nextControl.play();
+  }
+  
   // Use this method in your template to add to the playlist
   addTrackToPlaylist(release: any, track: any) {
-    track["cd_position"]=release.cd_position;
+    track["cd_position"] = release.cd_position;
+    track["full_name"] = release.artists_sort + " - " + track.title;
     this.playlistService.addToPlaylist(track);
+  }
+
+  getPlaylistSize() {
+    return this.playlistService.getPlaylist().tracks.length;
+  }
+
+  playSingleTrack(track: Track) {
+    this.playlistService.playSingleTrack(track);
   }
 
   ngOnInit() {
@@ -57,6 +89,7 @@ export class ReleaseComponent implements OnInit {
     });
 
     this.releases = releases;
+    this.release = this.releases[0];
   }
 
   // Helper function to get the primary image URL
@@ -71,5 +104,13 @@ export class ReleaseComponent implements OnInit {
     } else {
       return "/assets/default.png";
     }
+  }
+
+  onItemChange($event: any): void {
+    console.log('Carousel onItemChange', $event);
+    var releaseIndex:number = $event;
+    if (!releaseIndex) return;
+
+    this.release = this.releases[releaseIndex];
   }
 }

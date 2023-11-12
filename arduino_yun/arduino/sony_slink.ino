@@ -39,6 +39,10 @@ void setup()
   pinMode(INPUT_PIN, INPUT);
 
     // Setup command handlers
+  commandHandlers[0x01] = handleStopCommand; // Command byte for 'Stop'
+  commandHandlers[0x02] = handleStopCommand; // Command byte for 'Pause'
+  commandHandlers[0x03] = handleStopCommand; // Command byte for 'Pause'
+  commandHandlers[0x04] = handleStopCommand; // Command byte for 'Eject'
   commandHandlers[0x50] = handlePlayCommand; // Command byte for 'Play'
   commandHandlers[0x0C] = handle30SecCommand; // Command byte for '30 sec remaining'
   // Add more command handlers as needed
@@ -209,6 +213,13 @@ int hexByteToDecimalInt(byte hexByte) {
   return atoi(str);
 }
 
+void handleStopCommand(const std::vector<byte>& message) {
+  if (isTimerEnabled) {
+    isTimerEnabled = false;
+    return;
+  }
+}
+
 void handlePlayCommand(const std::vector<byte>& message) {
   if (isTimerEnabled) {
     onTrackFinish();
@@ -225,11 +236,11 @@ void handlePlayCommand(const std::vector<byte>& message) {
   unsigned long duration = (minutes * 60ul) + (seconds); // Convert to s
   // Set a timer to call onTrackFinish after the duration
   // You'll need to implement setTimer and onTrackFinish
-  Serial.println("Duration: ");
+  /*Serial.println("Duration: ");
   Serial.println(duration);
   alarmTime = duration;
   startTime = readCurrentTimestamp();
-  isTimerEnabled = true;
+  isTimerEnabled = true;*/
 }
 
 void handle30SecCommand(const std::vector<byte>& message) {
@@ -237,12 +248,12 @@ void handle30SecCommand(const std::vector<byte>& message) {
 
   // Set a timer to call onTrackFinish after the duration
   // You'll need to implement setTimer and onTrackFinish
-  /*Serial.println("Duration: ");
-  Serial.println(30*1000);
+  Serial.println("Duration: ");
+  Serial.println(30);
   alarmTime = duration;
   // Reset the timer if you want it to start counting again
   startTime = readCurrentTimestamp();
-  isTimerEnabled = true; */
+  isTimerEnabled = true; 
 }
 
 void playNextFromPlaylist() {

@@ -20,7 +20,7 @@ def get_headers(data):
 def receive_request(sock):
     """Receive the full request from the socket"""
     request_data = ''
-    sock.settimeout(1)  # Set timeout to stop receiving if no data sent
+    sock.settimeout(10)  # Set timeout to stop receiving if no data sent
 
     while True:
         try:

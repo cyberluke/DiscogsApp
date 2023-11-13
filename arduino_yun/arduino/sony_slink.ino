@@ -260,7 +260,7 @@ void handle30SecCommand(const std::vector<byte>& message) {
   startTime = readCurrentTimestamp();
   isTimerEnabled = true;
   //Bridge.put("nextTrackTimer", duration);
-  client.get("http://localhost:8080/nextTrack/" + String(duration));
+  client.get("http://localhost:8080/nextTrack/" + String(duration-3));
 }
 
 void playNextFromPlaylist() {

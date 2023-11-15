@@ -4,6 +4,7 @@
 #include <map>
 #include <function_objects.h>
 #include <Bridge.h>
+#include <HttpClient.h>
 #include <Process.h>
 
 #define DEBUG_PULSES
@@ -16,6 +17,10 @@ volatile unsigned long timeLowTransition = 0;
 volatile byte bufferReadPosition = 0;
 volatile byte bufferWritePosition = 0;
 volatile byte pulseBuffer[PULSE_BUFFER_SIZE];
+HttpClient client;
+// Define a buffer to hold the incoming playlist data
+char playlistBuffer[64]; // Adjust the size as needed for your data
+
 
 // Global variables
 std::vector<byte> messageBytes;
@@ -253,7 +258,9 @@ void handle30SecCommand(const std::vector<byte>& message) {
   alarmTime = duration;
   // Reset the timer if you want it to start counting again
   startTime = readCurrentTimestamp();
-  isTimerEnabled = true; 
+  isTimerEnabled = true;
+  //Bridge.put("nextTrackTimer", duration);
+  client.get("http://localhost:8080/nextTrack/" + String(duration-3));
 }
 
 void playNextFromPlaylist() {
@@ -407,22 +414,22 @@ void loop()
   //processSerialInput();
 
   if (isTimerEnabled) {
-    if (readCurrentTimestamp() - startTime >= alarmTime) {
+    /*if (readCurrentTimestamp() - startTime >= alarmTime) {
       // Time to trigger the alarm
       Serial.println("Alarm!");
       onTrackFinish();
       isTimerEnabled = false;
-    }
+    }*/
   }
-
-  // Define a buffer to hold the incoming playlist data
-  char playlistBuffer[512]; // Adjust the size as needed for your data
 
   // Attempt to get the playlist data from the Bridge
   int bytesRead = Bridge.get("playlist", playlistBuffer, sizeof(playlistBuffer) - 1);
 
+  bool isPlaylist = false;
+  bool hasReadData = false;
+
   if (bytesRead > 0) {
-    bool isPlaylist = false;
+    hasReadData = true;
     // Ensure the buffer is null-terminated
     playlistBuffer[bytesRead] = '\0';
 
@@ -476,10 +483,14 @@ void loop()
       song = strtok(NULL, "\r\n"); // Get the next song
     }
 
+  }
+
+  if (hasReadData) {
     // Clear the playlist after processing
     Bridge.put("playlist", "");
     if (isPlaylist) {
       onTrackFinish();
     }
   }
+
 }

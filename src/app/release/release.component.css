@@ -7,6 +7,15 @@ img.w-100 {
   cursor: pointer;
   height: auto;
 }
+.example-form {
+  min-width: 150px;
+
+  width: 100%;
+}
+
+.example-full-width {
+  width: 100%;
+}
 .carousel {
   width: 600px;
   min-height: 600px;

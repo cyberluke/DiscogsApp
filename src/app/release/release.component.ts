@@ -36,8 +36,7 @@ export class ReleaseComponent implements OnInit {
   ];
 
   myControl = new FormControl('');
-  options: string[] = ['One', 'Two', 'Three'];
-  filteredOptions!: Observable<string[]>;
+  filteredOptions!: Observable<any[]>;
 
   constructor(private releaseService: ReleaseService, private playlistService: PlaylistService,
     private imageService: ImageService) {}
@@ -221,9 +220,14 @@ export class ReleaseComponent implements OnInit {
     this.indexUpdated.next();
   }
 
-  private _filter(value: string): string[] {
+  private _filter(value: string): any[] {
     const filterValue = value.toLowerCase();
 
-    return this.release.filter((r: { title: string; }) => r.title.toLowerCase().includes(filterValue));
+    let filteredOptions = this.releases.filter((r: { title: string; artists_sort: string; }) => 
+        r.title.toLowerCase().includes(filterValue.toLowerCase()) ||
+        r.artists_sort.toLowerCase().includes(filterValue.toLowerCase())
+    );
+    
+    return filteredOptions;
   }
 }

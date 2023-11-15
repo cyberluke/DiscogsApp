@@ -20,6 +20,14 @@
     </ng-template>
     <ng-template cTemplateId="accordionBodyTemplate">
       <div class="accordion-body">
+        <mat-chip-listbox class="mat-mdc-chip-set-stacked" aria-label="Color selection">
+            <mat-chip-option color="accent" (click)="switchCarousel()" [class.selected]="carouselButtonSelected">CD CAROUSEL</mat-chip-option>
+        </mat-chip-listbox>
+        <mat-grid-list cols="15" rowHeight="1:1" *ngIf="carouselButtonSelected">
+          <mat-grid-tile *ngFor="let release of releases">
+            <img [src]="getPrimaryImageUrl(release)" [alt]="release.title" [matTooltip]="release.title" class="d-block w-100" loading="lazy" (click)="releaseGoToSlide(release)" />
+          </mat-grid-tile>
+        </mat-grid-list>
         <c-container>
           <c-row>
             <c-col class="custom-width">
@@ -42,15 +50,15 @@
                 <h4>&nbsp;</h4>
                 <ul cListGroup>
                   <li cListGroupItem *ngFor="let track of release.tracklist">
-                    <button mat-icon-button (click)="addTrackToPlaylist(release, track)" aria-label="Add to Playlist">
+                    {{ track.position }}
+                    <button *ngIf="track.position!='Video'" mat-icon-button (click)="playSingleTrack(release, track)" aria-label="Play">
+                      <mat-icon>play_arrow</mat-icon>
+                    </button>  
+                    <button *ngIf="track.position!='Video'" mat-icon-button (click)="addTrackToPlaylist(release, track)" aria-label="Add to Playlist">
                       <mat-icon>add_circle_outline</mat-icon>
                     </button>
-                    {{ track.position }}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                    &nbsp;&nbsp;&nbsp;
                     {{ track.title }} ({{ track.duration }})     
-                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                    <button *ngIf="track.position" mat-icon-button (click)="playSingleTrack(track)" aria-label="Play">
-                      <mat-icon>play_arrow</mat-icon>
-                    </button>   
                   </li>
                 </ul>
               </div>

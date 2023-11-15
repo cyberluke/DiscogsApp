@@ -61,4 +61,10 @@ export class PlaylistComponent {
   playSingleTrack(track: Track) {
     this.playlistService.playSingleTrack(track);
   }
+
+  playPlaylist(playlist: Playlist) {
+    this.playlistService.playPlaylist(playlist);
+  }
+
+  
 }

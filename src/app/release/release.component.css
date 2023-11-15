@@ -2,6 +2,11 @@ img.w-600 {
     width: 600px;
     height: auto;
 }
+img.w-100 {
+  width: 100px;
+  cursor: pointer;
+  height: auto;
+}
 .carousel {
   width: 600px;
   min-height: 600px;
@@ -19,6 +24,10 @@ img.w-600 {
 .release-info h3 {
   font-size: xx-large;
 }
+mat-grid-tile {
+  background: lightblue;
+}
+
 .release-info .list-group-item {
   display: flex;
   flex-direction: row;

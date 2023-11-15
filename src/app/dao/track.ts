@@ -14,6 +14,7 @@ export interface Artist {
     artists: Artist[];
     title: string;
     duration: string;
+    cd_position: number;
     full_name: string;
   }
 

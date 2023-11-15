@@ -36,6 +36,14 @@ export class PlaylistService {
     this.playlist = playlist;
   }
 
+  playPlaylist(playlist: Playlist) {
+    this.http.post('http://localhost:5000/playlist', playlist)
+    .subscribe(response => {
+      console.log(response);
+      // Handle response here
+    });
+  }
+
   playSingleTrack(track: Track) {
     this.http.post('http://localhost:5000/track', track)
       .subscribe(response => {
@@ -65,7 +73,7 @@ export class PlaylistService {
   savePlaylist(playlistName: string) {
     this.playlist.name = playlistName;
 
-    this.http.post<Playlist>('http://localhost:5000/playlist', this.playlist)
+    this.http.post<Playlist>('http://localhost:5000/save-playlist', this.playlist)
       .subscribe(response => {
         console.log(response);
         // Handle response here

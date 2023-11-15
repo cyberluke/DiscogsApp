@@ -1,9 +1,11 @@
 from flask import Flask, request, jsonify, abort, send_from_directory
+from types import SimpleNamespace
 from flask_cors import CORS
 from pysondb import db
 from ratelimit import limits, sleep_and_retry
 from ratelimit.exception import RateLimitException
 import requests
+from urllib.error import HTTPError
 import csv
 import re
 from io import BytesIO, StringIO
@@ -12,6 +14,8 @@ from dotenv import load_dotenv
 import os
 from PIL import Image
 import cgi
+import json
+import time
 
 app = Flask(__name__)
 CORS(app)
@@ -83,7 +87,7 @@ def import_csv():
         return jsonify({"error": "No selected file"}), 400
 
     csv_file = StringIO(file.read().decode('utf-8'))
-    csv_reader = csv.reader(csv_file)
+    csv_reader = csv.reader(csv_file, delimiter = ';')
 
     last_discogs_url = None
     cd_position = 0
@@ -126,7 +130,7 @@ def get_all_releases():
 
 def get_release_from_discogs(release_id):
     try:
-        release_data = call_discogs_api(f"{DISCOGS_API_URL}{release_id}")
+        release_data = call_discogs_api(url=f"{DISCOGS_API_URL}{release_id}", stream=False)
         return release_data
     except RateLimitException as e:
         print("Rate limit exceeded: {}".format(e))
@@ -135,14 +139,14 @@ def get_release_from_discogs(release_id):
 
 def get_or_create_release(cd_position, release_id):
     # Check if the release is in the database
-    release = json_db.getByQuery({"id": release_id})
+    release = json_db.getByQuery({"release_id": release_id})
     
     if not release:
         # If not in the database, fetch from Discogs API
         release_data = get_release_from_discogs(release_id)
         if release_data:
             # Store the release data in the database
-            release_data['id'] = release_id
+            release_data['release_id'] = release_id
             release_data['cd_position'] = cd_position
 
             # Define the schema based on the first entry's keys
@@ -201,24 +205,49 @@ def download_image():
     local_image_url = f'http://localhost:5000/images/{image_name}'
     return jsonify({"url": local_image_url})
 
+def send_request_with_retries(url, data, headers, max_retries=20, backoff_factor=1):
+    retries = 0
+    while retries < max_retries:
+        try:
+            response = requests.post(url, data=data, headers=headers)
+            response.raise_for_status()  # This will raise an HTTPError if the HTTP request returned an unsuccessful status code
+            return response
+        except (HTTPError, ConnectionError, OSError) as e:
+            retries += 1
+            #wait_time = backoff_factor * (2 ** retries)
+            wait_time = 0.1
+            print(f"Connection error: {e}. Retrying in {wait_time} seconds...")
+            time.sleep(wait_time)
+
+    raise Exception("Failed to send request after multiple retries.")    
+
 @app.route('/playlists', methods=['GET'])
 def playlists():
     playlist = playlist_db.getAll()
     return jsonify(playlist), 200
 
-@app.route('/playlist', methods=['POST'])
-def playlist():
-    print(request)
-    playlist = playlist_db.getByQuery({"name": request.name})
+@app.route('/save-playlist', methods=['POST'])
+def save_playlist():
+    data = json.loads(request.data, object_hook=lambda d: SimpleNamespace(**d))
+    print(data.name)
+
+    playlist = playlist_db.getByQuery(query={"name": f"{data.name}"})
     if not playlist:
-        playlist_db.add(playlist)
-        slinkPlay(playlist)
+        playlist_db.add(json.loads(request.data))
+        slinkPlaylist(data)
     else:
         #playlist_db.updateById(playlist[0]["id"], playlist)
-        playlist_db.updateByQuery({"name": request.name}, playlist)
-        slinkPlaylist(playlist)
+        playlist_db.updateByQuery({"name": data.name}, json.loads(request.data))
+        slinkPlaylist(json.loads(request.data))
 
     return jsonify({"status": "Playlist sent"}), 200
+
+@app.route('/playlist', methods=['POST'])
+def playlist():
+    data = json.loads(request.data)
+
+    slinkPlaylist(data)
+    return jsonify({"status": "Playlist sent"}), 200    
 
 def slinkSend(slink_data):
     # Convert the data to a JSON string
@@ -228,16 +257,20 @@ def slinkSend(slink_data):
     headers = {'Content-Type': 'text/plain'}
 
     # Send the POST request
-    return requests.post(f"{SONY_SLINK_SERVER}", data=slink_data, headers=headers)    
+    #time.sleep(0.01)
+    return send_request_with_retries(url=f"{SONY_SLINK_SERVER}", data=slink_data, headers=headers)    
 
 def slinkPlaylist(playlist):
     slink_data = "PLAYLIST\r\n"
-    cd_player_id = 60
+    cd_player_id = 90
     cd_operation_play = 50
 
-    for track in playlist.tracks:
-        slink_data += f"{cd_player_id}{cd_operation_play}" + f"{track.cd_position:02d}" + f"{track.position:02d}" + "\r\n"
-
+    for track in playlist["tracks"]:
+        slink_data += f"{cd_player_id}{cd_operation_play}"
+        print(track)
+        slink_data += format_with_padding(track["cd_position"]) if track["cd_position"] < 100 else hex(0x9A + (track["cd_position"] - 100))[2:]
+        slink_data += format_with_padding(track["position"])
+        slink_data += "\r\n"
 
     response = slinkSend(slink_data)
     # Check the response
@@ -248,18 +281,37 @@ def slinkPlaylist(playlist):
 
 @app.route('/track', methods=['POST'])
 def track():
-    print(request)
+    # Parse the JSON data received from Angular
+    track = json.loads(request.data, object_hook=lambda d: SimpleNamespace(**d))
 
-    slinkPlaylist(request)
+    # Process the track as needed
+    # Example: print track details
+    print(f"! Received track: {track.title}, duration {track.duration}")
+
+    slinkTrack(track)
 
     return jsonify({"status": "Track sent"}), 200
 
+def format_with_padding(value, pad_length=2):
+    if isinstance(value, int):
+        return f"{value:0{pad_length}d}"
+    elif isinstance(value, str) and value.isdigit():
+        return f"{int(value):0{pad_length}d}"
+    else:
+        return value
+
 def slinkTrack(track):
     slink_data = ""
-    cd_player_id = 60
+    cd_player_id = 90
     cd_operation_play = 50
 
-    slink_data += f"{cd_player_id}{cd_operation_play}" + f"{track.cd_position:02d}" + f"{track.position:02d}" + "\r\n"
+    slink_data = ""
+    slink_data += f"{cd_player_id}{cd_operation_play}"
+    slink_data += format_with_padding(track.cd_position) if track.cd_position < 100 else hex((0x9A + (track.cd_position - 100)))[2:]
+    slink_data += format_with_padding(track.position)
+    slink_data += "\r\n"
+
+    print(slink_data)
 
     response = slinkSend(slink_data)
     # Check the response

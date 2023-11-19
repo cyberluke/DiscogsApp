@@ -371,6 +371,16 @@ def format_with_padding(value, pad_length=2):
     else:
         return value
 
+def process_position(position):
+    # Split by '-' and take the second number if '-' is present
+    if '-' in position:
+        position = position.split('-')[1]
+
+    # Remove non-numeric characters
+    position = re.sub(r'\D', '', position)
+    
+    return position
+
 def slinkTrack(track):
     slink_data = ""
     cd_player_id = 90
@@ -378,13 +388,16 @@ def slinkTrack(track):
 
     slink_data = ""
 
+    track.position = process_position(track.position)
+
     if track.cd_position < 100:
         slink_data += f"{cd_player_id}{cd_operation_play}"
         format_with_padding(track.cd_position)
         slink_data += format_with_padding(track.position)
     elif track.cd_position <= 200:
         slink_data += f"{cd_player_id}{cd_operation_play}"
-        hex(0x9A + (track.cd_position - 100))[2:]
+        track.cd_position = hex(0x9A + (track.cd_position - 100))[2:]
+        slink_data += format_with_padding(track.cd_position)
         slink_data += format_with_padding(track.position)
     else:    
         slink_data += f"{(cd_player_id+3)}{cd_operation_play}"

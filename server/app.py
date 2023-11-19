@@ -90,7 +90,7 @@ def import_csv():
     csv_reader = csv.reader(csv_file, delimiter = ';')
 
     last_discogs_url = None
-    cd_position = 0
+    cd_position = 1
 
     for line_number, row in enumerate(csv_reader, start=1):
         #if line_number == 1:  # Skip header row if present
@@ -102,9 +102,6 @@ def import_csv():
             print(f"Duplicate URL found and skipped: {discogs_url}")
             continue
 
-        # Increment cd_position since it's a new, non-duplicate line
-        cd_position += 1
-
         # Update the last processed URL
         last_discogs_url = discogs_url
 
@@ -112,7 +109,34 @@ def import_csv():
         if match:
             release_id = int(match.group(1))
             #try:
-            release_data = get_or_create_release(cd_position, release_id)
+            data = get_or_create_release(cd_position, release_id)
+            # Increment cd_position since it's a new, non-duplicate line
+            # Assuming 'qty' is a key in the first dictionary of the 'formats' list
+            qty = 1
+            if 'formats' in data and len(data['formats']) > 0 and 'qty' in data['formats'][0]:
+                qty = data['formats'][0]['qty']
+                if isinstance(qty, int):
+                    # qty is already an integer
+                    print(qty)
+                else:
+                    # Convert qty to integer
+                    qty = int(qty)
+                    print(qty)
+            else:
+                print("qty not found in the data")
+
+            if qty == 1:
+                cd_position += 1
+
+            for i in range(qty - 1):
+                cd_position += 1
+                data['cd_position'] = cd_position
+                data['title'] = data['title'] + " (CD " + str(qty) + ")"
+                if not json_db.getByQuery({"title": data['title']}):
+                    json_db.add(data)
+
+            if qty != 1:
+                cd_position += 1    
             #except Exception as e:
             #    print(f"Failed to process release ID {release_id}: {e}")
             #    continue
@@ -120,6 +144,42 @@ def import_csv():
             print(f"No release ID found in URL {discogs_url}")
 
     return jsonify({"status": "Import completed"}), 200
+
+def custom_object_hook(d):
+    """
+    Recursively convert dictionary objects to SimpleNamespace objects.
+    """
+    for k, v in d.items():
+        if isinstance(v, dict):
+            d[k] = custom_object_hook(v)
+    return SimpleNamespace(**d)
+
+@app.route('/favourite', methods=['POST'])
+def add_to_favourites():
+    data = json.loads(request.data, object_hook=custom_object_hook)
+    in_release = data.release
+    in_track = data.track
+
+    print(in_release.release_id)
+    print(in_track.position)
+
+    release = json_db.getByQuery({"release_id": in_release.release_id})[0]
+
+    print(release['tracklist'])
+
+    if release:
+        # Find the track by position
+        track = next((t for t in release['tracklist'] if t['position'] == in_track.position), None)
+
+        if track:
+            # Update the _score of the track
+            track['_score'] = 1
+
+            # Update the release in the database
+            json_db.updateById(release['id'], release)
+
+    # Return the release data from JSON storage
+    return jsonify(release), 200
 
 @app.route('/releases')
 def get_all_releases():
@@ -263,12 +323,21 @@ def slinkSend(slink_data):
 def slinkPlaylist(playlist):
     slink_data = "PLAYLIST\r\n"
     cd_player_id = 90
+    cd_player_id_300 = 93
     cd_operation_play = 50
 
     for track in playlist["tracks"]:
-        slink_data += f"{cd_player_id}{cd_operation_play}"
+        
         print(track)
-        slink_data += format_with_padding(track["cd_position"]) if track["cd_position"] < 100 else hex(0x9A + (track["cd_position"] - 100))[2:]
+        if track["cd_position"] < 100:
+            slink_data += f"{cd_player_id}{cd_operation_play}"
+            format_with_padding(track["cd_position"])
+        elif track["cd_position"] <= 200:
+            slink_data += f"{cd_player_id}{cd_operation_play}"
+            hex(0x9A + (track["cd_position"] - 100))[2:]
+        else:    
+            slink_data += f"{cd_player_id_300}{cd_operation_play}"
+            format_with_padding(track["cd_position"])
         slink_data += format_with_padding(track["position"])
         slink_data += "\r\n"
 
@@ -297,6 +366,8 @@ def format_with_padding(value, pad_length=2):
         return f"{value:0{pad_length}d}"
     elif isinstance(value, str) and value.isdigit():
         return f"{int(value):0{pad_length}d}"
+    elif isinstance(value, str) and len(value) == 1:
+        return '0' + value    
     else:
         return value
 
@@ -306,9 +377,21 @@ def slinkTrack(track):
     cd_operation_play = 50
 
     slink_data = ""
-    slink_data += f"{cd_player_id}{cd_operation_play}"
-    slink_data += format_with_padding(track.cd_position) if track.cd_position < 100 else hex((0x9A + (track.cd_position - 100)))[2:]
-    slink_data += format_with_padding(track.position)
+
+    if track.cd_position < 100:
+        slink_data += f"{cd_player_id}{cd_operation_play}"
+        format_with_padding(track.cd_position)
+        slink_data += format_with_padding(track.position)
+    elif track.cd_position <= 200:
+        slink_data += f"{cd_player_id}{cd_operation_play}"
+        hex(0x9A + (track.cd_position - 100))[2:]
+        slink_data += format_with_padding(track.position)
+    else:    
+        slink_data += f"{(cd_player_id+3)}{cd_operation_play}"
+        track.cd_position = hex(int(track.cd_position) - 200)[2:]
+        slink_data += format_with_padding(track.cd_position)
+        slink_data += format_with_padding(track.position)
+ 
     slink_data += "\r\n"
 
     print(slink_data)

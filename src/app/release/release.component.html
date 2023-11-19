@@ -64,12 +64,13 @@
             <c-col class="release-info">
               <div *ngIf="release">
                 <!-- Display other release information here -->
-                <h3>{{ release.artists_sort }} - {{ release.title }}</h3>
+                <h3>({{ release.cd_position }}) {{ release.artists_sort }} - {{ release.title }}</h3>
                 <!-- Add more details as needed -->
                 <p><strong>{{ release.released_formatted }} - {{ release.genres.join(', ') }}</strong></p>
                 <h4>&nbsp;</h4>
                 <ul cListGroup>
-                  <li cListGroupItem *ngFor="let track of release.tracklist">
+                  <li cListGroupItem *ngFor="let track of getTracksForDisc(release)" class="flex-li">
+                    <div>
                     {{ track.position }}
                     <button *ngIf="track.position!='Video'" mat-icon-button (click)="playSingleTrack(release, track)" aria-label="Play">
                       <mat-icon>play_arrow</mat-icon>
@@ -79,6 +80,10 @@
                     </button>
                     &nbsp;&nbsp;&nbsp;
                     {{ track.title }} ({{ track.duration }})     
+                  </div>
+                    <button style="text-align:right" *ngIf="track.position!='Video'" mat-icon-button (click)="addToFavourites(release, track)" aria-label="Add a Star">
+                      <mat-icon [ngClass]="{'icon-gold': track._score==1}">star_circle_outline</mat-icon>
+                    </button>
                   </li>
                 </ul>
               </div>

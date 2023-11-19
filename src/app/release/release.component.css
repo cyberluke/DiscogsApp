@@ -7,9 +7,16 @@ img.w-100 {
   cursor: pointer;
   height: auto;
 }
+.icon-gold {
+  color: goldenrod;
+}
+.flex-li {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
 .example-form {
   min-width: 150px;
-
   width: 100%;
 }
 

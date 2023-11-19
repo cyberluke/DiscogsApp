@@ -117,7 +117,18 @@ export class ReleaseComponent implements OnInit {
     });
   }
 
-
+  addToFavourites(release: any, track: any) {
+    this.releaseService.addToFavourites(release, track).subscribe(
+      response => {
+        console.log('Track added to favourites successfully', response);
+        // Handle successful response here
+      },
+      error => {
+        console.error('Error adding track to favourites', error);
+        // Handle error here
+      }
+    );
+  }
 
   // Use this method in your template to add to the playlist
   addTrackToPlaylist(release: any, track: any) {
@@ -230,4 +241,23 @@ export class ReleaseComponent implements OnInit {
     
     return filteredOptions;
   }
+
+  getTracksForDisc(release: any): any[] {
+    // If there is only one disc, return the whole tracklist
+    if (release.format_quantity === 1) {
+        return release.tracklist;
+    }
+
+    // Extract the disc number from the title, e.g., "CD 2" -> 2
+    let discNumber = 1;
+    if (release.title.includes('(CD ')) {
+      discNumber = parseInt(release.title.split('(CD ')[1]);
+    }
+
+    // Filter tracks that belong to the current disc
+    return release.tracklist.filter((track: { position: { split: (arg0: string) => [any]; }; }) => {
+        let [discId, ] = track.position.split('-');
+        return parseInt(discId) === discNumber;
+    });
+}
 }

@@ -323,23 +323,28 @@ def slinkSend(slink_data):
 def slinkPlaylist(playlist):
     slink_data = "PLAYLIST\r\n"
     cd_player_id = 90
-    cd_player_id_300 = 93
     cd_operation_play = 50
 
     for track in playlist["tracks"]:
         
-        print(track)
-        if track["cd_position"] < 100:
+        track['position'] = process_position(track['position'])
+
+        if track['cd_position'] < 100:
             slink_data += f"{cd_player_id}{cd_operation_play}"
-            format_with_padding(track["cd_position"])
-        elif track["cd_position"] <= 200:
+            slink_data += format_with_padding(track['cd_position'])
+            slink_data += format_with_padding(track['position'])
+        elif track['cd_position'] <= 200:
             slink_data += f"{cd_player_id}{cd_operation_play}"
-            hex(0x9A + (track["cd_position"] - 100))[2:]
+            track['cd_position'] = hex(0x9A + (track['cd_position'] - 100))[2:]
+            slink_data += format_with_padding(track['cd_position'])
+            slink_data += format_with_padding(track['position'])
         else:    
-            slink_data += f"{cd_player_id_300}{cd_operation_play}"
-            format_with_padding(track["cd_position"])
-        slink_data += format_with_padding(track["position"])
-        slink_data += "\r\n"
+            slink_data += f"{(cd_player_id+3)}{cd_operation_play}"
+            track['cd_position'] = hex(int(track['cd_position']) - 200)[2:]
+            slink_data += format_with_padding(track['cd_position'])
+            slink_data += format_with_padding(track['position'])
+            slink_data += format_with_padding(track["position"])
+            slink_data += "\r\n"
 
     response = slinkSend(slink_data)
     # Check the response
@@ -392,7 +397,7 @@ def slinkTrack(track):
 
     if track.cd_position < 100:
         slink_data += f"{cd_player_id}{cd_operation_play}"
-        format_with_padding(track.cd_position)
+        slink_data += format_with_padding(track.cd_position)
         slink_data += format_with_padding(track.position)
     elif track.cd_position <= 200:
         slink_data += f"{cd_player_id}{cd_operation_play}"

@@ -957,6 +957,812 @@
             }
          ],
          "id": 264938948604523997
+      },
+      {
+         "name": "Killy K",
+         "tracks": [
+            {
+               "cd_position": 75,
+               "duration": "3:19",
+               "full_name": "Will Smith - Miami",
+               "position": "1",
+               "title": "Miami",
+               "type_": "track"
+            },
+            {
+               "_score": 1,
+               "artists": [
+                  {
+                     "anv": "",
+                     "id": 232956,
+                     "join": "Feat.",
+                     "name": "Pitbull",
+                     "resource_url": "https://api.discogs.com/artists/232956",
+                     "role": "",
+                     "tracks": ""
+                  },
+                  {
+                     "anv": "Ke$ha",
+                     "id": 1123409,
+                     "join": "",
+                     "name": "Kesha",
+                     "resource_url": "https://api.discogs.com/artists/1123409",
+                     "role": "",
+                     "tracks": ""
+                  }
+               ],
+               "duration": "3:24",
+               "position": "1",
+               "title": "Timber",
+               "type_": "track",
+               "cd_position": 1,
+               "full_name": "Pitbull Feat. Kesha - Timber"
+            },
+            {
+               "cd_position": 203,
+               "duration": "4:49",
+               "extraartists": [
+                  {
+                     "anv": "",
+                     "id": 93046,
+                     "join": "",
+                     "name": "Terry Date",
+                     "resource_url": "https://api.discogs.com/artists/93046",
+                     "role": "Co-producer",
+                     "tracks": ""
+                  },
+                  {
+                     "anv": "",
+                     "id": 168213,
+                     "join": "",
+                     "name": "Eddie Sancho",
+                     "resource_url": "https://api.discogs.com/artists/168213",
+                     "role": "Engineer",
+                     "tracks": ""
+                  },
+                  {
+                     "anv": "",
+                     "id": 170714,
+                     "join": "",
+                     "name": "Dexter Thibou",
+                     "resource_url": "https://api.discogs.com/artists/170714",
+                     "role": "Engineer [Assistant]",
+                     "tracks": ""
+                  },
+                  {
+                     "anv": "C. Smith",
+                     "id": 579789,
+                     "join": "",
+                     "name": "Clifford Smith (2)",
+                     "resource_url": "https://api.discogs.com/artists/579789",
+                     "role": "Lyrics By",
+                     "tracks": ""
+                  },
+                  {
+                     "anv": "C. Martin",
+                     "id": 608750,
+                     "join": "",
+                     "name": "Chris Martin (6)",
+                     "resource_url": "https://api.discogs.com/artists/608750",
+                     "role": "Music By",
+                     "tracks": ""
+                  },
+                  {
+                     "anv": "D.J. Premier",
+                     "id": 21151,
+                     "join": "",
+                     "name": "DJ Premier",
+                     "resource_url": "https://api.discogs.com/artists/21151",
+                     "role": "Producer",
+                     "tracks": ""
+                  },
+                  {
+                     "anv": "",
+                     "id": 17587,
+                     "join": "",
+                     "name": "Method Man",
+                     "resource_url": "https://api.discogs.com/artists/17587",
+                     "role": "Vocals",
+                     "tracks": ""
+                  }
+               ],
+               "full_name": "Limp Bizkit - N 2 Gether Now",
+               "position": "10",
+               "title": "N 2 Gether Now",
+               "type_": "track"
+            },
+            {
+               "cd_position": 183,
+               "duration": "3:37",
+               "full_name": "Red Hot Chili Peppers - By The Way",
+               "position": "1",
+               "title": "By The Way",
+               "type_": "track"
+            },
+            {
+               "cd_position": 197,
+               "duration": "3:37",
+               "full_name": "Crazy Town - Butterfly (Album Version)",
+               "position": "1",
+               "title": "Butterfly (Album Version)",
+               "type_": "track"
+            },
+            {
+               "duration": "3:36",
+               "extraartists": [
+                  {
+                     "anv": "",
+                     "id": 4018,
+                     "join": "",
+                     "name": "Kurtis Mantronik",
+                     "resource_url": "https://api.discogs.com/artists/4018",
+                     "role": "Remix, Producer [Additional Production]",
+                     "tracks": ""
+                  },
+                  {
+                     "anv": "B. Marley",
+                     "id": 41441,
+                     "join": "",
+                     "name": "Bob Marley",
+                     "resource_url": "https://api.discogs.com/artists/41441",
+                     "role": "Written-By",
+                     "tracks": ""
+                  },
+                  {
+                     "anv": "E. Semon",
+                     "id": 39838,
+                     "join": "",
+                     "name": "Erick Sermon",
+                     "resource_url": "https://api.discogs.com/artists/39838",
+                     "role": "Written-By",
+                     "tracks": ""
+                  },
+                  {
+                     "anv": "P. Smith",
+                     "id": 185861,
+                     "join": "",
+                     "name": "Parrish Smith",
+                     "resource_url": "https://api.discogs.com/artists/185861",
+                     "role": "Written-By",
+                     "tracks": ""
+                  }
+               ],
+               "position": "1",
+               "title": "Strictly Business (Mantronik MBA Radio Edit)",
+               "type_": "track",
+               "cd_position": 74,
+               "full_name": "Kurtis Mantronik vs. EPMD - Strictly Business (Mantronik MBA Radio Edit)"
+            },
+            {
+               "cd_position": 146,
+               "duration": "3:55",
+               "extraartists": [
+                  {
+                     "anv": "",
+                     "id": 488902,
+                     "join": "",
+                     "name": "Tomcat (4)",
+                     "resource_url": "https://api.discogs.com/artists/488902",
+                     "role": "Co-producer",
+                     "tracks": ""
+                  },
+                  {
+                     "anv": "",
+                     "id": 1732340,
+                     "join": "",
+                     "name": "Marcus Deon Thomas",
+                     "resource_url": "https://api.discogs.com/artists/1732340",
+                     "role": "Lyrics By",
+                     "tracks": ""
+                  },
+                  {
+                     "anv": "",
+                     "id": 311607,
+                     "join": "",
+                     "name": "Alexander Hawking",
+                     "resource_url": "https://api.discogs.com/artists/311607",
+                     "role": "Music By, Lyrics By",
+                     "tracks": ""
+                  },
+                  {
+                     "anv": "",
+                     "id": 61646,
+                     "join": "",
+                     "name": "DJ Stevie Steve",
+                     "resource_url": "https://api.discogs.com/artists/61646",
+                     "role": "Music By, Lyrics By",
+                     "tracks": ""
+                  }
+               ],
+               "full_name": "Pharao - There Is A Star",
+               "position": "1",
+               "title": "There Is A Star",
+               "type_": "track"
+            },
+            {
+               "cd_position": 85,
+               "duration": "3:38",
+               "extraartists": [
+                  {
+                     "anv": "",
+                     "id": 7981,
+                     "join": "",
+                     "name": "Sash!",
+                     "resource_url": "https://api.discogs.com/artists/7981",
+                     "role": "Producer",
+                     "tracks": ""
+                  },
+                  {
+                     "anv": "",
+                     "id": 41250,
+                     "join": "",
+                     "name": "Tokapi",
+                     "resource_url": "https://api.discogs.com/artists/41250",
+                     "role": "Remix",
+                     "tracks": ""
+                  }
+               ],
+               "full_name": "Dr. Alban - Mr. DJ (Tokapi Mix)",
+               "position": "1",
+               "title": "Mr. DJ (Tokapi Mix)",
+               "type_": "track"
+            },
+            {
+               "cd_position": 170,
+               "duration": "4:12",
+               "full_name": "Captain Jack - Drill Instructor (All For One) (Shortmix)",
+               "position": "1",
+               "title": "Drill Instructor (All For One) (Shortmix)",
+               "type_": "track"
+            },
+            {
+               "cd_position": 85,
+               "duration": "5:35",
+               "extraartists": [
+                  {
+                     "anv": "",
+                     "id": 7981,
+                     "join": "",
+                     "name": "Sash!",
+                     "resource_url": "https://api.discogs.com/artists/7981",
+                     "role": "Remix",
+                     "tracks": ""
+                  },
+                  {
+                     "anv": "",
+                     "id": 41250,
+                     "join": "",
+                     "name": "Tokapi",
+                     "resource_url": "https://api.discogs.com/artists/41250",
+                     "role": "Remix",
+                     "tracks": ""
+                  }
+               ],
+               "full_name": "Dr. Alban - Mr. DJ (Tokapi Sash! Mix)",
+               "position": "6",
+               "title": "Mr. DJ (Tokapi Sash! Mix)",
+               "type_": "track"
+            },
+            {
+               "cd_position": 172,
+               "duration": "4:00",
+               "full_name": "Quad City DJ's - Space Jam (Radio Edit)",
+               "position": "1",
+               "title": "Space Jam (Radio Edit)",
+               "type_": "track"
+            },
+            {
+               "cd_position": 193,
+               "duration": "4:40",
+               "full_name": "Alanis Morissette - Mary Jane",
+               "position": "9",
+               "title": "Mary Jane",
+               "type_": "track"
+            },
+            {
+               "cd_position": 193,
+               "duration": "3:49",
+               "extraartists": [
+                  {
+                     "anv": "",
+                     "id": 506608,
+                     "join": "",
+                     "name": "Rob Ladd",
+                     "resource_url": "https://api.discogs.com/artists/506608",
+                     "role": "Drums, Percussion",
+                     "tracks": ""
+                  },
+                  {
+                     "anv": "",
+                     "id": 395349,
+                     "join": "",
+                     "name": "Basil Fung",
+                     "resource_url": "https://api.discogs.com/artists/395349",
+                     "role": "Guitar",
+                     "tracks": ""
+                  },
+                  {
+                     "anv": "",
+                     "id": 506606,
+                     "join": "",
+                     "name": "Ted Blaisdell",
+                     "resource_url": "https://api.discogs.com/artists/506606",
+                     "role": "Recorded By",
+                     "tracks": ""
+                  }
+               ],
+               "full_name": "Alanis Morissette - Ironic",
+               "position": "10",
+               "title": "Ironic",
+               "type_": "track"
+            },
+            {
+               "cd_position": 192,
+               "duration": "6:31",
+               "full_name": "Robert Miles - Fable (Message Version)",
+               "position": "2",
+               "title": "Fable (Message Version)",
+               "type_": "track"
+            },
+            {
+               "artists": [
+                  {
+                     "anv": "",
+                     "id": 144978,
+                     "join": "",
+                     "name": "Lizzy Mack",
+                     "resource_url": "https://api.discogs.com/artists/144978",
+                     "role": "",
+                     "tracks": ""
+                  }
+               ],
+               "cd_position": 140,
+               "duration": "5:25",
+               "full_name": "Various - Don't Go",
+               "position": "12",
+               "title": "Don't Go",
+               "type_": "track"
+            },
+            {
+               "cd_position": 200,
+               "duration": "6:08",
+               "full_name": "KMFDM - Megalomaniac",
+               "position": "1",
+               "title": "Megalomaniac",
+               "type_": "track"
+            },
+            {
+               "cd_position": 198,
+               "duration": "4:27",
+               "extraartists": [
+                  {
+                     "anv": "",
+                     "id": 53972,
+                     "join": "",
+                     "name": "Jeff Turzo",
+                     "resource_url": "https://api.discogs.com/artists/53972",
+                     "role": "Remix",
+                     "tracks": ""
+                  }
+               ],
+               "full_name": "Bloodhound Gang - The Bad Touch (The God Lives Underwater Mix)",
+               "position": "2",
+               "title": "The Bad Touch (The God Lives Underwater Mix)",
+               "type_": "track"
+            },
+            {
+               "cd_position": 204,
+               "duration": "4:45",
+               "full_name": "Limp Bizkit - Walking Away",
+               "position": "8",
+               "title": "Walking Away",
+               "type_": "track"
+            },
+            {
+               "cd_position": 203,
+               "duration": "5:54",
+               "extraartists": [
+                  {
+                     "anv": "",
+                     "id": 4033,
+                     "join": "",
+                     "name": "Eric B. & Rakim",
+                     "resource_url": "https://api.discogs.com/artists/4033",
+                     "role": "Recorded By [Sample As Recorded By]",
+                     "tracks": ""
+                  },
+                  {
+                     "anv": "B. Byrd",
+                     "id": 41425,
+                     "join": "",
+                     "name": "Bobby Byrd",
+                     "resource_url": "https://api.discogs.com/artists/41425",
+                     "role": "Written-By [Sample From \"I Know You Got Soul\"]",
+                     "tracks": ""
+                  },
+                  {
+                     "anv": "C. Bobbit",
+                     "id": 387194,
+                     "join": "",
+                     "name": "Charles Bobbit",
+                     "resource_url": "https://api.discogs.com/artists/387194",
+                     "role": "Written-By [Sample From \"I Know You Got Soul\"]",
+                     "tracks": ""
+                  },
+                  {
+                     "anv": "E.Barrier",
+                     "id": 685127,
+                     "join": "",
+                     "name": "Eric Barrier",
+                     "resource_url": "https://api.discogs.com/artists/685127",
+                     "role": "Written-By [Sample From \"I Know You Got Soul\"]",
+                     "tracks": ""
+                  },
+                  {
+                     "anv": "J. Brown",
+                     "id": 12596,
+                     "join": "",
+                     "name": "James Brown",
+                     "resource_url": "https://api.discogs.com/artists/12596",
+                     "role": "Written-By [Sample From \"I Know You Got Soul\"]",
+                     "tracks": ""
+                  },
+                  {
+                     "anv": "W.Griffin",
+                     "id": 671902,
+                     "join": "",
+                     "name": "William Michael Griffin, Jr.",
+                     "resource_url": "https://api.discogs.com/artists/671902",
+                     "role": "Written-By [Sample From \"I Know You Got Soul\"]",
+                     "tracks": ""
+                  }
+               ],
+               "full_name": "Limp Bizkit - Re-Arranged",
+               "position": "5",
+               "title": "Re-Arranged",
+               "type_": "track"
+            },
+            {
+               "cd_position": 204,
+               "duration": "2:17",
+               "full_name": "Limp Bizkit - Bring It Back",
+               "position": "2",
+               "title": "Bring It Back",
+               "type_": "track"
+            },
+            {
+               "cd_position": 203,
+               "duration": "3:54",
+               "extraartists": [
+                  {
+                     "anv": "",
+                     "id": 86310,
+                     "join": "",
+                     "name": "Aaron Lewis",
+                     "resource_url": "https://api.discogs.com/artists/86310",
+                     "role": "Backing Vocals",
+                     "tracks": ""
+                  },
+                  {
+                     "anv": "",
+                     "id": 244167,
+                     "join": "",
+                     "name": "Brendan O'Brien",
+                     "resource_url": "https://api.discogs.com/artists/244167",
+                     "role": "Music By",
+                     "tracks": ""
+                  }
+               ],
+               "full_name": "Limp Bizkit - No Sex",
+               "position": "12",
+               "title": "No Sex",
+               "type_": "track"
+            },
+            {
+               "cd_position": 203,
+               "duration": "4:59",
+               "full_name": "Limp Bizkit - Trust?",
+               "position": "11",
+               "title": "Trust?",
+               "type_": "track"
+            },
+            {
+               "cd_position": 191,
+               "duration": "4:58",
+               "full_name": "Prodigy, The - Out Of Space",
+               "position": "7",
+               "title": "Out Of Space",
+               "type_": "track"
+            },
+            {
+               "artists": [
+                  {
+                     "anv": "",
+                     "id": 7219,
+                     "join": "",
+                     "name": "Lunatic Calm",
+                     "resource_url": "https://api.discogs.com/artists/7219",
+                     "role": "",
+                     "tracks": ""
+                  }
+               ],
+               "cd_position": 190,
+               "duration": "3:12",
+               "extraartists": [
+                  {
+                     "anv": "",
+                     "id": 892186,
+                     "join": "",
+                     "name": "Howard Saunders",
+                     "resource_url": "https://api.discogs.com/artists/892186",
+                     "role": "Written-By",
+                     "tracks": ""
+                  },
+                  {
+                     "anv": "",
+                     "id": 559722,
+                     "join": "",
+                     "name": "Simon Shackleton",
+                     "resource_url": "https://api.discogs.com/artists/559722",
+                     "role": "Written-By",
+                     "tracks": ""
+                  }
+               ],
+               "full_name": "Various - Leave You Far Behind",
+               "position": "6",
+               "title": "Leave You Far Behind",
+               "type_": "track"
+            },
+            {
+               "cd_position": 187,
+               "duration": "4:35",
+               "extraartists": [
+                  {
+                     "anv": "Smith",
+                     "id": 381678,
+                     "join": "",
+                     "name": "Adrian Smith (2)",
+                     "resource_url": "https://api.discogs.com/artists/381678",
+                     "role": "Written-By",
+                     "tracks": ""
+                  },
+                  {
+                     "anv": "Dickinson",
+                     "id": 260980,
+                     "join": "",
+                     "name": "Bruce Dickinson",
+                     "resource_url": "https://api.discogs.com/artists/260980",
+                     "role": "Written-By",
+                     "tracks": ""
+                  },
+                  {
+                     "anv": "Harris",
+                     "id": 254418,
+                     "join": "",
+                     "name": "Steve Harris",
+                     "resource_url": "https://api.discogs.com/artists/254418",
+                     "role": "Written-By",
+                     "tracks": ""
+                  }
+               ],
+               "full_name": "Iron Maiden - The Wicker Man",
+               "position": "1",
+               "title": "The Wicker Man",
+               "type_": "track"
+            },
+            {
+               "cd_position": 186,
+               "duration": "3:09",
+               "full_name": "Guano Apes - Open Your Eyes",
+               "position": "1",
+               "title": "Open Your Eyes",
+               "type_": "track"
+            },
+            {
+               "cd_position": 181,
+               "duration": "4:07",
+               "extraartists": [
+                  {
+                     "anv": "",
+                     "id": 124885,
+                     "join": "",
+                     "name": "Dillon Gallagher",
+                     "resource_url": "https://api.discogs.com/artists/124885",
+                     "role": "Engineer",
+                     "tracks": ""
+                  },
+                  {
+                     "anv": "Hardin/Curnow",
+                     "id": 101773,
+                     "join": "",
+                     "name": "Phil Harding & Ian Curnow",
+                     "resource_url": "https://api.discogs.com/artists/101773",
+                     "role": "Written-By",
+                     "tracks": ""
+                  },
+                  {
+                     "anv": "Kean",
+                     "id": 91819,
+                     "join": "",
+                     "name": "Rob Kean",
+                     "resource_url": "https://api.discogs.com/artists/91819",
+                     "role": "Written-By",
+                     "tracks": ""
+                  },
+                  {
+                     "anv": "Mortimer",
+                     "id": 69982,
+                     "join": "",
+                     "name": "Tony Mortimer",
+                     "resource_url": "https://api.discogs.com/artists/69982",
+                     "role": "Written-By",
+                     "tracks": ""
+                  }
+               ],
+               "full_name": "East 17 - Let It Rain",
+               "position": "7",
+               "title": "Let It Rain",
+               "type_": "track"
+            },
+            {
+               "cd_position": 184,
+               "duration": "3:42",
+               "full_name": "Clawfinger - Two Steps Away",
+               "position": "1",
+               "title": "Two Steps Away",
+               "type_": "track"
+            },
+            {
+               "cd_position": 181,
+               "duration": "4:33",
+               "extraartists": [
+                  {
+                     "anv": "",
+                     "id": 485239,
+                     "join": "",
+                     "name": "Pete Frith",
+                     "resource_url": "https://api.discogs.com/artists/485239",
+                     "role": "Engineer",
+                     "tracks": ""
+                  },
+                  {
+                     "anv": "Matt Rowebottom",
+                     "id": 5100346,
+                     "join": "",
+                     "name": "Matthew Rowebottom",
+                     "resource_url": "https://api.discogs.com/artists/5100346",
+                     "role": "Engineer [Assistant]",
+                     "tracks": ""
+                  },
+                  {
+                     "anv": "",
+                     "id": 67285,
+                     "join": "",
+                     "name": "Ollie J",
+                     "resource_url": "https://api.discogs.com/artists/67285",
+                     "role": "Mixed By",
+                     "tracks": ""
+                  },
+                  {
+                     "anv": "",
+                     "id": 81133,
+                     "join": "",
+                     "name": "Richard Stannard",
+                     "resource_url": "https://api.discogs.com/artists/81133",
+                     "role": "Producer",
+                     "tracks": ""
+                  },
+                  {
+                     "anv": "Harvey",
+                     "id": 38854,
+                     "join": "",
+                     "name": "Brian Harvey",
+                     "resource_url": "https://api.discogs.com/artists/38854",
+                     "role": "Written-By",
+                     "tracks": ""
+                  },
+                  {
+                     "anv": "Rowebottom",
+                     "id": 5100346,
+                     "join": "",
+                     "name": "Matthew Rowebottom",
+                     "resource_url": "https://api.discogs.com/artists/5100346",
+                     "role": "Written-By",
+                     "tracks": ""
+                  },
+                  {
+                     "anv": "Stannard",
+                     "id": 81133,
+                     "join": "",
+                     "name": "Richard Stannard",
+                     "resource_url": "https://api.discogs.com/artists/81133",
+                     "role": "Written-By",
+                     "tracks": ""
+                  },
+                  {
+                     "anv": "Mortimer",
+                     "id": 69982,
+                     "join": "",
+                     "name": "Tony Mortimer",
+                     "resource_url": "https://api.discogs.com/artists/69982",
+                     "role": "Written-By",
+                     "tracks": ""
+                  }
+               ],
+               "full_name": "East 17 - Around The World",
+               "position": "6",
+               "title": "Around The World",
+               "type_": "track"
+            },
+            {
+               "cd_position": 174,
+               "duration": "3:43",
+               "full_name": "Tiga & Zyntherius - Sunglasses At Night (Radio Edit)",
+               "position": "1",
+               "title": "Sunglasses At Night (Radio Edit)",
+               "type_": "track"
+            },
+            {
+               "cd_position": 173,
+               "duration": "3:48",
+               "full_name": "Double You - Dancing With An Angel (Radio Mix)",
+               "position": "1",
+               "title": "Dancing With An Angel (Radio Mix)",
+               "type_": "track"
+            },
+            {
+               "cd_position": 171,
+               "duration": "5:51",
+               "extraartists": [
+                  {
+                     "anv": "",
+                     "id": 18911,
+                     "join": "",
+                     "name": "Robotnico",
+                     "resource_url": "https://api.discogs.com/artists/18911",
+                     "role": "Remix",
+                     "tracks": ""
+                  }
+               ],
+               "full_name": "Masterboy - Is This The Love (Acid Mix)",
+               "position": "2",
+               "title": "Is This The Love (Acid Mix)",
+               "type_": "track"
+            },
+            {
+               "cd_position": 166,
+               "duration": "5:38",
+               "full_name": "Prophesy - The Fire (Trance Mix)",
+               "position": "3",
+               "title": "The Fire (Trance Mix)",
+               "type_": "track"
+            },
+            {
+               "cd_position": 139,
+               "duration": "3:57",
+               "full_name": "P!NK - Just Like A Pill (Radio Version)",
+               "position": "1",
+               "title": "Just Like A Pill (Radio Version)",
+               "type_": "track"
+            },
+            {
+               "cd_position": 126,
+               "duration": "3:54",
+               "full_name": "Syndrome (3) - Heyo (Nana Ae) (Radio Edit)",
+               "position": "1",
+               "title": "Heyo (Nana Ae) (Radio Edit)",
+               "type_": "track"
+            },
+            {
+               "cd_position": 78,
+               "duration": "3:51",
+               "full_name": "Lovestern Galaktika Project Meets Daisy C.I.O. - Galaktika - Are You Ready? (Razzorblade Video Mix)",
+               "position": "1",
+               "title": "Galaktika - Are You Ready? (Razzorblade Video Mix)",
+               "type_": "track"
+            }
+         ],
+         "id": 197038046499179600
       }
    ]
 }

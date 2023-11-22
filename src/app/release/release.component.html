@@ -79,7 +79,8 @@
                       <mat-icon>add_circle_outline</mat-icon>
                     </button>
                     &nbsp;&nbsp;&nbsp;
-                    {{ track.title }} ({{ track.duration }})     
+                    {{ release.artists_sort === 'Various' ? (track.artists[0].name + ' - ' + track.title) : track.title }}
+                     ({{ track.duration }})     
                   </div>
                     <button style="text-align:right" *ngIf="track.position!='Video'" mat-icon-button (click)="addToFavourites(release, track)" aria-label="Add a Star">
                       <mat-icon [ngClass]="{'icon-gold': track._score==1}">star_circle_outline</mat-icon>

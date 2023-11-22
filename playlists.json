@@ -970,6 +970,25 @@
                "type_": "track"
             },
             {
+               "duration": "4:05",
+               "extraartists": [
+                  {
+                     "anv": "",
+                     "id": 51994,
+                     "join": "",
+                     "name": "Pablo Flores",
+                     "resource_url": "https://api.discogs.com/artists/51994",
+                     "role": "Remix",
+                     "tracks": ""
+                  }
+               ],
+               "position": "14",
+               "title": "Una Noche Más (Pablo's Miami Mix Radio Edit)",
+               "type_": "track",
+               "cd_position": 220,
+               "full_name": "Jennifer Lopez - Una Noche Más (Pablo's Miami Mix Radio Edit)"
+            },
+            {
                "_score": 1,
                "artists": [
                   {
@@ -991,12 +1010,12 @@
                      "tracks": ""
                   }
                ],
+               "cd_position": 1,
                "duration": "3:24",
+               "full_name": "Pitbull Feat. Kesha - Timber",
                "position": "1",
                "title": "Timber",
-               "type_": "track",
-               "cd_position": 1,
-               "full_name": "Pitbull Feat. Kesha - Timber"
+               "type_": "track"
             },
             {
                "cd_position": 203,
@@ -1088,6 +1107,7 @@
                "type_": "track"
             },
             {
+               "cd_position": 74,
                "duration": "3:36",
                "extraartists": [
                   {
@@ -1127,11 +1147,10 @@
                      "tracks": ""
                   }
                ],
+               "full_name": "Kurtis Mantronik vs. EPMD - Strictly Business (Mantronik MBA Radio Edit)",
                "position": "1",
                "title": "Strictly Business (Mantronik MBA Radio Edit)",
-               "type_": "track",
-               "cd_position": 74,
-               "full_name": "Kurtis Mantronik vs. EPMD - Strictly Business (Mantronik MBA Radio Edit)"
+               "type_": "track"
             },
             {
                "cd_position": 146,

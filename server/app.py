@@ -44,7 +44,9 @@ load_dotenv()  # This loads the environment variables from .env
 DISCOGS_TOKEN = os.getenv('DISCOGS_TOKEN')
 SONY_SLINK_SERVER = os.getenv('SONY_SLINK_SERVER')
 json_db = db.getDb("discogs_data_all.json")
+schema = None
 playlist_db = db.getDb("playlists.json")
+
 
 # Constants for rate limiting
 CALLS = 55
@@ -113,27 +115,26 @@ def import_csv():
             # Increment cd_position since it's a new, non-duplicate line
             # Assuming 'qty' is a key in the first dictionary of the 'formats' list
             qty = 1
-            if 'formats' in data and len(data['formats']) > 0 and 'qty' in data['formats'][0]:
-                qty = data['formats'][0]['qty']
-                if isinstance(qty, int):
-                    # qty is already an integer
-                    print(qty)
-                else:
+            if 'format_quantity' in data:
+                qty = data['format_quantity']
+                if not isinstance(qty, int):
                     # Convert qty to integer
                     qty = int(qty)
-                    print(qty)
+                    #print(qty)
             else:
                 print("qty not found in the data")
 
             if qty == 1:
                 cd_position += 1
 
+            original_title = data['title']
+
             for i in range(qty - 1):
                 cd_position += 1
                 data['cd_position'] = cd_position
-                data['title'] = data['title'] + " (CD " + str(qty) + ")"
+                data['title'] = original_title + " (CD " + str(i+2) + ")"
                 if not json_db.getByQuery({"title": data['title']}):
-                    json_db.add(data)
+                    insert_to_db(data)
 
             if qty != 1:
                 cd_position += 1    
@@ -197,6 +198,18 @@ def get_release_from_discogs(release_id):
     except Exception as e:
         print("Error during API call: {}".format(e))
 
+def insert_to_db(release_data):
+    # Get the schema from the first entry in the database
+    global schema
+    if (schema == None):
+        schema = json_db.getAll()[0].keys()
+    
+    # Ensure the new data conforms to the schema
+    data_to_add = {key: release_data.get(key, None) for key in schema}
+    
+    # Add the data to the database
+    json_db.add(data_to_add)            
+
 def get_or_create_release(cd_position, release_id):
     # Check if the release is in the database
     release = json_db.getByQuery({"release_id": release_id})
@@ -213,14 +226,7 @@ def get_or_create_release(cd_position, release_id):
             if not json_db.getAll():  # If the database is empty, the first entry defines the schema
                 json_db.add(release_data)
             else:
-                # Get the schema from the first entry in the database
-                schema = json_db.getAll()[0].keys()
-                
-                # Ensure the new data conforms to the schema
-                data_to_add = {key: release_data.get(key, None) for key in schema}
-                
-                # Add the data to the database
-                json_db.add(data_to_add)
+                insert_to_db(release_data)
         return release_data
     return release[0]
 

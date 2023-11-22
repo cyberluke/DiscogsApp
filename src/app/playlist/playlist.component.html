@@ -29,6 +29,9 @@
         <button mat-icon-button (click)="editPlaylist(playlist)" aria-label="Edit Playlist">
           <mat-icon>edit_circle_outline</mat-icon>
         </button>
+        <button mat-icon-button (click)="playPlaylist(playlist)" aria-label="Play">
+          <mat-icon>play_arrow</mat-icon>
+        </button>
         {{ playlist.name }}     
       </li>
     </ul>

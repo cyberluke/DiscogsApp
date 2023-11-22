@@ -20,6 +20,34 @@
     </ng-template>
     <ng-template cTemplateId="accordionBodyTemplate">
       <div class="accordion-body">
+        <mat-chip-listbox class="mat-mdc-chip-set-stacked" aria-label="Color selection">
+            <mat-chip-option color="accent" (click)="switchCarousel()" [class.selected]="carouselButtonSelected">CD CAROUSEL</mat-chip-option>
+        </mat-chip-listbox>
+<div *ngIf="carouselButtonSelected">
+        <form class="example-form">
+          <mat-form-field class="example-full-width">
+            <mat-label>Search</mat-label>
+            <input type="text"
+                   placeholder="Filter"
+                   aria-label="Search"
+                   matInput
+                   [formControl]="myControl"
+                   >
+                   <!--
+            <mat-autocomplete #auto="matAutocomplete">
+              @for (r of filteredOptions | async; track r) {
+                <mat-option [value]="r">{{ r.artists_sort }} - {{ r.title }}</mat-option>
+              }
+            </mat-autocomplete>-->
+          </mat-form-field>
+        </form>
+
+        <mat-grid-list cols="15" rowHeight="1:1">
+          <mat-grid-tile *ngFor="let release of (filteredOptions | async)">
+            <img [src]="getPrimaryImageUrl(release)" [alt]="release.title" [matTooltip]="release.title" class="d-block w-100" loading="lazy" (click)="releaseGoToSlide(release)" />
+          </mat-grid-tile>
+        </mat-grid-list>
+      </div>
         <c-container>
           <c-row>
             <c-col class="custom-width">
@@ -36,21 +64,27 @@
             <c-col class="release-info">
               <div *ngIf="release">
                 <!-- Display other release information here -->
-                <h3>{{ release.artists_sort }} - {{ release.title }}</h3>
+                <h3>({{ release.cd_position }}) {{ release.artists_sort }} - {{ release.title }}</h3>
                 <!-- Add more details as needed -->
                 <p><strong>{{ release.released_formatted }} - {{ release.genres.join(', ') }}</strong></p>
                 <h4>&nbsp;</h4>
                 <ul cListGroup>
-                  <li cListGroupItem *ngFor="let track of release.tracklist">
-                    <button mat-icon-button (click)="addTrackToPlaylist(release, track)" aria-label="Add to Playlist">
+                  <li cListGroupItem *ngFor="let track of getTracksForDisc(release)" class="flex-li">
+                    <div>
+                    {{ track.position }}
+                    <button *ngIf="track.position!='Video'" mat-icon-button (click)="playSingleTrack(release, track)" aria-label="Play">
+                      <mat-icon>play_arrow</mat-icon>
+                    </button>  
+                    <button *ngIf="track.position!='Video'" mat-icon-button (click)="addTrackToPlaylist(release, track)" aria-label="Add to Playlist">
                       <mat-icon>add_circle_outline</mat-icon>
                     </button>
-                    {{ track.position }}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                    {{ track.title }} ({{ track.duration }})     
-                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                    <button *ngIf="track.position" mat-icon-button (click)="playSingleTrack(track)" aria-label="Play">
-                      <mat-icon>play_arrow</mat-icon>
-                    </button>   
+                    &nbsp;&nbsp;&nbsp;
+                    {{ release.artists_sort === 'Various' ? (track.artists[0].name + ' - ' + track.title) : track.title }}
+                     ({{ track.duration }})     
+                  </div>
+                    <button style="text-align:right" *ngIf="track.position!='Video'" mat-icon-button (click)="addToFavourites(release, track)" aria-label="Add a Star">
+                      <mat-icon [ngClass]="{'icon-gold': track._score==1}">star_circle_outline</mat-icon>
+                    </button>
                   </li>
                 </ul>
               </div>

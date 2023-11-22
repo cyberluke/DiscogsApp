@@ -40,22 +40,51 @@ class PlaylistHandler():
         if self.start_time is not None:
             print(time.time() - self.start_time)
             if (time.time() - self.start_time) >= self.duration:
-                self.next_track()
-                self.start_time = None
-                self.duration = None        
+                self.next_track()       
 
     def next_track(self):
         print("next track check...timer works")
+        if not self.playlist:
+            return
         if self.current_index < len(self.playlist):
             print("next track check....ok")
-            self.send_to_arduino(self.playlist[self.current_index])
             self.current_index += 1
+        else:    
+            self.current_index = 0
+
+        self.start_time = None
+        self.duration = None   
+        self.send_to_arduino(self.playlist[self.current_index])
+
+    def prev_track(self):
+        print("prev track check...")
+        if not self.playlist:
+            return
+        if self.current_index > 0:
+            print("prev track check....ok")
+            self.current_index -= 1  
+        else:
+            self.current_index = len(self.playlist) - 1
+
+        self.start_time = None
+        self.duration = None     
+        self.send_to_arduino(self.playlist[self.current_index])
+          
 
     def do_GET(self, path):
         path = path.split('/')
         print(path[1])
         print(len(path))
-        if path[1] == 'nextTrack' and len(path) == 3:
+        if path[1] == 'stop' and len(path) == 2:
+            self.playlist = []
+            self.current_index = 0
+            self.start_time = None
+            self.duration = None        
+        elif path[1] == 'nextTrack' and len(path) == 2:
+            self.next_track()
+        elif path[1] == 'prevTrack' and len(path) == 2:     
+            self.prev_track()       
+        elif path[1] == 'nextTrack' and len(path) == 3:
             try:
                 duration = int(path[2])
                 print("found duration")

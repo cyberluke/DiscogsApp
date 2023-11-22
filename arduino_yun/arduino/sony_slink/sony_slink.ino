@@ -20,7 +20,7 @@ volatile byte pulseBuffer[PULSE_BUFFER_SIZE];
 HttpClient client;
 // Define a buffer to hold the incoming playlist data
 char playlistBuffer[64]; // Adjust the size as needed for your data
-
+int stopButtonCounter = 0;
 
 // Global variables
 std::vector<byte> messageBytes;
@@ -48,6 +48,8 @@ void setup()
   commandHandlers[0x02] = handleStopCommand; // Command byte for 'Pause'
   commandHandlers[0x03] = handleStopCommand; // Command byte for 'Pause'
   commandHandlers[0x04] = handleStopCommand; // Command byte for 'Eject'
+  commandHandlers[0x08] = handleNextCommand; // Command byte for 'Next'  
+  commandHandlers[0x09] = handlePrevCommand; // Command byte for 'Prev'  
   commandHandlers[0x50] = handlePlayCommand; // Command byte for 'Play'
   commandHandlers[0x0C] = handle30SecCommand; // Command byte for '30 sec remaining'
   // Add more command handlers as needed
@@ -219,6 +221,11 @@ int hexByteToDecimalInt(byte hexByte) {
 }
 
 void handleStopCommand(const std::vector<byte>& message) {
+  stopButtonCounter++;
+  if (stopButtonCounter >= 2) {
+    stopButtonCounter = 0;
+    client.get("http://localhost:8080/stop");
+  }
   if (isTimerEnabled) {
     isTimerEnabled = false;
     return;
@@ -261,6 +268,16 @@ void handle30SecCommand(const std::vector<byte>& message) {
   isTimerEnabled = true;
   //Bridge.put("nextTrackTimer", duration);
   client.get("http://localhost:8080/nextTrack/" + String(duration-3));
+}
+
+void handleNextCommand(const std::vector<byte>& message) {
+  isTimerEnabled = false;
+  client.get("http://localhost:8080/nextTrack");
+}
+
+void handlePrevCommand(const std::vector<byte>& message) {
+  isTimerEnabled = false;
+  client.get("http://localhost:8080/prevTrack");
 }
 
 void playNextFromPlaylist() {

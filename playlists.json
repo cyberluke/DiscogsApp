@@ -112,30 +112,31 @@
                      "tracks": ""
                   }
                ],
+               "cd_position": 1,
                "duration": "3:24",
+               "full_name": "Pitbull Feat. Kesha - Timber",
                "position": "1",
                "title": "Timber",
-               "type_": "track",
-               "cd_position": 1,
-               "full_name": "Pitbull Feat. Kesha - Timber"
+               "type_": "track"
             },
             {
+               "cd_position": 2,
                "duration": "3:13",
+               "full_name": "A*Teens - Floorfiller (Radio Version)",
                "position": "1",
                "title": "Floorfiller (Radio Version)",
-               "type_": "track",
-               "cd_position": 2,
-               "full_name": "A*Teens - Floorfiller (Radio Version)"
+               "type_": "track"
             },
             {
+               "cd_position": 3,
                "duration": "3:07",
+               "full_name": "Bellini - Me Gusta La Vida (Radio Edit)",
                "position": "1",
                "title": "Me Gusta La Vida (Radio Edit)",
-               "type_": "track",
-               "cd_position": 3,
-               "full_name": "Bellini - Me Gusta La Vida (Radio Edit)"
+               "type_": "track"
             },
             {
+               "cd_position": 4,
                "duration": "",
                "extraartists": [
                   {
@@ -148,29 +149,29 @@
                      "tracks": ""
                   }
                ],
+               "full_name": "Flo Rida & Kesha - Right Round",
                "position": "1",
                "title": "Right Round",
-               "type_": "track",
-               "cd_position": 4,
-               "full_name": "Flo Rida & Kesha - Right Round"
+               "type_": "track"
             },
             {
+               "cd_position": 6,
                "duration": "5:55",
+               "full_name": "Worlds Apart - Everybody (House Remix)",
                "position": "1",
                "title": "Everybody (House Remix)",
-               "type_": "track",
-               "cd_position": 6,
-               "full_name": "Worlds Apart - Everybody (House Remix)"
+               "type_": "track"
             },
             {
+               "cd_position": 8,
                "duration": "3:52",
+               "full_name": "Mr. President - Up'n Away (Radio Mix)",
                "position": "1",
                "title": "Up'n Away (Radio Mix)",
-               "type_": "track",
-               "cd_position": 8,
-               "full_name": "Mr. President - Up'n Away (Radio Mix)"
+               "type_": "track"
             },
             {
+               "cd_position": 8,
                "duration": "6:33",
                "extraartists": [
                   {
@@ -201,37 +202,37 @@
                      "tracks": ""
                   }
                ],
+               "full_name": "Mr. President - Up'n Away (Club Mix)",
                "position": "3",
                "title": "Up'n Away (Club Mix)",
-               "type_": "track",
-               "cd_position": 8,
-               "full_name": "Mr. President - Up'n Away (Club Mix)"
+               "type_": "track"
             },
             {
+               "cd_position": 10,
                "duration": "3:47",
+               "full_name": "Music Instructor - Let The Music Play",
                "position": "3",
                "title": "Let The Music Play",
-               "type_": "track",
-               "cd_position": 10,
-               "full_name": "Music Instructor - Let The Music Play"
+               "type_": "track"
             },
             {
+               "cd_position": 10,
                "duration": "3:08",
+               "full_name": "Music Instructor - Get Freaky",
                "position": "6",
                "title": "Get Freaky",
-               "type_": "track",
-               "cd_position": 10,
-               "full_name": "Music Instructor - Get Freaky"
+               "type_": "track"
             },
             {
+               "cd_position": 11,
                "duration": "3:45",
+               "full_name": "Captain Hollywood Project - Flying High (Radio Mix)",
                "position": "1",
                "title": "Flying High (Radio Mix)",
-               "type_": "track",
-               "cd_position": 11,
-               "full_name": "Captain Hollywood Project - Flying High (Radio Mix)"
+               "type_": "track"
             },
             {
+               "cd_position": 12,
                "duration": "5:50",
                "extraartists": [
                   {
@@ -253,13 +254,13 @@
                      "tracks": ""
                   }
                ],
+               "full_name": "Reggy O. - Let The Music Play (Freestyle Club Mix)",
                "position": "2",
                "title": "Let The Music Play (Freestyle Club Mix)",
-               "type_": "track",
-               "cd_position": 12,
-               "full_name": "Reggy O. - Let The Music Play (Freestyle Club Mix)"
+               "type_": "track"
             },
             {
+               "cd_position": 13,
                "duration": "3:36",
                "extraartists": [
                   {
@@ -272,21 +273,21 @@
                      "tracks": ""
                   }
                ],
+               "full_name": "Pharao - World Of Magic (Unicorn Radio Mix)",
                "position": "4",
                "title": "World Of Magic (Unicorn Radio Mix)",
-               "type_": "track",
-               "cd_position": 13,
-               "full_name": "Pharao - World Of Magic (Unicorn Radio Mix)"
+               "type_": "track"
             },
             {
+               "cd_position": 15,
                "duration": "3:25",
+               "full_name": "Captain Jack - Little Boy (Radio Mix)",
                "position": "1",
                "title": "Little Boy (Radio Mix)",
-               "type_": "track",
-               "cd_position": 15,
-               "full_name": "Captain Jack - Little Boy (Radio Mix)"
+               "type_": "track"
             },
             {
+               "cd_position": 16,
                "duration": "3:50",
                "extraartists": [
                   {
@@ -299,13 +300,13 @@
                      "tracks": ""
                   }
                ],
+               "full_name": "K5 - Passion (KayCee Remix Radio Edit)",
                "position": "3",
                "title": "Passion (KayCee Remix Radio Edit)",
-               "type_": "track",
-               "cd_position": 16,
-               "full_name": "K5 - Passion (KayCee Remix Radio Edit)"
+               "type_": "track"
             },
             {
+               "cd_position": 18,
                "duration": "5:38",
                "extraartists": [
                   {
@@ -318,13 +319,13 @@
                      "tracks": ""
                   }
                ],
+               "full_name": "J.K. - My Radio (M.B.R.G. Extended Mix)",
                "position": "2",
                "title": "My Radio (M.B.R.G. Extended Mix)",
-               "type_": "track",
-               "cd_position": 18,
-               "full_name": "J.K. - My Radio (M.B.R.G. Extended Mix)"
+               "type_": "track"
             },
             {
+               "cd_position": 19,
                "duration": "3:11",
                "extraartists": [
                   {
@@ -337,21 +338,21 @@
                      "tracks": ""
                   }
                ],
+               "full_name": "Angel City Featuring Lara McAllen - Love Me Right (Oh Sheila) (Radio Edit)",
                "position": "1",
                "title": "Love Me Right (Oh Sheila) (Radio Edit)",
-               "type_": "track",
-               "cd_position": 19,
-               "full_name": "Angel City Featuring Lara McAllen - Love Me Right (Oh Sheila) (Radio Edit)"
+               "type_": "track"
             },
             {
+               "cd_position": 20,
                "duration": "7:12",
+               "full_name": "Bang! (3) - Everybody, Everywhere! (Club Mix)",
                "position": "3",
                "title": "Everybody, Everywhere! (Club Mix)",
-               "type_": "track",
-               "cd_position": 20,
-               "full_name": "Bang! (3) - Everybody, Everywhere! (Club Mix)"
+               "type_": "track"
             },
             {
+               "cd_position": 22,
                "duration": "3:55",
                "extraartists": [
                   {
@@ -382,13 +383,13 @@
                      "tracks": ""
                   }
                ],
+               "full_name": "Real McCoy - Love & Devotion (Airplay Mix)",
                "position": "1",
                "title": "Love & Devotion (Airplay Mix)",
-               "type_": "track",
-               "cd_position": 22,
-               "full_name": "Real McCoy - Love & Devotion (Airplay Mix)"
+               "type_": "track"
             },
             {
+               "cd_position": 23,
                "duration": "4:15",
                "extraartists": [
                   {
@@ -428,21 +429,21 @@
                      "tracks": ""
                   }
                ],
+               "full_name": "Haddaway - Life (Radio Edit)",
                "position": "3",
                "title": "Life (Radio Edit)",
-               "type_": "track",
-               "cd_position": 23,
-               "full_name": "Haddaway - Life (Radio Edit)"
+               "type_": "track"
             },
             {
+               "cd_position": 24,
                "duration": "3:44",
+               "full_name": "Odyssey (4) - Into The Light (Radio Edit)",
                "position": "1",
                "title": "Into The Light (Radio Edit)",
-               "type_": "track",
-               "cd_position": 24,
-               "full_name": "Odyssey (4) - Into The Light (Radio Edit)"
+               "type_": "track"
             },
             {
+               "cd_position": 25,
                "duration": "7:01",
                "extraartists": [
                   {
@@ -455,13 +456,13 @@
                      "tracks": ""
                   }
                ],
+               "full_name": "Pharao - There Is A Star (Supernova Mix)",
                "position": "3",
                "title": "There Is A Star (Supernova Mix)",
-               "type_": "track",
-               "cd_position": 25,
-               "full_name": "Pharao - There Is A Star (Supernova Mix)"
+               "type_": "track"
             },
             {
+               "cd_position": 26,
                "duration": "6:26",
                "extraartists": [
                   {
@@ -474,37 +475,37 @@
                      "tracks": ""
                   }
                ],
+               "full_name": "Playahitty - The Summer Is Magic (D.J. Herbie Mixa Mixa)",
                "position": "3",
                "title": "The Summer Is Magic (D.J. Herbie Mixa Mixa)",
-               "type_": "track",
-               "cd_position": 26,
-               "full_name": "Playahitty - The Summer Is Magic (D.J. Herbie Mixa Mixa)"
+               "type_": "track"
             },
             {
+               "cd_position": 27,
                "duration": "6:30",
+               "full_name": "Centory - Take It To The Limit (Extended Club Mix)",
                "position": "2",
                "title": "Take It To The Limit (Extended Club Mix)",
-               "type_": "track",
-               "cd_position": 27,
-               "full_name": "Centory - Take It To The Limit (Extended Club Mix)"
+               "type_": "track"
             },
             {
+               "cd_position": 29,
                "duration": "3:46",
+               "full_name": "Brooklyn Bounce - Club Bizarre (Single Edit)",
                "position": "2",
                "title": "Club Bizarre (Single Edit)",
-               "type_": "track",
-               "cd_position": 29,
-               "full_name": "Brooklyn Bounce - Club Bizarre (Single Edit)"
+               "type_": "track"
             },
             {
+               "cd_position": 30,
                "duration": "3:38",
+               "full_name": "Brooklyn Bounce - Take A Ride (Radio Mix)",
                "position": "1",
                "title": "Take A Ride (Radio Mix)",
-               "type_": "track",
-               "cd_position": 30,
-               "full_name": "Brooklyn Bounce - Take A Ride (Radio Mix)"
+               "type_": "track"
             },
             {
+               "cd_position": 31,
                "duration": "3:33",
                "extraartists": [
                   {
@@ -517,37 +518,37 @@
                      "tracks": ""
                   }
                ],
+               "full_name": "Eurogroove - Move Your Body (FKB Edit)",
                "position": "1",
                "title": "Move Your Body (FKB Edit)",
-               "type_": "track",
-               "cd_position": 31,
-               "full_name": "Eurogroove - Move Your Body (FKB Edit)"
+               "type_": "track"
             },
             {
+               "cd_position": 32,
                "duration": "3:47",
+               "full_name": "X-Sample Featuring Jennifer Lucas - Goin' On (Hard Mix Edit)",
                "position": "1",
                "title": "Goin' On (Hard Mix Edit)",
-               "type_": "track",
-               "cd_position": 32,
-               "full_name": "X-Sample Featuring Jennifer Lucas - Goin' On (Hard Mix Edit)"
+               "type_": "track"
             },
             {
+               "cd_position": 33,
                "duration": "3:18",
+               "full_name": "Sequential One - My Love Is Hot (Radio Mix)",
                "position": "1",
                "title": "My Love Is Hot (Radio Mix)",
-               "type_": "track",
-               "cd_position": 33,
-               "full_name": "Sequential One - My Love Is Hot (Radio Mix)"
+               "type_": "track"
             },
             {
+               "cd_position": 34,
                "duration": "3:53",
+               "full_name": "Leeza B. - Wave Of Light (Edit)",
                "position": "1",
                "title": "Wave Of Light (Edit)",
-               "type_": "track",
-               "cd_position": 34,
-               "full_name": "Leeza B. - Wave Of Light (Edit)"
+               "type_": "track"
             },
             {
+               "cd_position": 35,
                "duration": "3:23",
                "extraartists": [
                   {
@@ -578,13 +579,13 @@
                      "tracks": ""
                   }
                ],
+               "full_name": "Trance Allstars - Go (Taucher Short Version)",
                "position": "4",
                "title": "Go (Taucher Short Version)",
-               "type_": "track",
-               "cd_position": 35,
-               "full_name": "Trance Allstars - Go (Taucher Short Version)"
+               "type_": "track"
             },
             {
+               "cd_position": 35,
                "duration": "3:35",
                "extraartists": [
                   {
@@ -606,29 +607,29 @@
                      "tracks": ""
                   }
                ],
+               "full_name": "Trance Allstars - Go (ATB Short Version)",
                "position": "3",
                "title": "Go (ATB Short Version)",
-               "type_": "track",
-               "cd_position": 35,
-               "full_name": "Trance Allstars - Go (ATB Short Version)"
+               "type_": "track"
             },
             {
+               "cd_position": 52,
                "duration": "4:52",
+               "full_name": "Antares (3) - Ride On A Meteorite (Radio Edit)",
                "position": "1",
                "title": "Ride On A Meteorite (Radio Edit)",
-               "type_": "track",
-               "cd_position": 52,
-               "full_name": "Antares (3) - Ride On A Meteorite (Radio Edit)"
+               "type_": "track"
             },
             {
+               "cd_position": 53,
                "duration": "3:01",
+               "full_name": "Angel City - Do You Know (I Go Crazy) (Radio Edit)",
                "position": "1",
                "title": "Do You Know (I Go Crazy) (Radio Edit)",
-               "type_": "track",
-               "cd_position": 53,
-               "full_name": "Angel City - Do You Know (I Go Crazy) (Radio Edit)"
+               "type_": "track"
             },
             {
+               "cd_position": 60,
                "duration": "8:12",
                "extraartists": [
                   {
@@ -641,21 +642,21 @@
                      "tracks": ""
                   }
                ],
+               "full_name": "Katana - Erotmania (Hardfloor Mix)",
                "position": "5",
                "title": "Erotmania (Hardfloor Mix)",
-               "type_": "track",
-               "cd_position": 60,
-               "full_name": "Katana - Erotmania (Hardfloor Mix)"
+               "type_": "track"
             },
             {
+               "cd_position": 61,
                "duration": "3:21",
+               "full_name": "Safri Duo - Played-A-Live (Radio Cut)",
                "position": "1",
                "title": "Played-A-Live (Radio Cut)",
-               "type_": "track",
-               "cd_position": 61,
-               "full_name": "Safri Duo - Played-A-Live (Radio Cut)"
+               "type_": "track"
             },
             {
+               "cd_position": 63,
                "duration": "3:36",
                "extraartists": [
                   {
@@ -668,29 +669,29 @@
                      "tracks": ""
                   }
                ],
+               "full_name": "Daddy DJ - Daddy DJ (Chico & Tonio Radio Edit)",
                "position": "1",
                "title": "Daddy DJ (Chico & Tonio Radio Edit)",
-               "type_": "track",
-               "cd_position": 63,
-               "full_name": "Daddy DJ - Daddy DJ (Chico & Tonio Radio Edit)"
+               "type_": "track"
             },
             {
+               "cd_position": 64,
                "duration": "3:42",
+               "full_name": "Jam & Spoon Featuring Rea Garvey - Set Me Free (Empty Rooms) (Radio Version)",
                "position": "1",
                "title": "Set Me Free (Empty Rooms) (Radio Version)",
-               "type_": "track",
-               "cd_position": 64,
-               "full_name": "Jam & Spoon Featuring Rea Garvey - Set Me Free (Empty Rooms) (Radio Version)"
+               "type_": "track"
             },
             {
+               "cd_position": 68,
                "duration": "5:55",
+               "full_name": "Prince Ital Joe Feat. Marky Mark - Happy People (Long Version)",
                "position": "2",
                "title": "Happy People (Long Version)",
-               "type_": "track",
-               "cd_position": 68,
-               "full_name": "Prince Ital Joe Feat. Marky Mark - Happy People (Long Version)"
+               "type_": "track"
             },
             {
+               "cd_position": 70,
                "duration": "4:48",
                "extraartists": [
                   {
@@ -703,29 +704,29 @@
                      "tracks": ""
                   }
                ],
+               "full_name": "2 Unlimited - Tribal Dance (Automatic Breakbeat Remix)",
                "position": "6",
                "title": "Tribal Dance (Automatic Breakbeat Remix)",
-               "type_": "track",
-               "cd_position": 70,
-               "full_name": "2 Unlimited - Tribal Dance (Automatic Breakbeat Remix)"
+               "type_": "track"
             },
             {
+               "cd_position": 71,
                "duration": "3:52",
+               "full_name": "Captain Hollywood Project - Only With You (Radio Mix)",
                "position": "1",
                "title": "Only With You (Radio Mix)",
-               "type_": "track",
-               "cd_position": 71,
-               "full_name": "Captain Hollywood Project - Only With You (Radio Mix)"
+               "type_": "track"
             },
             {
+               "cd_position": 72,
                "duration": "3:45",
+               "full_name": "Virtue - Feeling Good (New Dawn) (7\" Edit)",
                "position": "1",
                "title": "Feeling Good (New Dawn) (7\" Edit)",
-               "type_": "track",
-               "cd_position": 72,
-               "full_name": "Virtue - Feeling Good (New Dawn) (7\" Edit)"
+               "type_": "track"
             },
             {
+               "cd_position": 73,
                "duration": "6:24",
                "extraartists": [
                   {
@@ -747,13 +748,13 @@
                      "tracks": ""
                   }
                ],
+               "full_name": "Tank - Can U Feel The Bass? (DJ Darling Vs. Deejay Sören Remix)",
                "position": "3",
                "title": "Can U Feel The Bass? (DJ Darling Vs. Deejay Sören Remix)",
-               "type_": "track",
-               "cd_position": 73,
-               "full_name": "Tank - Can U Feel The Bass? (DJ Darling Vs. Deejay Sören Remix)"
+               "type_": "track"
             },
             {
+               "cd_position": 74,
                "duration": "3:36",
                "extraartists": [
                   {
@@ -793,21 +794,21 @@
                      "tracks": ""
                   }
                ],
+               "full_name": "Kurtis Mantronik vs. EPMD - Strictly Business (Mantronik MBA Radio Edit)",
                "position": "1",
                "title": "Strictly Business (Mantronik MBA Radio Edit)",
-               "type_": "track",
-               "cd_position": 74,
-               "full_name": "Kurtis Mantronik vs. EPMD - Strictly Business (Mantronik MBA Radio Edit)"
+               "type_": "track"
             },
             {
+               "cd_position": 78,
                "duration": "3:51",
+               "full_name": "Lovestern Galaktika Project Meets Daisy C.I.O. - Galaktika - Are You Ready? (Razzorblade Video Mix)",
                "position": "1",
                "title": "Galaktika - Are You Ready? (Razzorblade Video Mix)",
-               "type_": "track",
-               "cd_position": 78,
-               "full_name": "Lovestern Galaktika Project Meets Daisy C.I.O. - Galaktika - Are You Ready? (Razzorblade Video Mix)"
+               "type_": "track"
             },
             {
+               "cd_position": 78,
                "duration": "7:04",
                "extraartists": [
                   {
@@ -820,13 +821,13 @@
                      "tracks": ""
                   }
                ],
+               "full_name": "Lovestern Galaktika Project Meets Daisy C.I.O. - Galaktika - Are You Ready? (Kaylab Remix)",
                "position": "7",
                "title": "Galaktika - Are You Ready? (Kaylab Remix)",
-               "type_": "track",
-               "cd_position": 78,
-               "full_name": "Lovestern Galaktika Project Meets Daisy C.I.O. - Galaktika - Are You Ready? (Kaylab Remix)"
+               "type_": "track"
             },
             {
+               "cd_position": 80,
                "duration": "3:52",
                "extraartists": [
                   {
@@ -839,13 +840,13 @@
                      "tracks": ""
                   }
                ],
+               "full_name": "Alex Party - Wrap Me Up (Dancing Divaz Edit)",
                "position": "2",
                "title": "Wrap Me Up (Dancing Divaz Edit)",
-               "type_": "track",
-               "cd_position": 80,
-               "full_name": "Alex Party - Wrap Me Up (Dancing Divaz Edit)"
+               "type_": "track"
             },
             {
+               "cd_position": 80,
                "duration": "6:52",
                "extraartists": [
                   {
@@ -858,13 +859,13 @@
                      "tracks": ""
                   }
                ],
+               "full_name": "Alex Party - Wrap Me Up (Dancing Divaz Club Mix)",
                "position": "7",
                "title": "Wrap Me Up (Dancing Divaz Club Mix)",
-               "type_": "track",
-               "cd_position": 80,
-               "full_name": "Alex Party - Wrap Me Up (Dancing Divaz Club Mix)"
+               "type_": "track"
             },
             {
+               "cd_position": 81,
                "duration": "5:34",
                "extraartists": [
                   {
@@ -877,29 +878,29 @@
                      "tracks": ""
                   }
                ],
+               "full_name": "Real McCoy - Automatic Lover (Call For Love) (Party Rave Mix)",
                "position": "4",
                "title": "Automatic Lover (Call For Love) (Party Rave Mix)",
-               "type_": "track",
-               "cd_position": 81,
-               "full_name": "Real McCoy - Automatic Lover (Call For Love) (Party Rave Mix)"
+               "type_": "track"
             },
             {
+               "cd_position": 82,
                "duration": "4:09",
+               "full_name": "Aqua - Turn Back Time (Album Version)",
                "position": "1",
                "title": "Turn Back Time (Album Version)",
-               "type_": "track",
-               "cd_position": 82,
-               "full_name": "Aqua - Turn Back Time (Album Version)"
+               "type_": "track"
             },
             {
+               "cd_position": 84,
                "duration": "4:16",
+               "full_name": "Magic Affair feat. Anita Davis & Raz-Ma-Taz - Break These Chains (Radio Version)",
                "position": "1",
                "title": "Break These Chains (Radio Version)",
-               "type_": "track",
-               "cd_position": 84,
-               "full_name": "Magic Affair feat. Anita Davis & Raz-Ma-Taz - Break These Chains (Radio Version)"
+               "type_": "track"
             },
             {
+               "cd_position": 85,
                "duration": "3:38",
                "extraartists": [
                   {
@@ -921,13 +922,13 @@
                      "tracks": ""
                   }
                ],
+               "full_name": "Dr. Alban - Mr. DJ (Tokapi Mix)",
                "position": "1",
                "title": "Mr. DJ (Tokapi Mix)",
-               "type_": "track",
-               "cd_position": 85,
-               "full_name": "Dr. Alban - Mr. DJ (Tokapi Mix)"
+               "type_": "track"
             },
             {
+               "cd_position": 85,
                "duration": "5:35",
                "extraartists": [
                   {
@@ -949,14 +950,32 @@
                      "tracks": ""
                   }
                ],
+               "full_name": "Dr. Alban - Mr. DJ (Tokapi Sash! Mix)",
                "position": "6",
                "title": "Mr. DJ (Tokapi Sash! Mix)",
+               "type_": "track"
+            },
+            {
+               "artists": [
+                  {
+                     "anv": "",
+                     "id": 243730,
+                     "join": "",
+                     "name": "Golfclub",
+                     "resource_url": "https://api.discogs.com/artists/243730",
+                     "role": "",
+                     "tracks": ""
+                  }
+               ],
+               "duration": "2:53",
+               "position": "1-13",
+               "title": "Spandex",
                "type_": "track",
-               "cd_position": 85,
-               "full_name": "Dr. Alban - Mr. DJ (Tokapi Sash! Mix)"
+               "cd_position": 225,
+               "full_name": "Various - Spandex"
             }
          ],
-         "id": 264938948604523997
+         "id": 264938948604524000
       },
       {
          "name": "Killy K",

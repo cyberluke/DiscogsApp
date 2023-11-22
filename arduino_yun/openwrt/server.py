@@ -37,6 +37,8 @@ class PlaylistHandler():
 
     def next_track(self):
         print("next track check...timer works")
+        if not self.playlist:
+            return
         if self.current_index < len(self.playlist):
             print("next track check....ok")
             self.current_index += 1
@@ -49,6 +51,8 @@ class PlaylistHandler():
 
     def prev_track(self):
         print("prev track check...")
+        if not self.playlist:
+            return
         if self.current_index > 0:
             print("prev track check....ok")
             self.current_index -= 1  

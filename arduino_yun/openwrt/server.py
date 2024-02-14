@@ -19,6 +19,13 @@ class PlaylistHandler():
             self.current_index = 0
             self.send_to_arduino(self.playlist[self.current_index])
             self.current_index += 1
+        else:
+            self.playlist = []
+            self.current_index = 0
+            self.start_time = None
+            self.duration = None    
+            self.send_to_arduino(lines[0])
+
 
     def send_to_arduino(self, track):
         print("sending track to Arduino")

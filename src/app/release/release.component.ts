@@ -151,6 +151,7 @@ export class ReleaseComponent implements OnInit {
 
   playSingleTrack(release: any, track: Track) {
     track["cd_position"] = release.cd_position;
+    track["artist"] = release.artists_sort;
     track["full_name"] = release.artists_sort + " - " + track.title;
     this.playlistService.playSingleTrack(track);
   }

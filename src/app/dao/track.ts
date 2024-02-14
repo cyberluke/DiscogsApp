@@ -11,6 +11,7 @@ export interface Artist {
   export interface Track {
     position: string;
     type_: string;
+    artist: string;
     artists: Artist[];
     title: string;
     duration: string;

@@ -43,6 +43,8 @@ DISCOGS_API_URL = "https://api.discogs.com/releases/"
 load_dotenv()  # This loads the environment variables from .env
 DISCOGS_TOKEN = os.getenv('DISCOGS_TOKEN')
 SONY_SLINK_SERVER = os.getenv('SONY_SLINK_SERVER')
+FRONTEND = os.getenv('FRONTEND')
+TV_API = os.getenv('TV_API')
 json_db = db.getDb("discogs_data_all.json")
 schema = None
 playlist_db = db.getDb("playlists.json")
@@ -268,7 +270,7 @@ def download_image():
             return jsonify({"error": "Failed to retrieve image."}), response.status_code
 
     # Return the path to the local image file
-    local_image_url = f'http://localhost:5000/images/{image_name}'
+    local_image_url = f'{FRONTEND}/images/{image_name}'
     return jsonify({"url": local_image_url})
 
 def send_request_with_retries(url, data, headers, max_retries=20, backoff_factor=1):
@@ -350,7 +352,8 @@ def slinkPlaylist(playlist):
             slink_data += format_with_padding(track['cd_position'])
             slink_data += format_with_padding(track['position'])
             slink_data += format_with_padding(track["position"])
-            slink_data += "\r\n"
+
+        slink_data += "\r\n"
 
     response = slinkSend(slink_data)
     # Check the response
@@ -370,7 +373,22 @@ def track():
 
     slinkTrack(track)
 
+    headers = {'Content-Type': 'application/json'}
+    data = {}
+    data['artist'] = track.artist
+    data['track'] = track.title
+    data['duration'] = convert_duration_to_seconds(track.duration)
+    data['current_time'] = 0
+    response = requests.post(url=f"{TV_API}/youtube", json=data, headers=headers)
+
     return jsonify({"status": "Track sent"}), 200
+
+def convert_duration_to_seconds(duration):
+    if duration == "":
+        return 200
+    minutes, seconds = map(int, duration.split(':'))
+    total_seconds = minutes * 60 + seconds
+    return total_seconds
 
 def format_with_padding(value, pad_length=2):
     if isinstance(value, int):

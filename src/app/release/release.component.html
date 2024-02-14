@@ -1,4 +1,4 @@
-<c-accordion [flush]="true">
+<c-accordion [flush]="true" class="dark-mode">
   <c-accordion-item #item0="cAccordionItem" [visible]="false">
     <ng-template cTemplateId="accordionHeaderTemplate">
       <button (click)="item0.toggleItem()" [collapsed]="!item0.visible" cAccordionButton>

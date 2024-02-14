@@ -3,12 +3,14 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { Playlist, Track } from '../dao/track'; // Assuming Track is a class or interface
-
+import { environment } from '../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class PlaylistService {
+  private serviceUrl = environment.serviceUrl;
+
   // Your playlist array
   private playlist: Playlist = {
     name: '001 Dance',
@@ -37,7 +39,7 @@ export class PlaylistService {
   }
 
   playPlaylist(playlist: Playlist) {
-    this.http.post('http://localhost:5000/playlist', playlist)
+    this.http.post(`${this.serviceUrl}/playlist`, playlist)
     .subscribe(response => {
       console.log(response);
       // Handle response here
@@ -45,7 +47,7 @@ export class PlaylistService {
   }
 
   playSingleTrack(track: Track) {
-    this.http.post('http://localhost:5000/track', track)
+    this.http.post(`${this.serviceUrl}/track`, track)
       .subscribe(response => {
         console.log(response);
         // Handle response here
@@ -53,7 +55,7 @@ export class PlaylistService {
   }
   
   loadAll(): void {
-    this.http.get<Playlist[]>('http://localhost:5000/playlists')
+    this.http.get<Playlist[]>(`${this.serviceUrl}/playlists`)
     .subscribe({
       next: (response) => {
         console.log(response);
@@ -73,7 +75,7 @@ export class PlaylistService {
   savePlaylist(playlistName: string) {
     this.playlist.name = playlistName;
 
-    this.http.post<Playlist>('http://localhost:5000/save-playlist', this.playlist)
+    this.http.post<Playlist>(`${this.serviceUrl}/save-playlist`, this.playlist)
       .subscribe(response => {
         console.log(response);
         // Handle response here

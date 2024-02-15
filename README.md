@@ -16,8 +16,6 @@ Use a 3.5 mm mono plug to connect the Arduino to the S-Link/Control A1 port of t
 
 Use the serial port to send commands to the Sony equipment. Commands are sent as lines of hexadecimal data.
 
-![interface](https://raw.githubusercontent.com/hajdbo/sony-jukebox-slink/master/slink_interface.png)
-
 Connect the interface to one of the Control-A1 ports, using a 3.5mm mono male jack.
 
 

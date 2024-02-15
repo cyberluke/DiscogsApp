@@ -19,7 +19,7 @@ Use the serial port to send commands to the Sony equipment. Commands are sent as
 ![interface](https://raw.githubusercontent.com/hajdbo/sony-jukebox-slink/master/slink_interface.png)
 
 Connect the interface to one of the Control-A1 ports, using a 3.5mm mono male jack.
-![control A1 port](http://i.imgur.com/pV647eY.jpg?1)
+
 
 ## Development server
 

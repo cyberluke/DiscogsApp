@@ -21,6 +21,11 @@ Connect the interface to one of the Control-A1 ports, using a 3.5mm mono male ja
 
 ## Development server
 
+#### ABOUT
+Folder `arduino_yun` contains Arduino Sketch as well as openwrt Linux Python script server.py that needs to be copied over SCP/SSH and using SSH you can run it form user home folder or you can set it up as startup service using openwrt web gui.
+
+On laptop you can run Angular website and server.
+
 #### FRONTEND
 Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The application will automatically reload if you change any of the source files.
 

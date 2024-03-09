@@ -18,7 +18,7 @@ class PlaylistHandler():
             self.playlist = lines[1:]
             self.current_index = 0
             self.send_to_arduino(self.playlist[self.current_index])
-            self.current_index += 1
+            #self.current_index += 1
         else:
             self.playlist = []
             self.current_index = 0
@@ -46,7 +46,7 @@ class PlaylistHandler():
         print("next track check...timer works")
         if not self.playlist:
             return
-        if self.current_index < len(self.playlist):
+        if self.current_index < len(self.playlist) - 1:
             print("next track check....ok")
             self.current_index += 1
         else:    

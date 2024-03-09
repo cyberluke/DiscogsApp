@@ -6,7 +6,11 @@
     "start": "ng serve --host 0.0.0.0 --disable-host-check",
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
-    "test": "ng test"
+    "test": "ng test",
+    "dev:ssr": "ng run app:serve-ssr",
+    "serve:ssr": "node dist/app/server/main.js",
+    "build:ssr": "ng build && ng run app:server",
+    "prerender": "ng run app:prerender"
   },
   "private": true,
   "dependencies": {
@@ -19,23 +23,46 @@
     "@angular/material": "^17.2.0",
     "@angular/platform-browser": "^17.2.1",
     "@angular/platform-browser-dynamic": "^17.2.1",
+    "@angular/platform-server": "^17.2.1",
     "@angular/router": "^17.2.1",
-    "@coreui/angular": "^4.7.14",
+    "@angular/ssr": "^17.2.0",
+    "@babel/polyfill": "^7.12.1",
+    "@coreui/angular": "~4.7",
     "@coreui/coreui": "^4.3.2",
     "@coreui/icons": "^3.0.1",
-    "@coreui/icons-angular": "^4.5.27",
-    "@ng-bootstrap/ng-bootstrap": "^15.1.2",
+    "@coreui/icons-angular": "^4.7.14",
+    "@ionic/angular": "^7.7.2",
+    "@ionic/angular-toolkit": "^11.0.1",
+    "@ionic/cordova-builders": "^11.0.0",
+    "@ng-bootstrap/ng-bootstrap": "^16.0.0",
+    "@nguniversal/express-engine": "^7.0.2",
+    "classlist.js": "^1.1.20150312",
+    "core-js": "^3.36.0",
+    "express": "^4.18.2",
     "papaparse": "^5.4.1",
     "rxjs": "~7.8.0",
     "tslib": "^2.3.0",
+    "web-animations-js": "^2.3.2",
     "zone.js": "~0.14.2"
   },
   "devDependencies": {
     "@angular-devkit/build-angular": "^17.2.0",
     "@angular/cli": "^17.2.0",
     "@angular/compiler-cli": "^17.2.1",
+    "@babel/cli": "^7.23.9",
+    "@babel/core": "^7.23.9",
+    "@types/express": "^4.17.17",
     "@types/jasmine": "~4.3.0",
+    "@types/node": "^18.18.0",
     "@types/papaparse": "^5.3.10",
+    "browser-sync": "^3.0.0",
+    "com.hughisaacs2.cordova.plugins.androidtvplugin": "github:hughisaacs2/Cordova-Android-TV-Plugin",
+    "cordova-android": "^12.0.1",
+    "cordova-plugin-device": "2.0.2",
+    "cordova-plugin-ionic-keyboard": "^2.0.5",
+    "cordova-plugin-ionic-webview": "^5.0.0",
+    "cordova-plugin-splashscreen": "5.0.2",
+    "cordova-plugin-statusbar": "^2.4.2",
     "jasmine-core": "~4.6.0",
     "karma": "~6.4.0",
     "karma-chrome-launcher": "~3.2.0",
@@ -43,5 +70,18 @@
     "karma-jasmine": "~5.1.0",
     "karma-jasmine-html-reporter": "~2.1.0",
     "typescript": "~5.2.2"
+  },
+  "cordova": {
+    "plugins": {
+      "cordova-plugin-statusbar": {},
+      "cordova-plugin-device": {},
+      "cordova-plugin-splashscreen": {},
+      "cordova-plugin-ionic-webview": {},
+      "cordova-plugin-ionic-keyboard": {},
+      "com.hughisaacs2.cordova.plugins.androidtvplugin": {}
+    },
+    "platforms": [
+      "android"
+    ]
   }
 }

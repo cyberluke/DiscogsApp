@@ -2301,6 +2301,1070 @@
                "type_": "track"
             }
          ]
+      },
+      {
+         "name": "Lucky Luke",
+         "tracks": [
+            {
+               "_score": 1,
+               "duration": "4:05",
+               "extraartists": [
+                  {
+                     "anv": "",
+                     "id": 51994,
+                     "join": "",
+                     "name": "Pablo Flores",
+                     "resource_url": "https://api.discogs.com/artists/51994",
+                     "role": "Remix",
+                     "tracks": ""
+                  }
+               ],
+               "position": "14",
+               "title": "Una Noche Más (Pablo's Miami Mix Radio Edit)",
+               "type_": "track",
+               "cd_position": 220,
+               "full_name": "Jennifer Lopez - Una Noche Más (Pablo's Miami Mix Radio Edit)"
+            },
+            {
+               "artists": [
+                  {
+                     "anv": "PJ & Duncan AKA",
+                     "id": 36620,
+                     "join": "",
+                     "name": "PJ & Duncan",
+                     "resource_url": "https://api.discogs.com/artists/36620",
+                     "role": "",
+                     "tracks": ""
+                  }
+               ],
+               "duration": "3:13",
+               "position": "2-5",
+               "title": "If I Give You My Number (100% Radio Mix)",
+               "type_": "track",
+               "cd_position": 284,
+               "full_name": "Various - If I Give You My Number (100% Radio Mix)"
+            },
+            {
+               "_score": 1,
+               "artists": [
+                  {
+                     "anv": "",
+                     "id": 61645,
+                     "join": "",
+                     "name": "3-O-Matic",
+                     "resource_url": "https://api.discogs.com/artists/61645",
+                     "role": "",
+                     "tracks": ""
+                  }
+               ],
+               "duration": "3:57",
+               "position": "1-9",
+               "title": "Hand In Hand (Radio Mix - Video Version)",
+               "type_": "track",
+               "cd_position": 283,
+               "full_name": "Various - Hand In Hand (Radio Mix - Video Version)"
+            },
+            {
+               "_score": 1,
+               "duration": "3:38",
+               "extraartists": [
+                  {
+                     "anv": "",
+                     "id": 7981,
+                     "join": "",
+                     "name": "Sash!",
+                     "resource_url": "https://api.discogs.com/artists/7981",
+                     "role": "Producer",
+                     "tracks": ""
+                  },
+                  {
+                     "anv": "",
+                     "id": 41250,
+                     "join": "",
+                     "name": "Tokapi",
+                     "resource_url": "https://api.discogs.com/artists/41250",
+                     "role": "Remix",
+                     "tracks": ""
+                  }
+               ],
+               "position": "1",
+               "title": "Mr. DJ (Tokapi Mix)",
+               "type_": "track",
+               "cd_position": 85,
+               "full_name": "Dr. Alban - Mr. DJ (Tokapi Mix)"
+            },
+            {
+               "artist": "Sonique",
+               "cd_position": 276,
+               "duration": "3:59",
+               "full_name": "Sonique - Sky (Radio Edit)",
+               "position": "1",
+               "title": "Sky (Radio Edit)",
+               "type_": "track"
+            },
+            {
+               "artist": "Kim Leoni",
+               "cd_position": 274,
+               "duration": "5:34",
+               "extraartists": [
+                  {
+                     "anv": "",
+                     "id": 20826,
+                     "join": "",
+                     "name": "Topmodelz",
+                     "resource_url": "https://api.discogs.com/artists/20826",
+                     "role": "Remix",
+                     "tracks": ""
+                  }
+               ],
+               "full_name": "Kim Leoni - Medicine (Topmodelz Remix)",
+               "position": "4",
+               "title": "Medicine (Topmodelz Remix)",
+               "type_": "track"
+            },
+            {
+               "artists": [
+                  {
+                     "anv": "",
+                     "id": 11769,
+                     "join": "",
+                     "name": "Scooter",
+                     "resource_url": "https://api.discogs.com/artists/11769",
+                     "role": "",
+                     "tracks": ""
+                  }
+               ],
+               "duration": "3:56",
+               "extraartists": [
+                  {
+                     "anv": "",
+                     "id": 179650,
+                     "join": "",
+                     "name": "H.P. Baxxter",
+                     "resource_url": "https://api.discogs.com/artists/179650",
+                     "role": "Written-By",
+                     "tracks": ""
+                  },
+                  {
+                     "anv": "J. Thele",
+                     "id": 71782,
+                     "join": "",
+                     "name": "Jens Thele",
+                     "resource_url": "https://api.discogs.com/artists/71782",
+                     "role": "Written-By",
+                     "tracks": ""
+                  },
+                  {
+                     "anv": "",
+                     "id": 128241,
+                     "join": "",
+                     "name": "Rick J. Jordan",
+                     "resource_url": "https://api.discogs.com/artists/128241",
+                     "role": "Written-By",
+                     "tracks": ""
+                  },
+                  {
+                     "anv": "S. Bühler",
+                     "id": 581083,
+                     "join": "",
+                     "name": "Sören Bühler",
+                     "resource_url": "https://api.discogs.com/artists/581083",
+                     "role": "Written-By",
+                     "tracks": ""
+                  }
+               ],
+               "position": "1-15",
+               "title": "Move Your Ass",
+               "type_": "track",
+               "cd_position": 287,
+               "full_name": "Various - Move Your Ass"
+            },
+            {
+               "artist": "Sonique",
+               "cd_position": 276,
+               "duration": "7:40",
+               "extraartists": [
+                  {
+                     "anv": "Sharam Jay",
+                     "id": 8982,
+                     "join": "",
+                     "name": "Sharam Jey",
+                     "resource_url": "https://api.discogs.com/artists/8982",
+                     "role": "Remix, Producer [Additional Production]",
+                     "tracks": ""
+                  }
+               ],
+               "full_name": "Sonique - Sky (Sharam Jay Remix)",
+               "position": "4",
+               "title": "Sky (Sharam Jay Remix)",
+               "type_": "track"
+            },
+            {
+               "artist": "Various",
+               "artists": [
+                  {
+                     "anv": "",
+                     "id": 9155,
+                     "join": "",
+                     "name": "Phil Fuldner",
+                     "resource_url": "https://api.discogs.com/artists/9155",
+                     "role": "",
+                     "tracks": ""
+                  }
+               ],
+               "cd_position": 269,
+               "duration": "7:30",
+               "full_name": "Various - Miami Pop (Extension)",
+               "position": "2-8",
+               "title": "Miami Pop (Extension)",
+               "type_": "track"
+            },
+            {
+               "artist": "Various",
+               "artists": [
+                  {
+                     "anv": "",
+                     "id": 24267,
+                     "join": "",
+                     "name": "Hypertrophy",
+                     "resource_url": "https://api.discogs.com/artists/24267",
+                     "role": "",
+                     "tracks": ""
+                  }
+               ],
+               "cd_position": 270,
+               "duration": "6:47",
+               "extraartists": [
+                  {
+                     "anv": "",
+                     "id": 33536,
+                     "join": "",
+                     "name": "DJ Red 5",
+                     "resource_url": "https://api.discogs.com/artists/33536",
+                     "role": "Remix",
+                     "tracks": ""
+                  },
+                  {
+                     "anv": "",
+                     "id": 24267,
+                     "join": "",
+                     "name": "Hypertrophy",
+                     "resource_url": "https://api.discogs.com/artists/24267",
+                     "role": "Remix",
+                     "tracks": ""
+                  }
+               ],
+               "full_name": "Various - Pullover (DJ Red 5 Vs. Hypertrophy Remix)",
+               "position": "1-10",
+               "title": "Pullover (DJ Red 5 Vs. Hypertrophy Remix)",
+               "type_": "track"
+            },
+            {
+               "artist": "Various",
+               "artists": [
+                  {
+                     "anv": "",
+                     "id": 173967,
+                     "join": "Feat.",
+                     "name": "Run",
+                     "resource_url": "https://api.discogs.com/artists/173967",
+                     "role": "",
+                     "tracks": ""
+                  },
+                  {
+                     "anv": "",
+                     "id": 137205,
+                     "join": "",
+                     "name": "Justine Simmons",
+                     "resource_url": "https://api.discogs.com/artists/137205",
+                     "role": "",
+                     "tracks": ""
+                  }
+               ],
+               "cd_position": 271,
+               "duration": "3:54",
+               "extraartists": [
+                  {
+                     "anv": "",
+                     "id": 137205,
+                     "join": "",
+                     "name": "Justine Simmons",
+                     "resource_url": "https://api.discogs.com/artists/137205",
+                     "role": "Vocals",
+                     "tracks": ""
+                  }
+               ],
+               "full_name": "Various - Praise My DJs (Mach 3 On The Dance Floor Mix)",
+               "position": "2-2",
+               "title": "Praise My DJs (Mach 3 On The Dance Floor Mix)",
+               "type_": "track"
+            },
+            {
+               "_score": 1,
+               "artists": [
+                  {
+                     "anv": "",
+                     "id": 67258,
+                     "join": "",
+                     "name": "Sin With Sebastian",
+                     "resource_url": "https://api.discogs.com/artists/67258",
+                     "role": "",
+                     "tracks": ""
+                  }
+               ],
+               "duration": "3:47",
+               "extraartists": [
+                  {
+                     "anv": "",
+                     "id": 67258,
+                     "join": "",
+                     "name": "Sin With Sebastian",
+                     "resource_url": "https://api.discogs.com/artists/67258",
+                     "role": "Written-By",
+                     "tracks": ""
+                  }
+               ],
+               "position": "1-06",
+               "title": "Golden Boy",
+               "type_": "track",
+               "cd_position": 287,
+               "full_name": "Various - Golden Boy"
+            }
+         ],
+         "id": 259101133394857900
+      },
+      {
+         "id": 285999595097508839,
+         "name": "",
+         "tracks": [
+            {
+               "artist": "Sonique",
+               "cd_position": 276,
+               "duration": "3:59",
+               "full_name": "Sonique - Sky (Radio Edit)",
+               "position": "1",
+               "title": "Sky (Radio Edit)",
+               "type_": "track"
+            },
+            {
+               "artist": "Kim Leoni",
+               "cd_position": 274,
+               "duration": "5:34",
+               "extraartists": [
+                  {
+                     "anv": "",
+                     "id": 20826,
+                     "join": "",
+                     "name": "Topmodelz",
+                     "resource_url": "https://api.discogs.com/artists/20826",
+                     "role": "Remix",
+                     "tracks": ""
+                  }
+               ],
+               "full_name": "Kim Leoni - Medicine (Topmodelz Remix)",
+               "position": "4",
+               "title": "Medicine (Topmodelz Remix)",
+               "type_": "track"
+            },
+            {
+               "artists": [
+                  {
+                     "anv": "",
+                     "id": 11769,
+                     "join": "",
+                     "name": "Scooter",
+                     "resource_url": "https://api.discogs.com/artists/11769",
+                     "role": "",
+                     "tracks": ""
+                  }
+               ],
+               "cd_position": 287,
+               "duration": "3:56",
+               "extraartists": [
+                  {
+                     "anv": "",
+                     "id": 179650,
+                     "join": "",
+                     "name": "H.P. Baxxter",
+                     "resource_url": "https://api.discogs.com/artists/179650",
+                     "role": "Written-By",
+                     "tracks": ""
+                  },
+                  {
+                     "anv": "J. Thele",
+                     "id": 71782,
+                     "join": "",
+                     "name": "Jens Thele",
+                     "resource_url": "https://api.discogs.com/artists/71782",
+                     "role": "Written-By",
+                     "tracks": ""
+                  },
+                  {
+                     "anv": "",
+                     "id": 128241,
+                     "join": "",
+                     "name": "Rick J. Jordan",
+                     "resource_url": "https://api.discogs.com/artists/128241",
+                     "role": "Written-By",
+                     "tracks": ""
+                  },
+                  {
+                     "anv": "S. Bühler",
+                     "id": 581083,
+                     "join": "",
+                     "name": "Sören Bühler",
+                     "resource_url": "https://api.discogs.com/artists/581083",
+                     "role": "Written-By",
+                     "tracks": ""
+                  }
+               ],
+               "full_name": "Various - Move Your Ass",
+               "position": "1-15",
+               "title": "Move Your Ass",
+               "type_": "track"
+            },
+            {
+               "artist": "Sonique",
+               "cd_position": 276,
+               "duration": "7:40",
+               "extraartists": [
+                  {
+                     "anv": "Sharam Jay",
+                     "id": 8982,
+                     "join": "",
+                     "name": "Sharam Jey",
+                     "resource_url": "https://api.discogs.com/artists/8982",
+                     "role": "Remix, Producer [Additional Production]",
+                     "tracks": ""
+                  }
+               ],
+               "full_name": "Sonique - Sky (Sharam Jay Remix)",
+               "position": "4",
+               "title": "Sky (Sharam Jay Remix)",
+               "type_": "track"
+            },
+            {
+               "artist": "Various",
+               "artists": [
+                  {
+                     "anv": "",
+                     "id": 9155,
+                     "join": "",
+                     "name": "Phil Fuldner",
+                     "resource_url": "https://api.discogs.com/artists/9155",
+                     "role": "",
+                     "tracks": ""
+                  }
+               ],
+               "cd_position": 269,
+               "duration": "7:30",
+               "full_name": "Various - Miami Pop (Extension)",
+               "position": "2-8",
+               "title": "Miami Pop (Extension)",
+               "type_": "track"
+            },
+            {
+               "artist": "Various",
+               "artists": [
+                  {
+                     "anv": "",
+                     "id": 24267,
+                     "join": "",
+                     "name": "Hypertrophy",
+                     "resource_url": "https://api.discogs.com/artists/24267",
+                     "role": "",
+                     "tracks": ""
+                  }
+               ],
+               "cd_position": 270,
+               "duration": "6:47",
+               "extraartists": [
+                  {
+                     "anv": "",
+                     "id": 33536,
+                     "join": "",
+                     "name": "DJ Red 5",
+                     "resource_url": "https://api.discogs.com/artists/33536",
+                     "role": "Remix",
+                     "tracks": ""
+                  },
+                  {
+                     "anv": "",
+                     "id": 24267,
+                     "join": "",
+                     "name": "Hypertrophy",
+                     "resource_url": "https://api.discogs.com/artists/24267",
+                     "role": "Remix",
+                     "tracks": ""
+                  }
+               ],
+               "full_name": "Various - Pullover (DJ Red 5 Vs. Hypertrophy Remix)",
+               "position": "1-10",
+               "title": "Pullover (DJ Red 5 Vs. Hypertrophy Remix)",
+               "type_": "track"
+            },
+            {
+               "artist": "Various",
+               "artists": [
+                  {
+                     "anv": "",
+                     "id": 173967,
+                     "join": "Feat.",
+                     "name": "Run",
+                     "resource_url": "https://api.discogs.com/artists/173967",
+                     "role": "",
+                     "tracks": ""
+                  },
+                  {
+                     "anv": "",
+                     "id": 137205,
+                     "join": "",
+                     "name": "Justine Simmons",
+                     "resource_url": "https://api.discogs.com/artists/137205",
+                     "role": "",
+                     "tracks": ""
+                  }
+               ],
+               "cd_position": 271,
+               "duration": "3:54",
+               "extraartists": [
+                  {
+                     "anv": "",
+                     "id": 137205,
+                     "join": "",
+                     "name": "Justine Simmons",
+                     "resource_url": "https://api.discogs.com/artists/137205",
+                     "role": "Vocals",
+                     "tracks": ""
+                  }
+               ],
+               "full_name": "Various - Praise My DJs (Mach 3 On The Dance Floor Mix)",
+               "position": "2-2",
+               "title": "Praise My DJs (Mach 3 On The Dance Floor Mix)",
+               "type_": "track"
+            },
+            {
+               "_score": 1,
+               "artists": [
+                  {
+                     "anv": "",
+                     "id": 67258,
+                     "join": "",
+                     "name": "Sin With Sebastian",
+                     "resource_url": "https://api.discogs.com/artists/67258",
+                     "role": "",
+                     "tracks": ""
+                  }
+               ],
+               "cd_position": 287,
+               "duration": "3:47",
+               "extraartists": [
+                  {
+                     "anv": "",
+                     "id": 67258,
+                     "join": "",
+                     "name": "Sin With Sebastian",
+                     "resource_url": "https://api.discogs.com/artists/67258",
+                     "role": "Written-By",
+                     "tracks": ""
+                  }
+               ],
+               "full_name": "Various - Golden Boy",
+               "position": "1-06",
+               "title": "Golden Boy",
+               "type_": "track"
+            }
+         ]
+      },
+      {
+         "id": 193697691629298115,
+         "name": "asd",
+         "tracks": [
+            {
+               "artist": "Sonique",
+               "cd_position": 276,
+               "duration": "3:59",
+               "full_name": "Sonique - Sky (Radio Edit)",
+               "position": "1",
+               "title": "Sky (Radio Edit)",
+               "type_": "track"
+            },
+            {
+               "artist": "Kim Leoni",
+               "cd_position": 274,
+               "duration": "5:34",
+               "extraartists": [
+                  {
+                     "anv": "",
+                     "id": 20826,
+                     "join": "",
+                     "name": "Topmodelz",
+                     "resource_url": "https://api.discogs.com/artists/20826",
+                     "role": "Remix",
+                     "tracks": ""
+                  }
+               ],
+               "full_name": "Kim Leoni - Medicine (Topmodelz Remix)",
+               "position": "4",
+               "title": "Medicine (Topmodelz Remix)",
+               "type_": "track"
+            },
+            {
+               "artists": [
+                  {
+                     "anv": "",
+                     "id": 11769,
+                     "join": "",
+                     "name": "Scooter",
+                     "resource_url": "https://api.discogs.com/artists/11769",
+                     "role": "",
+                     "tracks": ""
+                  }
+               ],
+               "cd_position": 287,
+               "duration": "3:56",
+               "extraartists": [
+                  {
+                     "anv": "",
+                     "id": 179650,
+                     "join": "",
+                     "name": "H.P. Baxxter",
+                     "resource_url": "https://api.discogs.com/artists/179650",
+                     "role": "Written-By",
+                     "tracks": ""
+                  },
+                  {
+                     "anv": "J. Thele",
+                     "id": 71782,
+                     "join": "",
+                     "name": "Jens Thele",
+                     "resource_url": "https://api.discogs.com/artists/71782",
+                     "role": "Written-By",
+                     "tracks": ""
+                  },
+                  {
+                     "anv": "",
+                     "id": 128241,
+                     "join": "",
+                     "name": "Rick J. Jordan",
+                     "resource_url": "https://api.discogs.com/artists/128241",
+                     "role": "Written-By",
+                     "tracks": ""
+                  },
+                  {
+                     "anv": "S. Bühler",
+                     "id": 581083,
+                     "join": "",
+                     "name": "Sören Bühler",
+                     "resource_url": "https://api.discogs.com/artists/581083",
+                     "role": "Written-By",
+                     "tracks": ""
+                  }
+               ],
+               "full_name": "Various - Move Your Ass",
+               "position": "1-15",
+               "title": "Move Your Ass",
+               "type_": "track"
+            },
+            {
+               "artist": "Sonique",
+               "cd_position": 276,
+               "duration": "7:40",
+               "extraartists": [
+                  {
+                     "anv": "Sharam Jay",
+                     "id": 8982,
+                     "join": "",
+                     "name": "Sharam Jey",
+                     "resource_url": "https://api.discogs.com/artists/8982",
+                     "role": "Remix, Producer [Additional Production]",
+                     "tracks": ""
+                  }
+               ],
+               "full_name": "Sonique - Sky (Sharam Jay Remix)",
+               "position": "4",
+               "title": "Sky (Sharam Jay Remix)",
+               "type_": "track"
+            },
+            {
+               "artist": "Various",
+               "artists": [
+                  {
+                     "anv": "",
+                     "id": 9155,
+                     "join": "",
+                     "name": "Phil Fuldner",
+                     "resource_url": "https://api.discogs.com/artists/9155",
+                     "role": "",
+                     "tracks": ""
+                  }
+               ],
+               "cd_position": 269,
+               "duration": "7:30",
+               "full_name": "Various - Miami Pop (Extension)",
+               "position": "2-8",
+               "title": "Miami Pop (Extension)",
+               "type_": "track"
+            },
+            {
+               "artist": "Various",
+               "artists": [
+                  {
+                     "anv": "",
+                     "id": 24267,
+                     "join": "",
+                     "name": "Hypertrophy",
+                     "resource_url": "https://api.discogs.com/artists/24267",
+                     "role": "",
+                     "tracks": ""
+                  }
+               ],
+               "cd_position": 270,
+               "duration": "6:47",
+               "extraartists": [
+                  {
+                     "anv": "",
+                     "id": 33536,
+                     "join": "",
+                     "name": "DJ Red 5",
+                     "resource_url": "https://api.discogs.com/artists/33536",
+                     "role": "Remix",
+                     "tracks": ""
+                  },
+                  {
+                     "anv": "",
+                     "id": 24267,
+                     "join": "",
+                     "name": "Hypertrophy",
+                     "resource_url": "https://api.discogs.com/artists/24267",
+                     "role": "Remix",
+                     "tracks": ""
+                  }
+               ],
+               "full_name": "Various - Pullover (DJ Red 5 Vs. Hypertrophy Remix)",
+               "position": "1-10",
+               "title": "Pullover (DJ Red 5 Vs. Hypertrophy Remix)",
+               "type_": "track"
+            },
+            {
+               "artist": "Various",
+               "artists": [
+                  {
+                     "anv": "",
+                     "id": 173967,
+                     "join": "Feat.",
+                     "name": "Run",
+                     "resource_url": "https://api.discogs.com/artists/173967",
+                     "role": "",
+                     "tracks": ""
+                  },
+                  {
+                     "anv": "",
+                     "id": 137205,
+                     "join": "",
+                     "name": "Justine Simmons",
+                     "resource_url": "https://api.discogs.com/artists/137205",
+                     "role": "",
+                     "tracks": ""
+                  }
+               ],
+               "cd_position": 271,
+               "duration": "3:54",
+               "extraartists": [
+                  {
+                     "anv": "",
+                     "id": 137205,
+                     "join": "",
+                     "name": "Justine Simmons",
+                     "resource_url": "https://api.discogs.com/artists/137205",
+                     "role": "Vocals",
+                     "tracks": ""
+                  }
+               ],
+               "full_name": "Various - Praise My DJs (Mach 3 On The Dance Floor Mix)",
+               "position": "2-2",
+               "title": "Praise My DJs (Mach 3 On The Dance Floor Mix)",
+               "type_": "track"
+            },
+            {
+               "_score": 1,
+               "artists": [
+                  {
+                     "anv": "",
+                     "id": 67258,
+                     "join": "",
+                     "name": "Sin With Sebastian",
+                     "resource_url": "https://api.discogs.com/artists/67258",
+                     "role": "",
+                     "tracks": ""
+                  }
+               ],
+               "cd_position": 287,
+               "duration": "3:47",
+               "extraartists": [
+                  {
+                     "anv": "",
+                     "id": 67258,
+                     "join": "",
+                     "name": "Sin With Sebastian",
+                     "resource_url": "https://api.discogs.com/artists/67258",
+                     "role": "Written-By",
+                     "tracks": ""
+                  }
+               ],
+               "full_name": "Various - Golden Boy",
+               "position": "1-06",
+               "title": "Golden Boy",
+               "type_": "track"
+            }
+         ]
+      },
+      {
+         "name": "new2",
+         "tracks": [
+            {
+               "duration": "3:37",
+               "position": "1",
+               "title": "Butterfly (Album Version)",
+               "type_": "track",
+               "cd_position": 197,
+               "full_name": "Crazy Town - Butterfly (Album Version)"
+            },
+            {
+               "duration": "5:52",
+               "extraartists": [
+                  {
+                     "anv": "",
+                     "id": 7895,
+                     "join": "",
+                     "name": "Peter Parker",
+                     "resource_url": "https://api.discogs.com/artists/7895",
+                     "role": "Remix",
+                     "tracks": ""
+                  }
+               ],
+               "position": "d",
+               "title": "Samba De Janeiro (Peter Parker Remix)",
+               "type_": "track",
+               "cd_position": 259,
+               "full_name": "Bellini - Samba De Janeiro (Peter Parker Remix)"
+            },
+            {
+               "duration": "5:12",
+               "position": "3",
+               "title": "Close Your Eyes (Club Mix)",
+               "type_": "track",
+               "cd_position": 275,
+               "full_name": "Mega 'Lo Mania - Close Your Eyes (Club Mix)"
+            },
+            {
+               "duration": "5:34",
+               "extraartists": [
+                  {
+                     "anv": "",
+                     "id": 20826,
+                     "join": "",
+                     "name": "Topmodelz",
+                     "resource_url": "https://api.discogs.com/artists/20826",
+                     "role": "Remix",
+                     "tracks": ""
+                  }
+               ],
+               "position": "4",
+               "title": "Medicine (Topmodelz Remix)",
+               "type_": "track",
+               "cd_position": 274,
+               "full_name": "Kim Leoni - Medicine (Topmodelz Remix)",
+               "artist": "Kim Leoni"
+            },
+            {
+               "artists": [
+                  {
+                     "anv": "",
+                     "id": 12518,
+                     "join": "",
+                     "name": "DJ Snowman",
+                     "resource_url": "https://api.discogs.com/artists/12518",
+                     "role": "",
+                     "tracks": ""
+                  }
+               ],
+               "duration": "7:12",
+               "extraartists": [
+                  {
+                     "anv": "Ray Boye",
+                     "id": 465096,
+                     "join": "",
+                     "name": "Ray Boyé",
+                     "resource_url": "https://api.discogs.com/artists/465096",
+                     "role": "Written-By, Producer",
+                     "tracks": ""
+                  },
+                  {
+                     "anv": "",
+                     "id": 488140,
+                     "join": "",
+                     "name": "Thomas Baira",
+                     "resource_url": "https://api.discogs.com/artists/488140",
+                     "role": "Written-By, Producer",
+                     "tracks": ""
+                  }
+               ],
+               "position": "1-01",
+               "title": "Waves (Original Mix)",
+               "type_": "track",
+               "cd_position": 252,
+               "full_name": "Various - Waves (Original Mix)"
+            },
+            {
+               "artists": [
+                  {
+                     "anv": "",
+                     "id": 82196,
+                     "join": "",
+                     "name": "Rage At Dawn",
+                     "resource_url": "https://api.discogs.com/artists/82196",
+                     "role": "",
+                     "tracks": ""
+                  }
+               ],
+               "duration": "3:36",
+               "position": "16",
+               "title": "Su-Ki-Ja-Ki",
+               "type_": "track",
+               "cd_position": 251,
+               "full_name": "Various - Su-Ki-Ja-Ki"
+            },
+            {
+               "duration": "3:23",
+               "extraartists": [
+                  {
+                     "anv": "",
+                     "id": 43559,
+                     "join": "",
+                     "name": "DJ Delmundo",
+                     "resource_url": "https://api.discogs.com/artists/43559",
+                     "role": "Producer",
+                     "tracks": ""
+                  },
+                  {
+                     "anv": "",
+                     "id": 506284,
+                     "join": "",
+                     "name": "Danski",
+                     "resource_url": "https://api.discogs.com/artists/506284",
+                     "role": "Producer",
+                     "tracks": ""
+                  }
+               ],
+               "position": "1",
+               "title": "Boom, Boom, Boom, Boom (Airplay)",
+               "type_": "track",
+               "cd_position": 232,
+               "full_name": "Vengaboys - Boom, Boom, Boom, Boom (Airplay)"
+            },
+            {
+               "_score": 1,
+               "duration": "5:31",
+               "extraartists": [
+                  {
+                     "anv": "",
+                     "id": 347568,
+                     "join": "",
+                     "name": "David Bacon",
+                     "resource_url": "https://api.discogs.com/artists/347568",
+                     "role": "Arranged By, Mixed By",
+                     "tracks": ""
+                  },
+                  {
+                     "anv": "",
+                     "id": 397250,
+                     "join": "",
+                     "name": "Paul Jockey",
+                     "resource_url": "https://api.discogs.com/artists/397250",
+                     "role": "Arranged By, Mixed By",
+                     "tracks": ""
+                  },
+                  {
+                     "anv": "Vanni G",
+                     "id": 248573,
+                     "join": "",
+                     "name": "Vanni Giorgilli",
+                     "resource_url": "https://api.discogs.com/artists/248573",
+                     "role": "Arranged By, Mixed By",
+                     "tracks": ""
+                  }
+               ],
+               "position": "5",
+               "title": "I Am Back (Vanni G Extended Rmx)",
+               "type_": "track",
+               "cd_position": 216,
+               "full_name": "Regina - I Am Back (Vanni G Extended Rmx)"
+            },
+            {
+               "duration": "",
+               "position": "5",
+               "title": "As If It's Your Last",
+               "type_": "track",
+               "cd_position": 215,
+               "full_name": "Blackpink - As If It's Your Last"
+            },
+            {
+               "duration": "4:36",
+               "extraartists": [
+                  {
+                     "anv": "Smith",
+                     "id": 381678,
+                     "join": "",
+                     "name": "Adrian Smith (2)",
+                     "resource_url": "https://api.discogs.com/artists/381678",
+                     "role": "Written-By",
+                     "tracks": ""
+                  },
+                  {
+                     "anv": "Dickinson",
+                     "id": 260980,
+                     "join": "",
+                     "name": "Bruce Dickinson",
+                     "resource_url": "https://api.discogs.com/artists/260980",
+                     "role": "Written-By",
+                     "tracks": ""
+                  },
+                  {
+                     "anv": "Harris",
+                     "id": 254418,
+                     "join": "",
+                     "name": "Steve Harris",
+                     "resource_url": "https://api.discogs.com/artists/254418",
+                     "role": "Written-By",
+                     "tracks": ""
+                  }
+               ],
+               "position": "1-1",
+               "title": "The Wicker Man",
+               "type_": "track",
+               "cd_position": 201,
+               "full_name": "Iron Maiden - The Wicker Man"
+            },
+            {
+               "_score": 1,
+               "duration": "6:08",
+               "position": "1",
+               "title": "Megalomaniac",
+               "type_": "track",
+               "cd_position": 200,
+               "full_name": "KMFDM - Megalomaniac"
+            },
+            {
+               "duration": "4:24",
+               "position": "1",
+               "title": "The Bad Touch (LP)",
+               "type_": "track",
+               "cd_position": 198,
+               "full_name": "Bloodhound Gang - The Bad Touch (LP)"
+            }
+         ],
+         "id": 307347889194023352
       }
    ]
 }

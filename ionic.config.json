@@ -1,0 +1,7 @@
+{
+  "name": "discogs-app",
+  "integrations": {
+    "cordova": {}
+  },
+  "type": "angular"
+}

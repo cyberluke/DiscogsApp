@@ -82,6 +82,7 @@ def call_discogs_api_binary(url, stream:False):
 
 @app.route('/import-csv', methods=['POST'])
 def import_csv():
+    deck_number = request.args.get('deck_number', type=int, default=1)
     print(request.files)
     if 'file' not in request.files:
         return jsonify({"error": "No file part"}), 400
@@ -113,7 +114,7 @@ def import_csv():
         if match:
             release_id = int(match.group(1))
             #try:
-            data = get_or_create_release(cd_position, release_id)
+            data = get_or_create_release(deck_number, cd_position, release_id)
             # Increment cd_position since it's a new, non-duplicate line
             # Assuming 'qty' is a key in the first dictionary of the 'formats' list
             qty = 1
@@ -212,7 +213,7 @@ def insert_to_db(release_data):
     # Add the data to the database
     json_db.add(data_to_add)            
 
-def get_or_create_release(cd_position, release_id):
+def get_or_create_release(deck_number, cd_position, release_id):
     # Check if the release is in the database
     release = json_db.getByQuery({"release_id": release_id})
     
@@ -221,6 +222,7 @@ def get_or_create_release(cd_position, release_id):
         release_data = get_release_from_discogs(release_id)
         if release_data:
             # Store the release data in the database
+            release_data['deck_number'] = deck_number
             release_data['release_id'] = release_id
             release_data['cd_position'] = cd_position
 
@@ -418,6 +420,9 @@ def slinkTrack(track):
     slink_data = ""
 
     track.position = process_position(track.position)
+
+    if track.deck_number and track.deck_number == 2:
+        cd_player_id += 2
 
     if track.cd_position < 100:
         slink_data += f"{cd_player_id}{cd_operation_play}"

@@ -1,5 +1,5 @@
 import { NgModule } from '@angular/core';
-import { BrowserModule } from '@angular/platform-browser';
+import { BrowserModule, provideClientHydration } from '@angular/platform-browser';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { FormsModule } from '@angular/forms';
 import { ReleaseComponent } from './release/release.component';
@@ -25,6 +25,8 @@ import {AsyncPipe} from '@angular/common';
 import {MatAutocompleteModule} from '@angular/material/autocomplete';
 import {MatInputModule} from '@angular/material/input';
 import {MatFormFieldModule} from '@angular/material/form-field';
+import { IonicModule } from '@ionic/angular';
+import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 
 export interface ChipColor {
     name: string;
@@ -35,7 +37,10 @@ export interface ChipColor {
     declarations: [
         ReleaseComponent
     ],
-    providers: [],
+    providers: [
+    provideAnimationsAsync(),
+    provideClientHydration()
+  ],
     bootstrap: [ReleaseComponent],
     imports: [
         BrowserModule,
@@ -63,7 +68,8 @@ export interface ChipColor {
         MatAutocompleteModule,
         ReactiveFormsModule,
         AsyncPipe,
-        RouterModule.forRoot([])
+        RouterModule.forRoot([]),
+        IonicModule.forRoot({})
     ]
 })
 export class AppModule { }

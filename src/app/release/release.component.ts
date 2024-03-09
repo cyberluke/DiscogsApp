@@ -235,9 +235,13 @@ export class ReleaseComponent implements OnInit {
   private _filter(value: string): any[] {
     const filterValue = value.toLowerCase();
 
-    let filteredOptions = this.releases.filter((r: { title: string; artists_sort: string; }) => 
+    let filteredOptions = this.releases.filter((r: { title: string; artists_sort: string;  tracklist: any[]}) => 
         r.title.toLowerCase().includes(filterValue.toLowerCase()) ||
-        r.artists_sort.toLowerCase().includes(filterValue.toLowerCase())
+        r.artists_sort.toLowerCase().includes(filterValue.toLowerCase()) ||
+        (r.tracklist && r.tracklist.some(track => 
+          track.title.toLowerCase().includes(filterValue) ||
+          (track.artists && track.artists.some((artist: { name: string; }) => artist.name.toLowerCase().includes(filterValue)))
+      ))
     );
     
     return filteredOptions;

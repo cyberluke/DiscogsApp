@@ -16,12 +16,15 @@ Use a 3.5 mm mono plug to connect the Arduino to the S-Link/Control A1 port of t
 
 Use the serial port to send commands to the Sony equipment. Commands are sent as lines of hexadecimal data.
 
-![interface](https://raw.githubusercontent.com/hajdbo/sony-jukebox-slink/master/slink_interface.png)
-
 Connect the interface to one of the Control-A1 ports, using a 3.5mm mono male jack.
-![control A1 port](http://i.imgur.com/pV647eY.jpg?1)
+
 
 ## Development server
+
+#### ABOUT
+Folder `arduino_yun` contains Arduino Sketch as well as openwrt Linux Python script server.py that needs to be copied over SCP/SSH and using SSH you can run it form user home folder or you can set it up as startup service using openwrt web gui.
+
+On laptop you can run Angular website and server.
 
 #### FRONTEND
 Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The application will automatically reload if you change any of the source files.

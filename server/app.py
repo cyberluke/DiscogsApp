@@ -421,7 +421,7 @@ def slinkTrack(track):
 
     track.position = process_position(track.position)
 
-    if track.deck_number and track.deck_number == 2:
+    if hasattr(track, 'deck_number') and track.deck_number == 2:
         cd_player_id += 2
 
     if track.cd_position < 100:

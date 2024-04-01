@@ -46,6 +46,7 @@
                "position": "1",
                "title": "Strictly Business (Mantronik MBA Radio Edit)",
                "type_": "track",
+               "deck_number": 1,
                "cd_position": 74,
                "full_name": "Kurtis Mantronik vs. EPMD - Strictly Business (Mantronik MBA Radio Edit)"
             },
@@ -74,6 +75,7 @@
                "position": "6",
                "title": "Mr. DJ (Tokapi Sash! Mix)",
                "type_": "track",
+               "deck_number": 1,
                "cd_position": 85,
                "full_name": "Dr. Alban - Mr. DJ (Tokapi Sash! Mix)"
             },
@@ -82,6 +84,7 @@
                "position": "1",
                "title": "Surrender (Birretta Edit)",
                "type_": "track",
+               "deck_number": 1,
                "cd_position": 104,
                "full_name": "Soundlovers, The - Surrender (Birretta Edit)"
             }
@@ -112,6 +115,7 @@
                      "tracks": ""
                   }
                ],
+               "deck_number": 1,
                "cd_position": 1,
                "duration": "3:24",
                "full_name": "Pitbull Feat. Kesha - Timber",
@@ -120,6 +124,7 @@
                "type_": "track"
             },
             {
+               "deck_number": 1,
                "cd_position": 2,
                "duration": "3:13",
                "full_name": "A*Teens - Floorfiller (Radio Version)",
@@ -128,6 +133,7 @@
                "type_": "track"
             },
             {
+               "deck_number": 1,
                "cd_position": 3,
                "duration": "3:07",
                "full_name": "Bellini - Me Gusta La Vida (Radio Edit)",
@@ -136,6 +142,7 @@
                "type_": "track"
             },
             {
+               "deck_number": 1,
                "cd_position": 4,
                "duration": "",
                "extraartists": [
@@ -155,14 +162,16 @@
                "type_": "track"
             },
             {
-               "cd_position": 6,
                "duration": "5:55",
-               "full_name": "Worlds Apart - Everybody (House Remix)",
                "position": "1",
                "title": "Everybody (House Remix)",
-               "type_": "track"
+               "type_": "track",
+               "deck_number": 1,
+               "cd_position": 7,
+               "full_name": "Worlds Apart - Everybody (House Remix)"
             },
             {
+               "deck_number": 1,
                "cd_position": 8,
                "duration": "3:52",
                "full_name": "Mr. President - Up'n Away (Radio Mix)",
@@ -171,6 +180,7 @@
                "type_": "track"
             },
             {
+               "deck_number": 1,
                "cd_position": 8,
                "duration": "6:33",
                "extraartists": [
@@ -208,6 +218,7 @@
                "type_": "track"
             },
             {
+               "deck_number": 1,
                "cd_position": 10,
                "duration": "3:47",
                "full_name": "Music Instructor - Let The Music Play",
@@ -216,6 +227,7 @@
                "type_": "track"
             },
             {
+               "deck_number": 1,
                "cd_position": 10,
                "duration": "3:08",
                "full_name": "Music Instructor - Get Freaky",
@@ -224,6 +236,7 @@
                "type_": "track"
             },
             {
+               "deck_number": 1,
                "cd_position": 11,
                "duration": "3:45",
                "full_name": "Captain Hollywood Project - Flying High (Radio Mix)",
@@ -232,6 +245,7 @@
                "type_": "track"
             },
             {
+               "deck_number": 1,
                "cd_position": 12,
                "duration": "5:50",
                "extraartists": [
@@ -260,6 +274,7 @@
                "type_": "track"
             },
             {
+               "deck_number": 1,
                "cd_position": 13,
                "duration": "3:36",
                "extraartists": [
@@ -279,6 +294,7 @@
                "type_": "track"
             },
             {
+               "deck_number": 1,
                "cd_position": 15,
                "duration": "3:25",
                "full_name": "Captain Jack - Little Boy (Radio Mix)",
@@ -287,6 +303,7 @@
                "type_": "track"
             },
             {
+               "deck_number": 1,
                "cd_position": 16,
                "duration": "3:50",
                "extraartists": [
@@ -306,6 +323,7 @@
                "type_": "track"
             },
             {
+               "deck_number": 1,
                "cd_position": 18,
                "duration": "5:38",
                "extraartists": [
@@ -325,6 +343,7 @@
                "type_": "track"
             },
             {
+               "deck_number": 1,
                "cd_position": 19,
                "duration": "3:11",
                "extraartists": [
@@ -344,6 +363,7 @@
                "type_": "track"
             },
             {
+               "deck_number": 1,
                "cd_position": 20,
                "duration": "7:12",
                "full_name": "Bang! (3) - Everybody, Everywhere! (Club Mix)",
@@ -352,6 +372,7 @@
                "type_": "track"
             },
             {
+               "deck_number": 1,
                "cd_position": 22,
                "duration": "3:55",
                "extraartists": [
@@ -389,6 +410,7 @@
                "type_": "track"
             },
             {
+               "deck_number": 1,
                "cd_position": 23,
                "duration": "4:15",
                "extraartists": [
@@ -435,6 +457,7 @@
                "type_": "track"
             },
             {
+               "deck_number": 1,
                "cd_position": 24,
                "duration": "3:44",
                "full_name": "Odyssey (4) - Into The Light (Radio Edit)",
@@ -443,6 +466,7 @@
                "type_": "track"
             },
             {
+               "deck_number": 1,
                "cd_position": 25,
                "duration": "7:01",
                "extraartists": [
@@ -462,6 +486,7 @@
                "type_": "track"
             },
             {
+               "deck_number": 1,
                "cd_position": 26,
                "duration": "6:26",
                "extraartists": [
@@ -481,6 +506,7 @@
                "type_": "track"
             },
             {
+               "deck_number": 1,
                "cd_position": 27,
                "duration": "6:30",
                "full_name": "Centory - Take It To The Limit (Extended Club Mix)",
@@ -489,6 +515,7 @@
                "type_": "track"
             },
             {
+               "deck_number": 1,
                "cd_position": 29,
                "duration": "3:46",
                "full_name": "Brooklyn Bounce - Club Bizarre (Single Edit)",
@@ -497,6 +524,7 @@
                "type_": "track"
             },
             {
+               "deck_number": 1,
                "cd_position": 30,
                "duration": "3:38",
                "full_name": "Brooklyn Bounce - Take A Ride (Radio Mix)",
@@ -505,6 +533,7 @@
                "type_": "track"
             },
             {
+               "deck_number": 1,
                "cd_position": 31,
                "duration": "3:33",
                "extraartists": [
@@ -524,6 +553,7 @@
                "type_": "track"
             },
             {
+               "deck_number": 1,
                "cd_position": 32,
                "duration": "3:47",
                "full_name": "X-Sample Featuring Jennifer Lucas - Goin' On (Hard Mix Edit)",
@@ -532,6 +562,7 @@
                "type_": "track"
             },
             {
+               "deck_number": 1,
                "cd_position": 33,
                "duration": "3:18",
                "full_name": "Sequential One - My Love Is Hot (Radio Mix)",
@@ -540,6 +571,7 @@
                "type_": "track"
             },
             {
+               "deck_number": 1,
                "cd_position": 34,
                "duration": "3:53",
                "full_name": "Leeza B. - Wave Of Light (Edit)",
@@ -548,6 +580,7 @@
                "type_": "track"
             },
             {
+               "deck_number": 1,
                "cd_position": 35,
                "duration": "3:23",
                "extraartists": [
@@ -585,6 +618,7 @@
                "type_": "track"
             },
             {
+               "deck_number": 1,
                "cd_position": 35,
                "duration": "3:35",
                "extraartists": [
@@ -613,6 +647,7 @@
                "type_": "track"
             },
             {
+               "deck_number": 1,
                "cd_position": 52,
                "duration": "4:52",
                "full_name": "Antares (3) - Ride On A Meteorite (Radio Edit)",
@@ -621,6 +656,7 @@
                "type_": "track"
             },
             {
+               "deck_number": 1,
                "cd_position": 53,
                "duration": "3:01",
                "full_name": "Angel City - Do You Know (I Go Crazy) (Radio Edit)",
@@ -629,6 +665,7 @@
                "type_": "track"
             },
             {
+               "deck_number": 1,
                "cd_position": 60,
                "duration": "8:12",
                "extraartists": [
@@ -648,6 +685,7 @@
                "type_": "track"
             },
             {
+               "deck_number": 1,
                "cd_position": 61,
                "duration": "3:21",
                "full_name": "Safri Duo - Played-A-Live (Radio Cut)",
@@ -656,6 +694,7 @@
                "type_": "track"
             },
             {
+               "deck_number": 1,
                "cd_position": 63,
                "duration": "3:36",
                "extraartists": [
@@ -675,6 +714,7 @@
                "type_": "track"
             },
             {
+               "deck_number": 1,
                "cd_position": 64,
                "duration": "3:42",
                "full_name": "Jam & Spoon Featuring Rea Garvey - Set Me Free (Empty Rooms) (Radio Version)",
@@ -683,6 +723,7 @@
                "type_": "track"
             },
             {
+               "deck_number": 1,
                "cd_position": 68,
                "duration": "5:55",
                "full_name": "Prince Ital Joe Feat. Marky Mark - Happy People (Long Version)",
@@ -691,6 +732,7 @@
                "type_": "track"
             },
             {
+               "deck_number": 1,
                "cd_position": 70,
                "duration": "4:48",
                "extraartists": [
@@ -710,6 +752,7 @@
                "type_": "track"
             },
             {
+               "deck_number": 1,
                "cd_position": 71,
                "duration": "3:52",
                "full_name": "Captain Hollywood Project - Only With You (Radio Mix)",
@@ -718,6 +761,7 @@
                "type_": "track"
             },
             {
+               "deck_number": 1,
                "cd_position": 72,
                "duration": "3:45",
                "full_name": "Virtue - Feeling Good (New Dawn) (7\" Edit)",
@@ -726,6 +770,7 @@
                "type_": "track"
             },
             {
+               "deck_number": 1,
                "cd_position": 73,
                "duration": "6:24",
                "extraartists": [
@@ -754,6 +799,7 @@
                "type_": "track"
             },
             {
+               "deck_number": 1,
                "cd_position": 74,
                "duration": "3:36",
                "extraartists": [
@@ -800,6 +846,7 @@
                "type_": "track"
             },
             {
+               "deck_number": 1,
                "cd_position": 78,
                "duration": "3:51",
                "full_name": "Lovestern Galaktika Project Meets Daisy C.I.O. - Galaktika - Are You Ready? (Razzorblade Video Mix)",
@@ -808,6 +855,7 @@
                "type_": "track"
             },
             {
+               "deck_number": 1,
                "cd_position": 78,
                "duration": "7:04",
                "extraartists": [
@@ -827,6 +875,7 @@
                "type_": "track"
             },
             {
+               "deck_number": 1,
                "cd_position": 80,
                "duration": "3:52",
                "extraartists": [
@@ -846,6 +895,7 @@
                "type_": "track"
             },
             {
+               "deck_number": 1,
                "cd_position": 80,
                "duration": "6:52",
                "extraartists": [
@@ -865,6 +915,7 @@
                "type_": "track"
             },
             {
+               "deck_number": 1,
                "cd_position": 81,
                "duration": "5:34",
                "extraartists": [
@@ -884,6 +935,7 @@
                "type_": "track"
             },
             {
+               "deck_number": 1,
                "cd_position": 82,
                "duration": "4:09",
                "full_name": "Aqua - Turn Back Time (Album Version)",
@@ -892,6 +944,7 @@
                "type_": "track"
             },
             {
+               "deck_number": 1,
                "cd_position": 84,
                "duration": "4:16",
                "full_name": "Magic Affair feat. Anita Davis & Raz-Ma-Taz - Break These Chains (Radio Version)",
@@ -900,6 +953,7 @@
                "type_": "track"
             },
             {
+               "deck_number": 1,
                "cd_position": 85,
                "duration": "3:38",
                "extraartists": [
@@ -928,6 +982,7 @@
                "type_": "track"
             },
             {
+               "deck_number": 1,
                "cd_position": 85,
                "duration": "5:35",
                "extraartists": [
@@ -967,12 +1022,13 @@
                      "tracks": ""
                   }
                ],
+               "deck_number": 1,
+               "cd_position": 225,
                "duration": "2:53",
+               "full_name": "Various - Spandex",
                "position": "1-13",
                "title": "Spandex",
-               "type_": "track",
-               "cd_position": 225,
-               "full_name": "Various - Spandex"
+               "type_": "track"
             }
          ],
          "id": 264938948604524000
@@ -981,6 +1037,7 @@
          "name": "Killy K",
          "tracks": [
             {
+               "deck_number": 1,
                "cd_position": 75,
                "duration": "3:19",
                "full_name": "Will Smith - Miami",
@@ -1004,6 +1061,7 @@
                "position": "14",
                "title": "Una Noche Más (Pablo's Miami Mix Radio Edit)",
                "type_": "track",
+               "deck_number": 1,
                "cd_position": 220,
                "full_name": "Jennifer Lopez - Una Noche Más (Pablo's Miami Mix Radio Edit)"
             },
@@ -1029,6 +1087,7 @@
                      "tracks": ""
                   }
                ],
+               "deck_number": 1,
                "cd_position": 1,
                "duration": "3:24",
                "full_name": "Pitbull Feat. Kesha - Timber",
@@ -1037,6 +1096,7 @@
                "type_": "track"
             },
             {
+               "deck_number": 1,
                "cd_position": 203,
                "duration": "4:49",
                "extraartists": [
@@ -1110,6 +1170,7 @@
                "type_": "track"
             },
             {
+               "deck_number": 1,
                "cd_position": 183,
                "duration": "3:37",
                "full_name": "Red Hot Chili Peppers - By The Way",
@@ -1118,6 +1179,7 @@
                "type_": "track"
             },
             {
+               "deck_number": 1,
                "cd_position": 197,
                "duration": "3:37",
                "full_name": "Crazy Town - Butterfly (Album Version)",
@@ -1126,6 +1188,7 @@
                "type_": "track"
             },
             {
+               "deck_number": 1,
                "cd_position": 74,
                "duration": "3:36",
                "extraartists": [
@@ -1172,6 +1235,7 @@
                "type_": "track"
             },
             {
+               "deck_number": 1,
                "cd_position": 146,
                "duration": "3:55",
                "extraartists": [
@@ -1218,6 +1282,7 @@
                "type_": "track"
             },
             {
+               "deck_number": 1,
                "cd_position": 85,
                "duration": "3:38",
                "extraartists": [
@@ -1246,6 +1311,7 @@
                "type_": "track"
             },
             {
+               "deck_number": 1,
                "cd_position": 170,
                "duration": "4:12",
                "full_name": "Captain Jack - Drill Instructor (All For One) (Shortmix)",
@@ -1254,6 +1320,7 @@
                "type_": "track"
             },
             {
+               "deck_number": 1,
                "cd_position": 85,
                "duration": "5:35",
                "extraartists": [
@@ -1282,6 +1349,7 @@
                "type_": "track"
             },
             {
+               "deck_number": 1,
                "cd_position": 172,
                "duration": "4:00",
                "full_name": "Quad City DJ's - Space Jam (Radio Edit)",
@@ -1290,6 +1358,7 @@
                "type_": "track"
             },
             {
+               "deck_number": 1,
                "cd_position": 193,
                "duration": "4:40",
                "full_name": "Alanis Morissette - Mary Jane",
@@ -1298,6 +1367,7 @@
                "type_": "track"
             },
             {
+               "deck_number": 1,
                "cd_position": 193,
                "duration": "3:49",
                "extraartists": [
@@ -1335,6 +1405,7 @@
                "type_": "track"
             },
             {
+               "deck_number": 1,
                "cd_position": 192,
                "duration": "6:31",
                "full_name": "Robert Miles - Fable (Message Version)",
@@ -1354,6 +1425,7 @@
                      "tracks": ""
                   }
                ],
+               "deck_number": 1,
                "cd_position": 140,
                "duration": "5:25",
                "full_name": "Various - Don't Go",
@@ -1362,6 +1434,7 @@
                "type_": "track"
             },
             {
+               "deck_number": 1,
                "cd_position": 200,
                "duration": "6:08",
                "full_name": "KMFDM - Megalomaniac",
@@ -1370,6 +1443,7 @@
                "type_": "track"
             },
             {
+               "deck_number": 1,
                "cd_position": 198,
                "duration": "4:27",
                "extraartists": [
@@ -1389,6 +1463,7 @@
                "type_": "track"
             },
             {
+               "deck_number": 1,
                "cd_position": 204,
                "duration": "4:45",
                "full_name": "Limp Bizkit - Walking Away",
@@ -1397,6 +1472,7 @@
                "type_": "track"
             },
             {
+               "deck_number": 1,
                "cd_position": 203,
                "duration": "5:54",
                "extraartists": [
@@ -1461,6 +1537,7 @@
                "type_": "track"
             },
             {
+               "deck_number": 1,
                "cd_position": 204,
                "duration": "2:17",
                "full_name": "Limp Bizkit - Bring It Back",
@@ -1469,6 +1546,7 @@
                "type_": "track"
             },
             {
+               "deck_number": 1,
                "cd_position": 203,
                "duration": "3:54",
                "extraartists": [
@@ -1497,6 +1575,7 @@
                "type_": "track"
             },
             {
+               "deck_number": 1,
                "cd_position": 203,
                "duration": "4:59",
                "full_name": "Limp Bizkit - Trust?",
@@ -1505,6 +1584,7 @@
                "type_": "track"
             },
             {
+               "deck_number": 1,
                "cd_position": 191,
                "duration": "4:58",
                "full_name": "Prodigy, The - Out Of Space",
@@ -1524,6 +1604,7 @@
                      "tracks": ""
                   }
                ],
+               "deck_number": 1,
                "cd_position": 190,
                "duration": "3:12",
                "extraartists": [
@@ -1552,6 +1633,7 @@
                "type_": "track"
             },
             {
+               "deck_number": 1,
                "cd_position": 187,
                "duration": "4:35",
                "extraartists": [
@@ -1589,6 +1671,7 @@
                "type_": "track"
             },
             {
+               "deck_number": 1,
                "cd_position": 186,
                "duration": "3:09",
                "full_name": "Guano Apes - Open Your Eyes",
@@ -1597,6 +1680,7 @@
                "type_": "track"
             },
             {
+               "deck_number": 1,
                "cd_position": 181,
                "duration": "4:07",
                "extraartists": [
@@ -1643,6 +1727,7 @@
                "type_": "track"
             },
             {
+               "deck_number": 1,
                "cd_position": 184,
                "duration": "3:42",
                "full_name": "Clawfinger - Two Steps Away",
@@ -1651,6 +1736,7 @@
                "type_": "track"
             },
             {
+               "deck_number": 1,
                "cd_position": 181,
                "duration": "4:33",
                "extraartists": [
@@ -1733,6 +1819,7 @@
                "type_": "track"
             },
             {
+               "deck_number": 1,
                "cd_position": 174,
                "duration": "3:43",
                "full_name": "Tiga & Zyntherius - Sunglasses At Night (Radio Edit)",
@@ -1741,6 +1828,7 @@
                "type_": "track"
             },
             {
+               "deck_number": 1,
                "cd_position": 173,
                "duration": "3:48",
                "full_name": "Double You - Dancing With An Angel (Radio Mix)",
@@ -1749,6 +1837,7 @@
                "type_": "track"
             },
             {
+               "deck_number": 1,
                "cd_position": 171,
                "duration": "5:51",
                "extraartists": [
@@ -1768,6 +1857,7 @@
                "type_": "track"
             },
             {
+               "deck_number": 1,
                "cd_position": 166,
                "duration": "5:38",
                "full_name": "Prophesy - The Fire (Trance Mix)",
@@ -1776,6 +1866,7 @@
                "type_": "track"
             },
             {
+               "deck_number": 1,
                "cd_position": 139,
                "duration": "3:57",
                "full_name": "P!NK - Just Like A Pill (Radio Version)",
@@ -1784,6 +1875,7 @@
                "type_": "track"
             },
             {
+               "deck_number": 1,
                "cd_position": 126,
                "duration": "3:54",
                "full_name": "Syndrome (3) - Heyo (Nana Ae) (Radio Edit)",
@@ -1792,6 +1884,7 @@
                "type_": "track"
             },
             {
+               "deck_number": 1,
                "cd_position": 78,
                "duration": "3:51",
                "full_name": "Lovestern Galaktika Project Meets Daisy C.I.O. - Galaktika - Are You Ready? (Razzorblade Video Mix)",
@@ -1803,10 +1896,11 @@
          "id": 197038046499179600
       },
       {
-         "id": 286354921895624789,
+         "id": 286354921895624800,
          "name": "Nwe",
          "tracks": [
             {
+               "deck_number": 1,
                "cd_position": 20,
                "duration": "7:12",
                "full_name": "Bang! (3) - Everybody, Everywhere! (Club Mix)",
@@ -1815,6 +1909,7 @@
                "type_": "track"
             },
             {
+               "deck_number": 1,
                "cd_position": 29,
                "duration": "3:46",
                "full_name": "Brooklyn Bounce - Club Bizarre (Single Edit)",
@@ -1823,6 +1918,7 @@
                "type_": "track"
             },
             {
+               "deck_number": 1,
                "cd_position": 30,
                "duration": "3:38",
                "full_name": "Brooklyn Bounce - Take A Ride (Radio Mix)",
@@ -1831,6 +1927,7 @@
                "type_": "track"
             },
             {
+               "deck_number": 1,
                "cd_position": 31,
                "duration": "3:33",
                "extraartists": [
@@ -1850,6 +1947,7 @@
                "type_": "track"
             },
             {
+               "deck_number": 1,
                "cd_position": 32,
                "duration": "3:47",
                "full_name": "X-Sample Featuring Jennifer Lucas - Goin' On (Hard Mix Edit)",
@@ -1858,6 +1956,7 @@
                "type_": "track"
             },
             {
+               "deck_number": 1,
                "cd_position": 33,
                "duration": "3:18",
                "full_name": "Sequential One - My Love Is Hot (Radio Mix)",
@@ -1866,6 +1965,7 @@
                "type_": "track"
             },
             {
+               "deck_number": 1,
                "cd_position": 34,
                "duration": "3:53",
                "full_name": "Leeza B. - Wave Of Light (Edit)",
@@ -1874,6 +1974,7 @@
                "type_": "track"
             },
             {
+               "deck_number": 1,
                "cd_position": 35,
                "duration": "3:23",
                "extraartists": [
@@ -1911,6 +2012,7 @@
                "type_": "track"
             },
             {
+               "deck_number": 1,
                "cd_position": 35,
                "duration": "3:35",
                "extraartists": [
@@ -1939,6 +2041,7 @@
                "type_": "track"
             },
             {
+               "deck_number": 1,
                "cd_position": 52,
                "duration": "4:52",
                "full_name": "Antares (3) - Ride On A Meteorite (Radio Edit)",
@@ -1947,6 +2050,7 @@
                "type_": "track"
             },
             {
+               "deck_number": 1,
                "cd_position": 53,
                "duration": "3:01",
                "full_name": "Angel City - Do You Know (I Go Crazy) (Radio Edit)",
@@ -1955,6 +2059,7 @@
                "type_": "track"
             },
             {
+               "deck_number": 1,
                "cd_position": 60,
                "duration": "8:12",
                "extraartists": [
@@ -1974,6 +2079,7 @@
                "type_": "track"
             },
             {
+               "deck_number": 1,
                "cd_position": 61,
                "duration": "3:21",
                "full_name": "Safri Duo - Played-A-Live (Radio Cut)",
@@ -1982,6 +2088,7 @@
                "type_": "track"
             },
             {
+               "deck_number": 1,
                "cd_position": 63,
                "duration": "3:36",
                "extraartists": [
@@ -2001,6 +2108,7 @@
                "type_": "track"
             },
             {
+               "deck_number": 1,
                "cd_position": 64,
                "duration": "3:42",
                "full_name": "Jam & Spoon Featuring Rea Garvey - Set Me Free (Empty Rooms) (Radio Version)",
@@ -2009,6 +2117,7 @@
                "type_": "track"
             },
             {
+               "deck_number": 1,
                "cd_position": 68,
                "duration": "5:55",
                "full_name": "Prince Ital Joe Feat. Marky Mark - Happy People (Long Version)",
@@ -2017,6 +2126,7 @@
                "type_": "track"
             },
             {
+               "deck_number": 1,
                "cd_position": 70,
                "duration": "4:48",
                "extraartists": [
@@ -2036,6 +2146,7 @@
                "type_": "track"
             },
             {
+               "deck_number": 1,
                "cd_position": 71,
                "duration": "3:52",
                "full_name": "Captain Hollywood Project - Only With You (Radio Mix)",
@@ -2044,6 +2155,7 @@
                "type_": "track"
             },
             {
+               "deck_number": 1,
                "cd_position": 72,
                "duration": "3:45",
                "full_name": "Virtue - Feeling Good (New Dawn) (7\" Edit)",
@@ -2052,6 +2164,7 @@
                "type_": "track"
             },
             {
+               "deck_number": 1,
                "cd_position": 73,
                "duration": "6:24",
                "extraartists": [
@@ -2080,6 +2193,7 @@
                "type_": "track"
             },
             {
+               "deck_number": 1,
                "cd_position": 74,
                "duration": "3:36",
                "extraartists": [
@@ -2126,6 +2240,7 @@
                "type_": "track"
             },
             {
+               "deck_number": 1,
                "cd_position": 78,
                "duration": "3:51",
                "full_name": "Lovestern Galaktika Project Meets Daisy C.I.O. - Galaktika - Are You Ready? (Razzorblade Video Mix)",
@@ -2134,6 +2249,7 @@
                "type_": "track"
             },
             {
+               "deck_number": 1,
                "cd_position": 78,
                "duration": "7:04",
                "extraartists": [
@@ -2153,6 +2269,7 @@
                "type_": "track"
             },
             {
+               "deck_number": 1,
                "cd_position": 80,
                "duration": "3:52",
                "extraartists": [
@@ -2172,6 +2289,7 @@
                "type_": "track"
             },
             {
+               "deck_number": 1,
                "cd_position": 80,
                "duration": "6:52",
                "extraartists": [
@@ -2191,6 +2309,7 @@
                "type_": "track"
             },
             {
+               "deck_number": 1,
                "cd_position": 81,
                "duration": "5:34",
                "extraartists": [
@@ -2210,6 +2329,7 @@
                "type_": "track"
             },
             {
+               "deck_number": 1,
                "cd_position": 82,
                "duration": "4:09",
                "full_name": "Aqua - Turn Back Time (Album Version)",
@@ -2218,6 +2338,7 @@
                "type_": "track"
             },
             {
+               "deck_number": 1,
                "cd_position": 84,
                "duration": "4:16",
                "full_name": "Magic Affair feat. Anita Davis & Raz-Ma-Taz - Break These Chains (Radio Version)",
@@ -2226,6 +2347,7 @@
                "type_": "track"
             },
             {
+               "deck_number": 1,
                "cd_position": 85,
                "duration": "3:38",
                "extraartists": [
@@ -2254,6 +2376,7 @@
                "type_": "track"
             },
             {
+               "deck_number": 1,
                "cd_position": 85,
                "duration": "5:35",
                "extraartists": [
@@ -2293,12 +2416,22 @@
                      "tracks": ""
                   }
                ],
+               "deck_number": 1,
                "cd_position": 225,
                "duration": "2:53",
                "full_name": "Various - Spandex",
                "position": "1-13",
                "title": "Spandex",
                "type_": "track"
+            },
+            {
+               "duration": "4:50",
+               "position": "3",
+               "title": "The Spirit (Album Mix)",
+               "type_": "track",
+               "deck_number": 1,
+               "cd_position": 28,
+               "full_name": "Centory, Turbo B. - The Spirit (Album Mix)"
             }
          ]
       },
@@ -2306,24 +2439,14 @@
          "name": "Lucky Luke",
          "tracks": [
             {
-               "_score": 1,
-               "duration": "4:05",
-               "extraartists": [
-                  {
-                     "anv": "",
-                     "id": 51994,
-                     "join": "",
-                     "name": "Pablo Flores",
-                     "resource_url": "https://api.discogs.com/artists/51994",
-                     "role": "Remix",
-                     "tracks": ""
-                  }
-               ],
-               "position": "14",
-               "title": "Una Noche Más (Pablo's Miami Mix Radio Edit)",
+               "duration": "3:30",
+               "position": "1",
+               "title": "I Want You (Original Radio Edit)",
                "type_": "track",
-               "cd_position": 220,
-               "full_name": "Jennifer Lopez - Una Noche Más (Pablo's Miami Mix Radio Edit)"
+               "deck_number": 2,
+               "cd_position": 85,
+               "artist": "Filur Presents Magnum Coltrane Price",
+               "full_name": "Filur Presents Magnum Coltrane Price - I Want You (Original Radio Edit)"
             },
             {
                "artists": [
@@ -2337,35 +2460,159 @@
                      "tracks": ""
                   }
                ],
+               "cd_position": 284,
+               "deck_number": 1,
                "duration": "3:13",
+               "full_name": "Various - If I Give You My Number (100% Radio Mix)",
                "position": "2-5",
                "title": "If I Give You My Number (100% Radio Mix)",
-               "type_": "track",
-               "cd_position": 284,
-               "full_name": "Various - If I Give You My Number (100% Radio Mix)"
+               "type_": "track"
             },
             {
-               "_score": 1,
-               "artists": [
+               "duration": "3:16",
+               "extraartists": [
+                  {
+                     "anv": "Sheri Ford-Payne",
+                     "id": 56851,
+                     "join": "",
+                     "name": "Sherree Ford-Payne",
+                     "resource_url": "https://api.discogs.com/artists/56851",
+                     "role": "Backing Vocals",
+                     "tracks": ""
+                  },
+                  {
+                     "anv": "Daniel Frampton",
+                     "id": 34722,
+                     "join": "",
+                     "name": "Dan Frampton",
+                     "resource_url": "https://api.discogs.com/artists/34722",
+                     "role": "Engineer",
+                     "tracks": ""
+                  },
                   {
                      "anv": "",
-                     "id": 61645,
+                     "id": 302578,
                      "join": "",
-                     "name": "3-O-Matic",
-                     "resource_url": "https://api.discogs.com/artists/61645",
-                     "role": "",
+                     "name": "Ryan Freeland",
+                     "resource_url": "https://api.discogs.com/artists/302578",
+                     "role": "Engineer",
+                     "tracks": ""
+                  },
+                  {
+                     "anv": "Mat Fields",
+                     "id": 351722,
+                     "join": "",
+                     "name": "Matt Fields",
+                     "resource_url": "https://api.discogs.com/artists/351722",
+                     "role": "Engineer [Mix Engineer And Protools Assisted By]",
+                     "tracks": ""
+                  },
+                  {
+                     "anv": "",
+                     "id": 271357,
+                     "join": "",
+                     "name": "Wayne Wilkins",
+                     "resource_url": "https://api.discogs.com/artists/271357",
+                     "role": "Engineer [Mix Engineer And Protools]",
+                     "tracks": ""
+                  },
+                  {
+                     "anv": "",
+                     "id": 265711,
+                     "join": "",
+                     "name": "Andrew Frampton",
+                     "resource_url": "https://api.discogs.com/artists/265711",
+                     "role": "Instruments [All Instruments]",
+                     "tracks": ""
+                  },
+                  {
+                     "anv": "",
+                     "id": 126975,
+                     "join": "",
+                     "name": "Steve Kipner",
+                     "resource_url": "https://api.discogs.com/artists/126975",
+                     "role": "Instruments [All Instruments]",
+                     "tracks": ""
+                  },
+                  {
+                     "anv": "Mark 'Spike' Stent",
+                     "id": 211449,
+                     "join": "",
+                     "name": "Mark Stent",
+                     "resource_url": "https://api.discogs.com/artists/211449",
+                     "role": "Mixed By",
+                     "tracks": ""
+                  },
+                  {
+                     "anv": "",
+                     "id": 265711,
+                     "join": "",
+                     "name": "Andrew Frampton",
+                     "resource_url": "https://api.discogs.com/artists/265711",
+                     "role": "Producer",
+                     "tracks": ""
+                  },
+                  {
+                     "anv": "",
+                     "id": 126975,
+                     "join": "",
+                     "name": "Steve Kipner",
+                     "resource_url": "https://api.discogs.com/artists/126975",
+                     "role": "Producer",
+                     "tracks": ""
+                  },
+                  {
+                     "anv": "",
+                     "id": 265711,
+                     "join": "",
+                     "name": "Andrew Frampton",
+                     "resource_url": "https://api.discogs.com/artists/265711",
+                     "role": "Written-By",
+                     "tracks": ""
+                  },
+                  {
+                     "anv": "",
+                     "id": 126975,
+                     "join": "",
+                     "name": "Steve Kipner",
+                     "resource_url": "https://api.discogs.com/artists/126975",
+                     "role": "Written-By",
                      "tracks": ""
                   }
                ],
-               "duration": "3:57",
-               "position": "1-9",
-               "title": "Hand In Hand (Radio Mix - Video Version)",
+               "position": "1",
+               "title": "Not Such An Innocent Girl",
                "type_": "track",
-               "cd_position": 283,
-               "full_name": "Various - Hand In Hand (Radio Mix - Video Version)"
+               "deck_number": 2,
+               "cd_position": 36,
+               "artist": "Victoria Beckham",
+               "full_name": "Victoria Beckham - Not Such An Innocent Girl"
             },
             {
                "_score": 1,
+               "cd_position": 220,
+               "deck_number": 1,
+               "duration": "4:05",
+               "extraartists": [
+                  {
+                     "anv": "",
+                     "id": 51994,
+                     "join": "",
+                     "name": "Pablo Flores",
+                     "resource_url": "https://api.discogs.com/artists/51994",
+                     "role": "Remix",
+                     "tracks": ""
+                  }
+               ],
+               "full_name": "Jennifer Lopez - Una Noche Más (Pablo's Miami Mix Radio Edit)",
+               "position": "14",
+               "title": "Una Noche Más (Pablo's Miami Mix Radio Edit)",
+               "type_": "track"
+            },
+            {
+               "_score": 1,
+               "cd_position": 85,
+               "deck_number": 1,
                "duration": "3:38",
                "extraartists": [
                   {
@@ -2387,248 +2634,20 @@
                      "tracks": ""
                   }
                ],
+               "full_name": "Dr. Alban - Mr. DJ (Tokapi Mix)",
                "position": "1",
                "title": "Mr. DJ (Tokapi Mix)",
-               "type_": "track",
-               "cd_position": 85,
-               "full_name": "Dr. Alban - Mr. DJ (Tokapi Mix)"
+               "type_": "track"
             },
             {
                "artist": "Sonique",
                "cd_position": 276,
+               "deck_number": 1,
                "duration": "3:59",
                "full_name": "Sonique - Sky (Radio Edit)",
                "position": "1",
                "title": "Sky (Radio Edit)",
                "type_": "track"
-            },
-            {
-               "artist": "Kim Leoni",
-               "cd_position": 274,
-               "duration": "5:34",
-               "extraartists": [
-                  {
-                     "anv": "",
-                     "id": 20826,
-                     "join": "",
-                     "name": "Topmodelz",
-                     "resource_url": "https://api.discogs.com/artists/20826",
-                     "role": "Remix",
-                     "tracks": ""
-                  }
-               ],
-               "full_name": "Kim Leoni - Medicine (Topmodelz Remix)",
-               "position": "4",
-               "title": "Medicine (Topmodelz Remix)",
-               "type_": "track"
-            },
-            {
-               "artists": [
-                  {
-                     "anv": "",
-                     "id": 11769,
-                     "join": "",
-                     "name": "Scooter",
-                     "resource_url": "https://api.discogs.com/artists/11769",
-                     "role": "",
-                     "tracks": ""
-                  }
-               ],
-               "duration": "3:56",
-               "extraartists": [
-                  {
-                     "anv": "",
-                     "id": 179650,
-                     "join": "",
-                     "name": "H.P. Baxxter",
-                     "resource_url": "https://api.discogs.com/artists/179650",
-                     "role": "Written-By",
-                     "tracks": ""
-                  },
-                  {
-                     "anv": "J. Thele",
-                     "id": 71782,
-                     "join": "",
-                     "name": "Jens Thele",
-                     "resource_url": "https://api.discogs.com/artists/71782",
-                     "role": "Written-By",
-                     "tracks": ""
-                  },
-                  {
-                     "anv": "",
-                     "id": 128241,
-                     "join": "",
-                     "name": "Rick J. Jordan",
-                     "resource_url": "https://api.discogs.com/artists/128241",
-                     "role": "Written-By",
-                     "tracks": ""
-                  },
-                  {
-                     "anv": "S. Bühler",
-                     "id": 581083,
-                     "join": "",
-                     "name": "Sören Bühler",
-                     "resource_url": "https://api.discogs.com/artists/581083",
-                     "role": "Written-By",
-                     "tracks": ""
-                  }
-               ],
-               "position": "1-15",
-               "title": "Move Your Ass",
-               "type_": "track",
-               "cd_position": 287,
-               "full_name": "Various - Move Your Ass"
-            },
-            {
-               "artist": "Sonique",
-               "cd_position": 276,
-               "duration": "7:40",
-               "extraartists": [
-                  {
-                     "anv": "Sharam Jay",
-                     "id": 8982,
-                     "join": "",
-                     "name": "Sharam Jey",
-                     "resource_url": "https://api.discogs.com/artists/8982",
-                     "role": "Remix, Producer [Additional Production]",
-                     "tracks": ""
-                  }
-               ],
-               "full_name": "Sonique - Sky (Sharam Jay Remix)",
-               "position": "4",
-               "title": "Sky (Sharam Jay Remix)",
-               "type_": "track"
-            },
-            {
-               "artist": "Various",
-               "artists": [
-                  {
-                     "anv": "",
-                     "id": 9155,
-                     "join": "",
-                     "name": "Phil Fuldner",
-                     "resource_url": "https://api.discogs.com/artists/9155",
-                     "role": "",
-                     "tracks": ""
-                  }
-               ],
-               "cd_position": 269,
-               "duration": "7:30",
-               "full_name": "Various - Miami Pop (Extension)",
-               "position": "2-8",
-               "title": "Miami Pop (Extension)",
-               "type_": "track"
-            },
-            {
-               "artist": "Various",
-               "artists": [
-                  {
-                     "anv": "",
-                     "id": 24267,
-                     "join": "",
-                     "name": "Hypertrophy",
-                     "resource_url": "https://api.discogs.com/artists/24267",
-                     "role": "",
-                     "tracks": ""
-                  }
-               ],
-               "cd_position": 270,
-               "duration": "6:47",
-               "extraartists": [
-                  {
-                     "anv": "",
-                     "id": 33536,
-                     "join": "",
-                     "name": "DJ Red 5",
-                     "resource_url": "https://api.discogs.com/artists/33536",
-                     "role": "Remix",
-                     "tracks": ""
-                  },
-                  {
-                     "anv": "",
-                     "id": 24267,
-                     "join": "",
-                     "name": "Hypertrophy",
-                     "resource_url": "https://api.discogs.com/artists/24267",
-                     "role": "Remix",
-                     "tracks": ""
-                  }
-               ],
-               "full_name": "Various - Pullover (DJ Red 5 Vs. Hypertrophy Remix)",
-               "position": "1-10",
-               "title": "Pullover (DJ Red 5 Vs. Hypertrophy Remix)",
-               "type_": "track"
-            },
-            {
-               "artist": "Various",
-               "artists": [
-                  {
-                     "anv": "",
-                     "id": 173967,
-                     "join": "Feat.",
-                     "name": "Run",
-                     "resource_url": "https://api.discogs.com/artists/173967",
-                     "role": "",
-                     "tracks": ""
-                  },
-                  {
-                     "anv": "",
-                     "id": 137205,
-                     "join": "",
-                     "name": "Justine Simmons",
-                     "resource_url": "https://api.discogs.com/artists/137205",
-                     "role": "",
-                     "tracks": ""
-                  }
-               ],
-               "cd_position": 271,
-               "duration": "3:54",
-               "extraartists": [
-                  {
-                     "anv": "",
-                     "id": 137205,
-                     "join": "",
-                     "name": "Justine Simmons",
-                     "resource_url": "https://api.discogs.com/artists/137205",
-                     "role": "Vocals",
-                     "tracks": ""
-                  }
-               ],
-               "full_name": "Various - Praise My DJs (Mach 3 On The Dance Floor Mix)",
-               "position": "2-2",
-               "title": "Praise My DJs (Mach 3 On The Dance Floor Mix)",
-               "type_": "track"
-            },
-            {
-               "_score": 1,
-               "artists": [
-                  {
-                     "anv": "",
-                     "id": 67258,
-                     "join": "",
-                     "name": "Sin With Sebastian",
-                     "resource_url": "https://api.discogs.com/artists/67258",
-                     "role": "",
-                     "tracks": ""
-                  }
-               ],
-               "duration": "3:47",
-               "extraartists": [
-                  {
-                     "anv": "",
-                     "id": 67258,
-                     "join": "",
-                     "name": "Sin With Sebastian",
-                     "resource_url": "https://api.discogs.com/artists/67258",
-                     "role": "Written-By",
-                     "tracks": ""
-                  }
-               ],
-               "position": "1-06",
-               "title": "Golden Boy",
-               "type_": "track",
-               "cd_position": 287,
-               "full_name": "Various - Golden Boy"
             }
          ],
          "id": 259101133394857900
@@ -2639,6 +2658,7 @@
          "tracks": [
             {
                "artist": "Sonique",
+               "deck_number": 1,
                "cd_position": 276,
                "duration": "3:59",
                "full_name": "Sonique - Sky (Radio Edit)",
@@ -2648,6 +2668,7 @@
             },
             {
                "artist": "Kim Leoni",
+               "deck_number": 1,
                "cd_position": 274,
                "duration": "5:34",
                "extraartists": [
@@ -2678,6 +2699,7 @@
                      "tracks": ""
                   }
                ],
+               "deck_number": 1,
                "cd_position": 287,
                "duration": "3:56",
                "extraartists": [
@@ -2725,6 +2747,7 @@
             },
             {
                "artist": "Sonique",
+               "deck_number": 1,
                "cd_position": 276,
                "duration": "7:40",
                "extraartists": [
@@ -2756,6 +2779,7 @@
                      "tracks": ""
                   }
                ],
+               "deck_number": 1,
                "cd_position": 269,
                "duration": "7:30",
                "full_name": "Various - Miami Pop (Extension)",
@@ -2776,6 +2800,7 @@
                      "tracks": ""
                   }
                ],
+               "deck_number": 1,
                "cd_position": 270,
                "duration": "6:47",
                "extraartists": [
@@ -2825,6 +2850,7 @@
                      "tracks": ""
                   }
                ],
+               "deck_number": 1,
                "cd_position": 271,
                "duration": "3:54",
                "extraartists": [
@@ -2856,6 +2882,7 @@
                      "tracks": ""
                   }
                ],
+               "deck_number": 1,
                "cd_position": 287,
                "duration": "3:47",
                "extraartists": [
@@ -2882,6 +2909,7 @@
          "tracks": [
             {
                "artist": "Sonique",
+               "deck_number": 1,
                "cd_position": 276,
                "duration": "3:59",
                "full_name": "Sonique - Sky (Radio Edit)",
@@ -2891,6 +2919,7 @@
             },
             {
                "artist": "Kim Leoni",
+               "deck_number": 1,
                "cd_position": 274,
                "duration": "5:34",
                "extraartists": [
@@ -2921,6 +2950,7 @@
                      "tracks": ""
                   }
                ],
+               "deck_number": 1,
                "cd_position": 287,
                "duration": "3:56",
                "extraartists": [
@@ -2968,6 +2998,7 @@
             },
             {
                "artist": "Sonique",
+               "deck_number": 1,
                "cd_position": 276,
                "duration": "7:40",
                "extraartists": [
@@ -2999,6 +3030,7 @@
                      "tracks": ""
                   }
                ],
+               "deck_number": 1,
                "cd_position": 269,
                "duration": "7:30",
                "full_name": "Various - Miami Pop (Extension)",
@@ -3019,6 +3051,7 @@
                      "tracks": ""
                   }
                ],
+               "deck_number": 1,
                "cd_position": 270,
                "duration": "6:47",
                "extraartists": [
@@ -3068,6 +3101,7 @@
                      "tracks": ""
                   }
                ],
+               "deck_number": 1,
                "cd_position": 271,
                "duration": "3:54",
                "extraartists": [
@@ -3099,6 +3133,7 @@
                      "tracks": ""
                   }
                ],
+               "deck_number": 1,
                "cd_position": 287,
                "duration": "3:47",
                "extraartists": [
@@ -3127,6 +3162,7 @@
                "position": "1",
                "title": "Butterfly (Album Version)",
                "type_": "track",
+               "deck_number": 1,
                "cd_position": 197,
                "full_name": "Crazy Town - Butterfly (Album Version)"
             },
@@ -3146,6 +3182,7 @@
                "position": "d",
                "title": "Samba De Janeiro (Peter Parker Remix)",
                "type_": "track",
+               "deck_number": 1,
                "cd_position": 259,
                "full_name": "Bellini - Samba De Janeiro (Peter Parker Remix)"
             },
@@ -3154,6 +3191,7 @@
                "position": "3",
                "title": "Close Your Eyes (Club Mix)",
                "type_": "track",
+               "deck_number": 1,
                "cd_position": 275,
                "full_name": "Mega 'Lo Mania - Close Your Eyes (Club Mix)"
             },
@@ -3173,6 +3211,7 @@
                "position": "4",
                "title": "Medicine (Topmodelz Remix)",
                "type_": "track",
+               "deck_number": 1,
                "cd_position": 274,
                "full_name": "Kim Leoni - Medicine (Topmodelz Remix)",
                "artist": "Kim Leoni"
@@ -3213,6 +3252,7 @@
                "position": "1-01",
                "title": "Waves (Original Mix)",
                "type_": "track",
+               "deck_number": 1,
                "cd_position": 252,
                "full_name": "Various - Waves (Original Mix)"
             },
@@ -3232,6 +3272,7 @@
                "position": "16",
                "title": "Su-Ki-Ja-Ki",
                "type_": "track",
+               "deck_number": 1,
                "cd_position": 251,
                "full_name": "Various - Su-Ki-Ja-Ki"
             },
@@ -3260,6 +3301,7 @@
                "position": "1",
                "title": "Boom, Boom, Boom, Boom (Airplay)",
                "type_": "track",
+               "deck_number": 1,
                "cd_position": 232,
                "full_name": "Vengaboys - Boom, Boom, Boom, Boom (Airplay)"
             },
@@ -3298,6 +3340,7 @@
                "position": "5",
                "title": "I Am Back (Vanni G Extended Rmx)",
                "type_": "track",
+               "deck_number": 1,
                "cd_position": 216,
                "full_name": "Regina - I Am Back (Vanni G Extended Rmx)"
             },
@@ -3306,6 +3349,7 @@
                "position": "5",
                "title": "As If It's Your Last",
                "type_": "track",
+               "deck_number": 1,
                "cd_position": 215,
                "full_name": "Blackpink - As If It's Your Last"
             },
@@ -3343,6 +3387,7 @@
                "position": "1-1",
                "title": "The Wicker Man",
                "type_": "track",
+               "deck_number": 1,
                "cd_position": 201,
                "full_name": "Iron Maiden - The Wicker Man"
             },
@@ -3352,6 +3397,7 @@
                "position": "1",
                "title": "Megalomaniac",
                "type_": "track",
+               "deck_number": 1,
                "cd_position": 200,
                "full_name": "KMFDM - Megalomaniac"
             },
@@ -3360,11 +3406,1130 @@
                "position": "1",
                "title": "The Bad Touch (LP)",
                "type_": "track",
+               "deck_number": 1,
                "cd_position": 198,
                "full_name": "Bloodhound Gang - The Bad Touch (LP)"
             }
          ],
          "id": 307347889194023352
+      },
+      {
+         "id": 286354921895624800,
+         "name": "/Nwe",
+         "tracks": [
+            {
+               "deck_number": 1,
+               "cd_position": 20,
+               "duration": "7:12",
+               "full_name": "Bang! (3) - Everybody, Everywhere! (Club Mix)",
+               "position": "3",
+               "title": "Everybody, Everywhere! (Club Mix)",
+               "type_": "track"
+            },
+            {
+               "deck_number": 1,
+               "cd_position": 29,
+               "duration": "3:46",
+               "full_name": "Brooklyn Bounce - Club Bizarre (Single Edit)",
+               "position": "2",
+               "title": "Club Bizarre (Single Edit)",
+               "type_": "track"
+            },
+            {
+               "deck_number": 1,
+               "cd_position": 30,
+               "duration": "3:38",
+               "full_name": "Brooklyn Bounce - Take A Ride (Radio Mix)",
+               "position": "1",
+               "title": "Take A Ride (Radio Mix)",
+               "type_": "track"
+            },
+            {
+               "deck_number": 1,
+               "cd_position": 31,
+               "duration": "3:33",
+               "extraartists": [
+                  {
+                     "anv": "",
+                     "id": 88591,
+                     "join": "",
+                     "name": "FKB",
+                     "resource_url": "https://api.discogs.com/artists/88591",
+                     "role": "Remix",
+                     "tracks": ""
+                  }
+               ],
+               "full_name": "Eurogroove - Move Your Body (FKB Edit)",
+               "position": "1",
+               "title": "Move Your Body (FKB Edit)",
+               "type_": "track"
+            },
+            {
+               "deck_number": 1,
+               "cd_position": 32,
+               "duration": "3:47",
+               "full_name": "X-Sample Featuring Jennifer Lucas - Goin' On (Hard Mix Edit)",
+               "position": "1",
+               "title": "Goin' On (Hard Mix Edit)",
+               "type_": "track"
+            },
+            {
+               "deck_number": 1,
+               "cd_position": 33,
+               "duration": "3:18",
+               "full_name": "Sequential One - My Love Is Hot (Radio Mix)",
+               "position": "1",
+               "title": "My Love Is Hot (Radio Mix)",
+               "type_": "track"
+            },
+            {
+               "deck_number": 1,
+               "cd_position": 34,
+               "duration": "3:53",
+               "full_name": "Leeza B. - Wave Of Light (Edit)",
+               "position": "1",
+               "title": "Wave Of Light (Edit)",
+               "type_": "track"
+            },
+            {
+               "deck_number": 1,
+               "cd_position": 35,
+               "duration": "3:23",
+               "extraartists": [
+                  {
+                     "anv": "DJ Taucher",
+                     "id": 66851,
+                     "join": "",
+                     "name": "Taucher",
+                     "resource_url": "https://api.discogs.com/artists/66851",
+                     "role": "Producer",
+                     "tracks": ""
+                  },
+                  {
+                     "anv": "",
+                     "id": 11118,
+                     "join": "",
+                     "name": "Torsten Stenzel",
+                     "resource_url": "https://api.discogs.com/artists/11118",
+                     "role": "Producer",
+                     "tracks": ""
+                  },
+                  {
+                     "anv": "",
+                     "id": 66851,
+                     "join": "",
+                     "name": "Taucher",
+                     "resource_url": "https://api.discogs.com/artists/66851",
+                     "role": "Remix",
+                     "tracks": ""
+                  }
+               ],
+               "full_name": "Trance Allstars - Go (Taucher Short Version)",
+               "position": "4",
+               "title": "Go (Taucher Short Version)",
+               "type_": "track"
+            },
+            {
+               "deck_number": 1,
+               "cd_position": 35,
+               "duration": "3:35",
+               "extraartists": [
+                  {
+                     "anv": "Andre Tanneberger",
+                     "id": 4104,
+                     "join": "",
+                     "name": "André Tanneberger",
+                     "resource_url": "https://api.discogs.com/artists/4104",
+                     "role": "Producer, Arranged By",
+                     "tracks": ""
+                  },
+                  {
+                     "anv": "",
+                     "id": 5797,
+                     "join": "",
+                     "name": "ATB",
+                     "resource_url": "https://api.discogs.com/artists/5797",
+                     "role": "Remix",
+                     "tracks": ""
+                  }
+               ],
+               "full_name": "Trance Allstars - Go (ATB Short Version)",
+               "position": "3",
+               "title": "Go (ATB Short Version)",
+               "type_": "track"
+            },
+            {
+               "deck_number": 1,
+               "cd_position": 52,
+               "duration": "4:52",
+               "full_name": "Antares (3) - Ride On A Meteorite (Radio Edit)",
+               "position": "1",
+               "title": "Ride On A Meteorite (Radio Edit)",
+               "type_": "track"
+            },
+            {
+               "deck_number": 1,
+               "cd_position": 53,
+               "duration": "3:01",
+               "full_name": "Angel City - Do You Know (I Go Crazy) (Radio Edit)",
+               "position": "1",
+               "title": "Do You Know (I Go Crazy) (Radio Edit)",
+               "type_": "track"
+            },
+            {
+               "deck_number": 1,
+               "cd_position": 60,
+               "duration": "8:12",
+               "extraartists": [
+                  {
+                     "anv": "",
+                     "id": 858,
+                     "join": "",
+                     "name": "Hardfloor",
+                     "resource_url": "https://api.discogs.com/artists/858",
+                     "role": "Remix",
+                     "tracks": ""
+                  }
+               ],
+               "full_name": "Katana - Erotmania (Hardfloor Mix)",
+               "position": "5",
+               "title": "Erotmania (Hardfloor Mix)",
+               "type_": "track"
+            },
+            {
+               "deck_number": 1,
+               "cd_position": 61,
+               "duration": "3:21",
+               "full_name": "Safri Duo - Played-A-Live (Radio Cut)",
+               "position": "1",
+               "title": "Played-A-Live (Radio Cut)",
+               "type_": "track"
+            },
+            {
+               "deck_number": 1,
+               "cd_position": 63,
+               "duration": "3:36",
+               "extraartists": [
+                  {
+                     "anv": "",
+                     "id": 169694,
+                     "join": "",
+                     "name": "Chico & Tonio",
+                     "resource_url": "https://api.discogs.com/artists/169694",
+                     "role": "Remix",
+                     "tracks": ""
+                  }
+               ],
+               "full_name": "Daddy DJ - Daddy DJ (Chico & Tonio Radio Edit)",
+               "position": "1",
+               "title": "Daddy DJ (Chico & Tonio Radio Edit)",
+               "type_": "track"
+            },
+            {
+               "deck_number": 1,
+               "cd_position": 64,
+               "duration": "3:42",
+               "full_name": "Jam & Spoon Featuring Rea Garvey - Set Me Free (Empty Rooms) (Radio Version)",
+               "position": "1",
+               "title": "Set Me Free (Empty Rooms) (Radio Version)",
+               "type_": "track"
+            },
+            {
+               "deck_number": 1,
+               "cd_position": 68,
+               "duration": "5:55",
+               "full_name": "Prince Ital Joe Feat. Marky Mark - Happy People (Long Version)",
+               "position": "2",
+               "title": "Happy People (Long Version)",
+               "type_": "track"
+            },
+            {
+               "deck_number": 1,
+               "cd_position": 70,
+               "duration": "4:48",
+               "extraartists": [
+                  {
+                     "anv": "Automatic",
+                     "id": 84704,
+                     "join": "",
+                     "name": "DJ Automatic",
+                     "resource_url": "https://api.discogs.com/artists/84704",
+                     "role": "Remix",
+                     "tracks": ""
+                  }
+               ],
+               "full_name": "2 Unlimited - Tribal Dance (Automatic Breakbeat Remix)",
+               "position": "6",
+               "title": "Tribal Dance (Automatic Breakbeat Remix)",
+               "type_": "track"
+            },
+            {
+               "deck_number": 1,
+               "cd_position": 71,
+               "duration": "3:52",
+               "full_name": "Captain Hollywood Project - Only With You (Radio Mix)",
+               "position": "1",
+               "title": "Only With You (Radio Mix)",
+               "type_": "track"
+            },
+            {
+               "deck_number": 1,
+               "cd_position": 72,
+               "duration": "3:45",
+               "full_name": "Virtue - Feeling Good (New Dawn) (7\" Edit)",
+               "position": "1",
+               "title": "Feeling Good (New Dawn) (7\" Edit)",
+               "type_": "track"
+            },
+            {
+               "deck_number": 1,
+               "cd_position": 73,
+               "duration": "6:24",
+               "extraartists": [
+                  {
+                     "anv": "",
+                     "id": 53433,
+                     "join": "",
+                     "name": "DJ Darling",
+                     "resource_url": "https://api.discogs.com/artists/53433",
+                     "role": "Remix",
+                     "tracks": ""
+                  },
+                  {
+                     "anv": "",
+                     "id": 36279,
+                     "join": "",
+                     "name": "Dee Jay Sören",
+                     "resource_url": "https://api.discogs.com/artists/36279",
+                     "role": "Remix",
+                     "tracks": ""
+                  }
+               ],
+               "full_name": "Tank - Can U Feel The Bass? (DJ Darling Vs. Deejay Sören Remix)",
+               "position": "3",
+               "title": "Can U Feel The Bass? (DJ Darling Vs. Deejay Sören Remix)",
+               "type_": "track"
+            },
+            {
+               "deck_number": 1,
+               "cd_position": 74,
+               "duration": "3:36",
+               "extraartists": [
+                  {
+                     "anv": "",
+                     "id": 4018,
+                     "join": "",
+                     "name": "Kurtis Mantronik",
+                     "resource_url": "https://api.discogs.com/artists/4018",
+                     "role": "Remix, Producer [Additional Production]",
+                     "tracks": ""
+                  },
+                  {
+                     "anv": "B. Marley",
+                     "id": 41441,
+                     "join": "",
+                     "name": "Bob Marley",
+                     "resource_url": "https://api.discogs.com/artists/41441",
+                     "role": "Written-By",
+                     "tracks": ""
+                  },
+                  {
+                     "anv": "E. Semon",
+                     "id": 39838,
+                     "join": "",
+                     "name": "Erick Sermon",
+                     "resource_url": "https://api.discogs.com/artists/39838",
+                     "role": "Written-By",
+                     "tracks": ""
+                  },
+                  {
+                     "anv": "P. Smith",
+                     "id": 185861,
+                     "join": "",
+                     "name": "Parrish Smith",
+                     "resource_url": "https://api.discogs.com/artists/185861",
+                     "role": "Written-By",
+                     "tracks": ""
+                  }
+               ],
+               "full_name": "Kurtis Mantronik vs. EPMD - Strictly Business (Mantronik MBA Radio Edit)",
+               "position": "1",
+               "title": "Strictly Business (Mantronik MBA Radio Edit)",
+               "type_": "track"
+            },
+            {
+               "deck_number": 1,
+               "cd_position": 78,
+               "duration": "3:51",
+               "full_name": "Lovestern Galaktika Project Meets Daisy C.I.O. - Galaktika - Are You Ready? (Razzorblade Video Mix)",
+               "position": "1",
+               "title": "Galaktika - Are You Ready? (Razzorblade Video Mix)",
+               "type_": "track"
+            },
+            {
+               "deck_number": 1,
+               "cd_position": 78,
+               "duration": "7:04",
+               "extraartists": [
+                  {
+                     "anv": "",
+                     "id": 15125,
+                     "join": "",
+                     "name": "Kaylab",
+                     "resource_url": "https://api.discogs.com/artists/15125",
+                     "role": "Remix, Producer [Additional]",
+                     "tracks": ""
+                  }
+               ],
+               "full_name": "Lovestern Galaktika Project Meets Daisy C.I.O. - Galaktika - Are You Ready? (Kaylab Remix)",
+               "position": "7",
+               "title": "Galaktika - Are You Ready? (Kaylab Remix)",
+               "type_": "track"
+            },
+            {
+               "deck_number": 1,
+               "cd_position": 80,
+               "duration": "3:52",
+               "extraartists": [
+                  {
+                     "anv": "",
+                     "id": 12347,
+                     "join": "",
+                     "name": "Dancing Divaz",
+                     "resource_url": "https://api.discogs.com/artists/12347",
+                     "role": "Remix",
+                     "tracks": ""
+                  }
+               ],
+               "full_name": "Alex Party - Wrap Me Up (Dancing Divaz Edit)",
+               "position": "2",
+               "title": "Wrap Me Up (Dancing Divaz Edit)",
+               "type_": "track"
+            },
+            {
+               "deck_number": 1,
+               "cd_position": 80,
+               "duration": "6:52",
+               "extraartists": [
+                  {
+                     "anv": "",
+                     "id": 12347,
+                     "join": "",
+                     "name": "Dancing Divaz",
+                     "resource_url": "https://api.discogs.com/artists/12347",
+                     "role": "Remix",
+                     "tracks": ""
+                  }
+               ],
+               "full_name": "Alex Party - Wrap Me Up (Dancing Divaz Club Mix)",
+               "position": "7",
+               "title": "Wrap Me Up (Dancing Divaz Club Mix)",
+               "type_": "track"
+            },
+            {
+               "deck_number": 1,
+               "cd_position": 81,
+               "duration": "5:34",
+               "extraartists": [
+                  {
+                     "anv": "",
+                     "id": 84677,
+                     "join": "",
+                     "name": "The Berman Brothers",
+                     "resource_url": "https://api.discogs.com/artists/84677",
+                     "role": "Producer [Additional], Remix",
+                     "tracks": ""
+                  }
+               ],
+               "full_name": "Real McCoy - Automatic Lover (Call For Love) (Party Rave Mix)",
+               "position": "4",
+               "title": "Automatic Lover (Call For Love) (Party Rave Mix)",
+               "type_": "track"
+            },
+            {
+               "deck_number": 1,
+               "cd_position": 82,
+               "duration": "4:09",
+               "full_name": "Aqua - Turn Back Time (Album Version)",
+               "position": "1",
+               "title": "Turn Back Time (Album Version)",
+               "type_": "track"
+            },
+            {
+               "deck_number": 1,
+               "cd_position": 84,
+               "duration": "4:16",
+               "full_name": "Magic Affair feat. Anita Davis & Raz-Ma-Taz - Break These Chains (Radio Version)",
+               "position": "1",
+               "title": "Break These Chains (Radio Version)",
+               "type_": "track"
+            },
+            {
+               "deck_number": 1,
+               "cd_position": 85,
+               "duration": "3:38",
+               "extraartists": [
+                  {
+                     "anv": "",
+                     "id": 7981,
+                     "join": "",
+                     "name": "Sash!",
+                     "resource_url": "https://api.discogs.com/artists/7981",
+                     "role": "Producer",
+                     "tracks": ""
+                  },
+                  {
+                     "anv": "",
+                     "id": 41250,
+                     "join": "",
+                     "name": "Tokapi",
+                     "resource_url": "https://api.discogs.com/artists/41250",
+                     "role": "Remix",
+                     "tracks": ""
+                  }
+               ],
+               "full_name": "Dr. Alban - Mr. DJ (Tokapi Mix)",
+               "position": "1",
+               "title": "Mr. DJ (Tokapi Mix)",
+               "type_": "track"
+            },
+            {
+               "deck_number": 1,
+               "cd_position": 85,
+               "duration": "5:35",
+               "extraartists": [
+                  {
+                     "anv": "",
+                     "id": 7981,
+                     "join": "",
+                     "name": "Sash!",
+                     "resource_url": "https://api.discogs.com/artists/7981",
+                     "role": "Remix",
+                     "tracks": ""
+                  },
+                  {
+                     "anv": "",
+                     "id": 41250,
+                     "join": "",
+                     "name": "Tokapi",
+                     "resource_url": "https://api.discogs.com/artists/41250",
+                     "role": "Remix",
+                     "tracks": ""
+                  }
+               ],
+               "full_name": "Dr. Alban - Mr. DJ (Tokapi Sash! Mix)",
+               "position": "6",
+               "title": "Mr. DJ (Tokapi Sash! Mix)",
+               "type_": "track"
+            },
+            {
+               "artists": [
+                  {
+                     "anv": "",
+                     "id": 243730,
+                     "join": "",
+                     "name": "Golfclub",
+                     "resource_url": "https://api.discogs.com/artists/243730",
+                     "role": "",
+                     "tracks": ""
+                  }
+               ],
+               "deck_number": 1,
+               "cd_position": 225,
+               "duration": "2:53",
+               "full_name": "Various - Spandex",
+               "position": "1-13",
+               "title": "Spandex",
+               "type_": "track"
+            },
+            {
+               "duration": "4:50",
+               "position": "3",
+               "title": "The Spirit (Album Mix)",
+               "type_": "track",
+               "deck_number": 1,
+               "cd_position": 28,
+               "full_name": "Centory, Turbo B. - The Spirit (Album Mix)"
+            }
+         ]
+      },
+      {
+         "id": 243083468889887818,
+         "name": "All in 1 - 2",
+         "tracks": [
+            {
+               "deck_number": 1,
+               "cd_position": 80,
+               "duration": "6:52",
+               "extraartists": [
+                  {
+                     "anv": "",
+                     "id": 12347,
+                     "join": "",
+                     "name": "Dancing Divaz",
+                     "resource_url": "https://api.discogs.com/artists/12347",
+                     "role": "Remix",
+                     "tracks": ""
+                  }
+               ],
+               "full_name": "Alex Party - Wrap Me Up (Dancing Divaz Club Mix)",
+               "position": "7",
+               "title": "Wrap Me Up (Dancing Divaz Club Mix)",
+               "type_": "track"
+            },
+            {
+               "deck_number": 1,
+               "cd_position": 19,
+               "duration": "3:11",
+               "extraartists": [
+                  {
+                     "anv": "",
+                     "id": 154615,
+                     "join": "",
+                     "name": "Frank Knebel",
+                     "resource_url": "https://api.discogs.com/artists/154615",
+                     "role": "Remix [Remix By], Producer [Additional Production By]",
+                     "tracks": ""
+                  }
+               ],
+               "full_name": "Angel City Featuring Lara McAllen - Love Me Right (Oh Sheila) (Radio Edit)",
+               "position": "1",
+               "title": "Love Me Right (Oh Sheila) (Radio Edit)",
+               "type_": "track"
+            },
+            {
+               "deck_number": 1,
+               "cd_position": 20,
+               "duration": "7:12",
+               "full_name": "Bang! (3) - Everybody, Everywhere! (Club Mix)",
+               "position": "3",
+               "title": "Everybody, Everywhere! (Club Mix)",
+               "type_": "track"
+            },
+            {
+               "deck_number": 1,
+               "cd_position": 12,
+               "duration": "5:50",
+               "extraartists": [
+                  {
+                     "anv": "",
+                     "id": 35233,
+                     "join": "",
+                     "name": "Chris Barbosa",
+                     "resource_url": "https://api.discogs.com/artists/35233",
+                     "role": "Written-By",
+                     "tracks": ""
+                  },
+                  {
+                     "anv": "",
+                     "id": 207629,
+                     "join": "",
+                     "name": "Ed Chisolm",
+                     "resource_url": "https://api.discogs.com/artists/207629",
+                     "role": "Written-By",
+                     "tracks": ""
+                  }
+               ],
+               "full_name": "Reggy O. - Let The Music Play (Freestyle Club Mix)",
+               "position": "2",
+               "title": "Let The Music Play (Freestyle Club Mix)",
+               "type_": "track"
+            },
+            {
+               "deck_number": 1,
+               "cd_position": 31,
+               "duration": "3:33",
+               "extraartists": [
+                  {
+                     "anv": "",
+                     "id": 88591,
+                     "join": "",
+                     "name": "FKB",
+                     "resource_url": "https://api.discogs.com/artists/88591",
+                     "role": "Remix",
+                     "tracks": ""
+                  }
+               ],
+               "full_name": "Eurogroove - Move Your Body (FKB Edit)",
+               "position": "1",
+               "title": "Move Your Body (FKB Edit)",
+               "type_": "track"
+            },
+            {
+               "deck_number": 1,
+               "cd_position": 32,
+               "duration": "3:47",
+               "full_name": "X-Sample Featuring Jennifer Lucas - Goin' On (Hard Mix Edit)",
+               "position": "1",
+               "title": "Goin' On (Hard Mix Edit)",
+               "type_": "track"
+            },
+            {
+               "deck_number": 1,
+               "cd_position": 33,
+               "duration": "3:18",
+               "full_name": "Sequential One - My Love Is Hot (Radio Mix)",
+               "position": "1",
+               "title": "My Love Is Hot (Radio Mix)",
+               "type_": "track"
+            },
+            {
+               "deck_number": 1,
+               "cd_position": 34,
+               "duration": "3:53",
+               "full_name": "Leeza B. - Wave Of Light (Edit)",
+               "position": "1",
+               "title": "Wave Of Light (Edit)",
+               "type_": "track"
+            },
+            {
+               "deck_number": 1,
+               "cd_position": 35,
+               "duration": "3:23",
+               "extraartists": [
+                  {
+                     "anv": "DJ Taucher",
+                     "id": 66851,
+                     "join": "",
+                     "name": "Taucher",
+                     "resource_url": "https://api.discogs.com/artists/66851",
+                     "role": "Producer",
+                     "tracks": ""
+                  },
+                  {
+                     "anv": "",
+                     "id": 11118,
+                     "join": "",
+                     "name": "Torsten Stenzel",
+                     "resource_url": "https://api.discogs.com/artists/11118",
+                     "role": "Producer",
+                     "tracks": ""
+                  },
+                  {
+                     "anv": "",
+                     "id": 66851,
+                     "join": "",
+                     "name": "Taucher",
+                     "resource_url": "https://api.discogs.com/artists/66851",
+                     "role": "Remix",
+                     "tracks": ""
+                  }
+               ],
+               "full_name": "Trance Allstars - Go (Taucher Short Version)",
+               "position": "4",
+               "title": "Go (Taucher Short Version)",
+               "type_": "track"
+            },
+            {
+               "deck_number": 1,
+               "cd_position": 35,
+               "duration": "3:35",
+               "extraartists": [
+                  {
+                     "anv": "Andre Tanneberger",
+                     "id": 4104,
+                     "join": "",
+                     "name": "André Tanneberger",
+                     "resource_url": "https://api.discogs.com/artists/4104",
+                     "role": "Producer, Arranged By",
+                     "tracks": ""
+                  },
+                  {
+                     "anv": "",
+                     "id": 5797,
+                     "join": "",
+                     "name": "ATB",
+                     "resource_url": "https://api.discogs.com/artists/5797",
+                     "role": "Remix",
+                     "tracks": ""
+                  }
+               ],
+               "full_name": "Trance Allstars - Go (ATB Short Version)",
+               "position": "3",
+               "title": "Go (ATB Short Version)",
+               "type_": "track"
+            },
+            {
+               "deck_number": 1,
+               "cd_position": 52,
+               "duration": "4:52",
+               "full_name": "Antares (3) - Ride On A Meteorite (Radio Edit)",
+               "position": "1",
+               "title": "Ride On A Meteorite (Radio Edit)",
+               "type_": "track"
+            },
+            {
+               "deck_number": 1,
+               "cd_position": 53,
+               "duration": "3:01",
+               "full_name": "Angel City - Do You Know (I Go Crazy) (Radio Edit)",
+               "position": "1",
+               "title": "Do You Know (I Go Crazy) (Radio Edit)",
+               "type_": "track"
+            },
+            {
+               "deck_number": 1,
+               "cd_position": 60,
+               "duration": "8:12",
+               "extraartists": [
+                  {
+                     "anv": "",
+                     "id": 858,
+                     "join": "",
+                     "name": "Hardfloor",
+                     "resource_url": "https://api.discogs.com/artists/858",
+                     "role": "Remix",
+                     "tracks": ""
+                  }
+               ],
+               "full_name": "Katana - Erotmania (Hardfloor Mix)",
+               "position": "5",
+               "title": "Erotmania (Hardfloor Mix)",
+               "type_": "track"
+            },
+            {
+               "deck_number": 1,
+               "cd_position": 61,
+               "duration": "3:21",
+               "full_name": "Safri Duo - Played-A-Live (Radio Cut)",
+               "position": "1",
+               "title": "Played-A-Live (Radio Cut)",
+               "type_": "track"
+            },
+            {
+               "deck_number": 1,
+               "cd_position": 63,
+               "duration": "3:36",
+               "extraartists": [
+                  {
+                     "anv": "",
+                     "id": 169694,
+                     "join": "",
+                     "name": "Chico & Tonio",
+                     "resource_url": "https://api.discogs.com/artists/169694",
+                     "role": "Remix",
+                     "tracks": ""
+                  }
+               ],
+               "full_name": "Daddy DJ - Daddy DJ (Chico & Tonio Radio Edit)",
+               "position": "1",
+               "title": "Daddy DJ (Chico & Tonio Radio Edit)",
+               "type_": "track"
+            },
+            {
+               "deck_number": 1,
+               "cd_position": 64,
+               "duration": "3:42",
+               "full_name": "Jam & Spoon Featuring Rea Garvey - Set Me Free (Empty Rooms) (Radio Version)",
+               "position": "1",
+               "title": "Set Me Free (Empty Rooms) (Radio Version)",
+               "type_": "track"
+            },
+            {
+               "deck_number": 1,
+               "cd_position": 68,
+               "duration": "5:55",
+               "full_name": "Prince Ital Joe Feat. Marky Mark - Happy People (Long Version)",
+               "position": "2",
+               "title": "Happy People (Long Version)",
+               "type_": "track"
+            },
+            {
+               "deck_number": 1,
+               "cd_position": 70,
+               "duration": "4:48",
+               "extraartists": [
+                  {
+                     "anv": "Automatic",
+                     "id": 84704,
+                     "join": "",
+                     "name": "DJ Automatic",
+                     "resource_url": "https://api.discogs.com/artists/84704",
+                     "role": "Remix",
+                     "tracks": ""
+                  }
+               ],
+               "full_name": "2 Unlimited - Tribal Dance (Automatic Breakbeat Remix)",
+               "position": "6",
+               "title": "Tribal Dance (Automatic Breakbeat Remix)",
+               "type_": "track"
+            },
+            {
+               "deck_number": 1,
+               "cd_position": 71,
+               "duration": "3:52",
+               "full_name": "Captain Hollywood Project - Only With You (Radio Mix)",
+               "position": "1",
+               "title": "Only With You (Radio Mix)",
+               "type_": "track"
+            },
+            {
+               "deck_number": 1,
+               "cd_position": 72,
+               "duration": "3:45",
+               "full_name": "Virtue - Feeling Good (New Dawn) (7\" Edit)",
+               "position": "1",
+               "title": "Feeling Good (New Dawn) (7\" Edit)",
+               "type_": "track"
+            },
+            {
+               "deck_number": 1,
+               "cd_position": 73,
+               "duration": "6:24",
+               "extraartists": [
+                  {
+                     "anv": "",
+                     "id": 53433,
+                     "join": "",
+                     "name": "DJ Darling",
+                     "resource_url": "https://api.discogs.com/artists/53433",
+                     "role": "Remix",
+                     "tracks": ""
+                  },
+                  {
+                     "anv": "",
+                     "id": 36279,
+                     "join": "",
+                     "name": "Dee Jay Sören",
+                     "resource_url": "https://api.discogs.com/artists/36279",
+                     "role": "Remix",
+                     "tracks": ""
+                  }
+               ],
+               "full_name": "Tank - Can U Feel The Bass? (DJ Darling Vs. Deejay Sören Remix)",
+               "position": "3",
+               "title": "Can U Feel The Bass? (DJ Darling Vs. Deejay Sören Remix)",
+               "type_": "track"
+            },
+            {
+               "deck_number": 1,
+               "cd_position": 74,
+               "duration": "3:36",
+               "extraartists": [
+                  {
+                     "anv": "",
+                     "id": 4018,
+                     "join": "",
+                     "name": "Kurtis Mantronik",
+                     "resource_url": "https://api.discogs.com/artists/4018",
+                     "role": "Remix, Producer [Additional Production]",
+                     "tracks": ""
+                  },
+                  {
+                     "anv": "B. Marley",
+                     "id": 41441,
+                     "join": "",
+                     "name": "Bob Marley",
+                     "resource_url": "https://api.discogs.com/artists/41441",
+                     "role": "Written-By",
+                     "tracks": ""
+                  },
+                  {
+                     "anv": "E. Semon",
+                     "id": 39838,
+                     "join": "",
+                     "name": "Erick Sermon",
+                     "resource_url": "https://api.discogs.com/artists/39838",
+                     "role": "Written-By",
+                     "tracks": ""
+                  },
+                  {
+                     "anv": "P. Smith",
+                     "id": 185861,
+                     "join": "",
+                     "name": "Parrish Smith",
+                     "resource_url": "https://api.discogs.com/artists/185861",
+                     "role": "Written-By",
+                     "tracks": ""
+                  }
+               ],
+               "full_name": "Kurtis Mantronik vs. EPMD - Strictly Business (Mantronik MBA Radio Edit)",
+               "position": "1",
+               "title": "Strictly Business (Mantronik MBA Radio Edit)",
+               "type_": "track"
+            },
+            {
+               "deck_number": 1,
+               "cd_position": 78,
+               "duration": "3:51",
+               "full_name": "Lovestern Galaktika Project Meets Daisy C.I.O. - Galaktika - Are You Ready? (Razzorblade Video Mix)",
+               "position": "1",
+               "title": "Galaktika - Are You Ready? (Razzorblade Video Mix)",
+               "type_": "track"
+            },
+            {
+               "deck_number": 1,
+               "cd_position": 78,
+               "duration": "7:04",
+               "extraartists": [
+                  {
+                     "anv": "",
+                     "id": 15125,
+                     "join": "",
+                     "name": "Kaylab",
+                     "resource_url": "https://api.discogs.com/artists/15125",
+                     "role": "Remix, Producer [Additional]",
+                     "tracks": ""
+                  }
+               ],
+               "full_name": "Lovestern Galaktika Project Meets Daisy C.I.O. - Galaktika - Are You Ready? (Kaylab Remix)",
+               "position": "7",
+               "title": "Galaktika - Are You Ready? (Kaylab Remix)",
+               "type_": "track"
+            },
+            {
+               "deck_number": 1,
+               "cd_position": 80,
+               "duration": "3:52",
+               "extraartists": [
+                  {
+                     "anv": "",
+                     "id": 12347,
+                     "join": "",
+                     "name": "Dancing Divaz",
+                     "resource_url": "https://api.discogs.com/artists/12347",
+                     "role": "Remix",
+                     "tracks": ""
+                  }
+               ],
+               "full_name": "Alex Party - Wrap Me Up (Dancing Divaz Edit)",
+               "position": "2",
+               "title": "Wrap Me Up (Dancing Divaz Edit)",
+               "type_": "track"
+            },
+            {
+               "deck_number": 1,
+               "cd_position": 81,
+               "duration": "5:34",
+               "extraartists": [
+                  {
+                     "anv": "",
+                     "id": 84677,
+                     "join": "",
+                     "name": "The Berman Brothers",
+                     "resource_url": "https://api.discogs.com/artists/84677",
+                     "role": "Producer [Additional], Remix",
+                     "tracks": ""
+                  }
+               ],
+               "full_name": "Real McCoy - Automatic Lover (Call For Love) (Party Rave Mix)",
+               "position": "4",
+               "title": "Automatic Lover (Call For Love) (Party Rave Mix)",
+               "type_": "track"
+            },
+            {
+               "deck_number": 1,
+               "cd_position": 82,
+               "duration": "4:09",
+               "full_name": "Aqua - Turn Back Time (Album Version)",
+               "position": "1",
+               "title": "Turn Back Time (Album Version)",
+               "type_": "track"
+            },
+            {
+               "deck_number": 1,
+               "cd_position": 84,
+               "duration": "4:16",
+               "full_name": "Magic Affair feat. Anita Davis & Raz-Ma-Taz - Break These Chains (Radio Version)",
+               "position": "1",
+               "title": "Break These Chains (Radio Version)",
+               "type_": "track"
+            },
+            {
+               "deck_number": 1,
+               "cd_position": 85,
+               "duration": "3:38",
+               "extraartists": [
+                  {
+                     "anv": "",
+                     "id": 7981,
+                     "join": "",
+                     "name": "Sash!",
+                     "resource_url": "https://api.discogs.com/artists/7981",
+                     "role": "Producer",
+                     "tracks": ""
+                  },
+                  {
+                     "anv": "",
+                     "id": 41250,
+                     "join": "",
+                     "name": "Tokapi",
+                     "resource_url": "https://api.discogs.com/artists/41250",
+                     "role": "Remix",
+                     "tracks": ""
+                  }
+               ],
+               "full_name": "Dr. Alban - Mr. DJ (Tokapi Mix)",
+               "position": "1",
+               "title": "Mr. DJ (Tokapi Mix)",
+               "type_": "track"
+            },
+            {
+               "deck_number": 1,
+               "cd_position": 85,
+               "duration": "5:35",
+               "extraartists": [
+                  {
+                     "anv": "",
+                     "id": 7981,
+                     "join": "",
+                     "name": "Sash!",
+                     "resource_url": "https://api.discogs.com/artists/7981",
+                     "role": "Remix",
+                     "tracks": ""
+                  },
+                  {
+                     "anv": "",
+                     "id": 41250,
+                     "join": "",
+                     "name": "Tokapi",
+                     "resource_url": "https://api.discogs.com/artists/41250",
+                     "role": "Remix",
+                     "tracks": ""
+                  }
+               ],
+               "full_name": "Dr. Alban - Mr. DJ (Tokapi Sash! Mix)",
+               "position": "6",
+               "title": "Mr. DJ (Tokapi Sash! Mix)",
+               "type_": "track"
+            },
+            {
+               "artists": [
+                  {
+                     "anv": "",
+                     "id": 243730,
+                     "join": "",
+                     "name": "Golfclub",
+                     "resource_url": "https://api.discogs.com/artists/243730",
+                     "role": "",
+                     "tracks": ""
+                  }
+               ],
+               "deck_number": 1,
+               "cd_position": 225,
+               "duration": "2:53",
+               "full_name": "Various - Spandex",
+               "position": "1-13",
+               "title": "Spandex",
+               "type_": "track"
+            }
+         ]
+      },
+      {
+         "name": "Scooter",
+         "tracks": [
+            {
+               "duration": "5:08",
+               "position": "3",
+               "title": "We Are The Greatest",
+               "type_": "track",
+               "deck_number": 1,
+               "cd_position": 241,
+               "artist": "Scooter",
+               "full_name": "Scooter - We Are The Greatest"
+            }
+         ],
+         "id": 105078256826225168
       }
    ]
 }

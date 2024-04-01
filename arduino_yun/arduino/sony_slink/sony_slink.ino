@@ -4,7 +4,8 @@
 #include <map>
 #include <function_objects.h>
 #include <Bridge.h>
-#include <HttpClient.h>
+#include <BridgeHttpClient.h>
+
 #include <Process.h>
 
 #define DEBUG_PULSES
@@ -17,7 +18,9 @@ volatile unsigned long timeLowTransition = 0;
 volatile byte bufferReadPosition = 0;
 volatile byte bufferWritePosition = 0;
 volatile byte pulseBuffer[PULSE_BUFFER_SIZE];
-HttpClient client;
+
+BridgeHttpClient client;
+
 // Define a buffer to hold the incoming playlist data
 char playlistBuffer[64]; // Adjust the size as needed for your data
 int stopButtonCounter = 0;
@@ -57,9 +60,11 @@ void setup()
   attachInterrupt(digitalPinToInterrupt(INPUT_PIN), busChange, CHANGE);
 
   Bridge.begin();
-  Serial.begin(115200L);
+  // Console.begin();
+  // Serial.begin(115200L);
 
-  Serial.println("Bridge started.");
+  Console.println("Bridge started.");
+  client.enableInsecure();
   startTime = readCurrentTimestamp();
 }
 
@@ -98,7 +103,7 @@ void busChange()
   int timeLow = timeNow - timeLowTransition;
 
   if ((bufferWritePosition + 1) % PULSE_BUFFER_SIZE == bufferReadPosition) {
-    Serial.println(F("Pulse buffer overflow when receiving data"));
+    Console.println(F("Pulse buffer overflow when receiving data"));
     return;
   }
 
@@ -133,12 +138,12 @@ void processSlinkInput()
 
       if (partialOutput) {
         if (currentBit != 0) {
-          Serial.print(F("!Discarding "));
-          Serial.print(currentBit);
-          Serial.print(F(" stray bits"));
+          Console.print(F("!Discarding "));
+          Console.print(currentBit);
+          Console.print(F(" stray bits"));
         }
 
-        Serial.print('\n');
+        Console.print('\n');
         partialOutput = false;
       }
 
@@ -159,18 +164,18 @@ void processSlinkInput()
 
     if (currentBit == 8) {
       if (currentByte <= 0xF) {
-        Serial.print(0, HEX);
+        Console.print(0, HEX);
       }
-      Serial.print(currentByte, HEX);
+      Console.print(currentByte, HEX);
       messageBytes.push_back(currentByte);
       currentBit = 0;
     }
   }
 
   if (partialOutput && isBusIdle()) {
-    Serial.print('\n');
+    Console.print('\n');
     partialOutput = false;
-    if (messageBytes[0] == 0x98 || messageBytes[0] == 0x99 || messageBytes[0] == 0x9A) {
+    if (messageBytes[0] == 0x98 || messageBytes[0] == 0x99 || messageBytes[0] == 0x9A || messageBytes[0] == 0x9B || messageBytes[0] == 0x9C || messageBytes[0] == 0x9D) {
       handleCommand(messageBytes);
     }
     messageBytes.clear(); // Clear the message bytes after handling
@@ -224,7 +229,8 @@ void handleStopCommand(const std::vector<byte>& message) {
   stopButtonCounter++;
   if (stopButtonCounter >= 2) {
     stopButtonCounter = 0;
-    client.get("http://localhost:8080/stop");
+ 
+    client.getAsync("http://localhost:8080/stop");
   }
   if (isTimerEnabled) {
     isTimerEnabled = false;
@@ -233,26 +239,59 @@ void handleStopCommand(const std::vector<byte>& message) {
 }
 
 void handlePlayCommand(const std::vector<byte>& message) {
-  if (isTimerEnabled) {
-    onTrackFinish();
-    isTimerEnabled = false;
-    return;
+  Console.println("Incoming PLAY command");
+  int messageSize = message.size();
+  Console.println("Message size: " + String(messageSize));
+
+  Console.println(hexByteToDecimalInt(message[2]));
+
+  for (size_t i = 0; i < message.size(); ++i) {
+    Console.println(message[i], HEX); // Print each byte in hexadecimal format
   }
-  // Extract timing information from the message
-  // Assuming message[4] is minutes and message[5] is seconds
-  int minutes = hexByteToDecimalInt(message[4]);
-  int seconds = hexByteToDecimalInt(message[5]);
-  Serial.println(hexByteToDecimalInt(message[2]));
+  Console.println("Handing PLAY command");
   //unsigned long duration = (minutes * 60000ul) + (seconds * 1000ul); // Convert to ms
 
+  int minutes = 0;
+  int seconds = 0;
+  if (messageSize >= 6) {
+    // Extract timing information from the message
+    // Assuming message[4] is minutes and message[5] is seconds
+    Console.println("converting minutes");
+    int minutes = hexByteToDecimalInt(message[4]);
+    Console.println("converting seconds");
+    int seconds = hexByteToDecimalInt(message[5]);
+  }
   unsigned long duration = (minutes * 60ul) + (seconds); // Convert to s
   // Set a timer to call onTrackFinish after the duration
   // You'll need to implement setTimer and onTrackFinish
-  /*Serial.println("Duration: ");
-  Serial.println(duration);
+  /*Console.println("Duration: ");
+  Console.println(duration);
   alarmTime = duration;
   startTime = readCurrentTimestamp();
   isTimerEnabled = true;*/
+  int disc = 0;
+  int track = 0;
+  if (messageSize >= 3) {
+    Console.println("converting disc");
+    disc = hexByteToDecimalInt(message[2]);
+  }
+  if (messageSize >= 4) {
+    Console.println("converting track");
+    track = hexByteToDecimalInt(message[3]);
+  }
+
+  int deckId = message[0];
+
+  Console.println("sending html get");
+
+  client.get("http://localhost:8080/playButton/" + String(deckId) + "/" + String(disc) + "/" + String(track) + "/" + String(duration));
+
+  if (isTimerEnabled) {
+    onTrackFinish();
+    isTimerEnabled = false;
+    //return;
+  }
+
 }
 
 void handle30SecCommand(const std::vector<byte>& message) {
@@ -260,24 +299,27 @@ void handle30SecCommand(const std::vector<byte>& message) {
 
   // Set a timer to call onTrackFinish after the duration
   // You'll need to implement setTimer and onTrackFinish
-  Serial.println("Duration: ");
-  Serial.println(30);
+  Console.println("Duration: ");
+  Console.println(30);
   alarmTime = duration;
   // Reset the timer if you want it to start counting again
   startTime = readCurrentTimestamp();
   isTimerEnabled = true;
   //Bridge.put("nextTrackTimer", duration);
-  client.get("http://localhost:8080/nextTrack/" + String(duration-3));
+
+  client.getAsync("http://localhost:8080/nextTrack/" + String(duration-3));
 }
 
 void handleNextCommand(const std::vector<byte>& message) {
   isTimerEnabled = false;
-  client.get("http://localhost:8080/nextTrack");
+
+  client.getAsync("http://localhost:8080/nextTrack");
 }
 
 void handlePrevCommand(const std::vector<byte>& message) {
   isTimerEnabled = false;
-  client.get("http://localhost:8080/prevTrack");
+
+  client.getAsync("http://localhost:8080/prevTrack");
 }
 
 void playNextFromPlaylist() {
@@ -306,7 +348,7 @@ void playNextFromPlaylist() {
 }
 
 void onTrackFinish() {
-  Serial.println("onTrackFinish");
+  Console.println("onTrackFinish");
   playNextFromPlaylist();
 }
 
@@ -377,53 +419,53 @@ bool sendCommand(byte command[], int commandLength)
   return true;
 }
 
-void processSerialInput()
-{
-  static String bytesReceived;
-
-  while (Serial.available()) {
-    bytesReceived += char(Serial.read());
-  }
-
-  const int eolPos = bytesReceived.indexOf("\n");
-  if (eolPos == -1) {
-    return;
-  }
-
-  const String command = bytesReceived.substring(0, eolPos);
-  bytesReceived.remove(0, command.length() + 1);
-
-#ifdef DEBUG_PULSES
-  if (command == "pulsedump") {
-    Serial.println(pulseLengths);
-    return;
-  }
-#endif
-
-  // A hexadecimal command is expected
-  if (command.length() % 2 != 0) {
-    Serial.println(F("Uneven length of Serial input"));
-    return;
-  }
-
-  for (int i = 0; i < command.length(); ++i) {
-    if (!isHexadecimalDigit(command[i])) {
-      Serial.println(F("Non-hexadecimal Serial input"));
-      return;
-    }
-  }
-
-  byte commandBytes[command.length() / 2];
-  for (int i = 0; i < sizeof(commandBytes); ++i) {
-    String hexByte = command.substring(2 * i, 2 * i + 2);
-    commandBytes[i] = strtol(hexByte.c_str(), NULL, 16);
-  }
-
-  if (!sendCommand(commandBytes, sizeof(commandBytes))) {
-    // If send fails, re-queue command
-    bytesReceived = command + "\n" + bytesReceived;
-  }
-}
+//void processSerialInput()
+//{
+//  static String bytesReceived;
+//
+//  while (Serial.available()) {
+//    bytesReceived += char(Serial.read());
+//  }
+//
+//  const int eolPos = bytesReceived.indexOf("\n");
+//  if (eolPos == -1) {
+//    return;
+//  }
+//
+//  const String command = bytesReceived.substring(0, eolPos);
+//  bytesReceived.remove(0, command.length() + 1);
+//
+//#ifdef DEBUG_PULSES
+//  if (command == "pulsedump") {
+//    Console.println(pulseLengths);
+//    return;
+//  }
+//#endif
+//
+//  // A hexadecimal command is expected
+//  if (command.length() % 2 != 0) {
+//    Console.println(F("Uneven length of Serial input"));
+//    return;
+//  }
+//
+//  for (int i = 0; i < command.length(); ++i) {
+//    if (!isHexadecimalDigit(command[i])) {
+//      Console.println(F("Non-hexadecimal Serial input"));
+//      return;
+//    }
+//  }
+//
+//  byte commandBytes[command.length() / 2];
+//  for (int i = 0; i < sizeof(commandBytes); ++i) {
+//    String hexByte = command.substring(2 * i, 2 * i + 2);
+//    commandBytes[i] = strtol(hexByte.c_str(), NULL, 16);
+//  }
+//
+//  if (!sendCommand(commandBytes, sizeof(commandBytes))) {
+//    // If send fails, re-queue command
+//    bytesReceived = command + "\n" + bytesReceived;
+//  }
+//}
 
 void loop()
 {
@@ -433,7 +475,7 @@ void loop()
   if (isTimerEnabled) {
     /*if (readCurrentTimestamp() - startTime >= alarmTime) {
       // Time to trigger the alarm
-      Serial.println("Alarm!");
+      Console.println("Alarm!");
       onTrackFinish();
       isTimerEnabled = false;
     }*/
@@ -451,14 +493,14 @@ void loop()
     playlistBuffer[bytesRead] = '\0';
 
     // Process the playlist
-    Serial.println("Received data buffer:");
-    //Serial.println(playlistBuffer);
+    Console.println("Received data buffer:");
+    //Console.println(playlistBuffer);
 
     // Split the playlist into songs and print each song
     char* song = strtok(playlistBuffer, "\r\n");
     while (song != NULL) {
       if (strcmp(song, "PLAYLIST") == 0) {
-        Serial.println("Receiving PLAYLIST");
+        Console.println("Receiving PLAYLIST");
         currentPlaylistPosition = 0;
         isPlaylist = true;
         isTimerEnabled = false;
@@ -467,23 +509,23 @@ void loop()
         String command = String(song);
         // A hexadecimal command is expected
         if (command.length() % 2 != 0) {
-          Serial.println(F("Uneven length of Serial input"));
+          Console.println(F("Uneven length of Serial input"));
           break;
         }
 
         for (int i = 0; i < command.length(); ++i) {
           if (!isHexadecimalDigit(command[i])) {
-            Serial.println(F("Non-hexadecimal Serial input"));
+            Console.println(F("Non-hexadecimal Serial input"));
             break;
           }
         }
 
         if (isPlaylist) {
           playlist.push_back(command);
-          Serial.print("Song: ");
-          Serial.println(song);
+          Console.print("Song: ");
+          Console.println(song);
         } else {
-          Serial.println(song);
+          Console.println(song);
 
           byte commandBytes[command.length() / 2];
           for (int i = 0; i < sizeof(commandBytes); ++i) {

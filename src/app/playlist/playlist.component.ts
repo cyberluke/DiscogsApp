@@ -10,6 +10,7 @@ import { GridModule } from '@coreui/angular';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatListModule } from '@angular/material/list';
+import {MatInputModule} from '@angular/material/input';
 import { Playlist, Track } from '../dao/track';
 
 
@@ -20,7 +21,7 @@ import { Playlist, Track } from '../dao/track';
   standalone: true,
   imports: [CdkDropList, CdkDrag, DragDropModule, FormsModule, CommonModule, MatButtonModule,
     MatIconModule, GridModule,
-    MatListModule],
+    MatListModule, MatInputModule],
 })
 export class PlaylistComponent {
   playlistName: string = '';
@@ -56,6 +57,7 @@ export class PlaylistComponent {
 
   editPlaylist(playlist: Playlist) {
     this.playlistService.setPlaylist(playlist);
+    this.playlistName = playlist.name;
   }
 
   playSingleTrack(track: Track) {

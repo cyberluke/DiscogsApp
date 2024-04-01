@@ -25,6 +25,7 @@ export class ReleaseComponent implements OnInit {
   release: any;
   releases: any[] = [];
   currentCdIndex: number = 1;
+  currentDeckNumber: number = 1;
   private indexUpdated = new Subject<void>();
   carouselButtonSelected: boolean = false;
 
@@ -59,12 +60,18 @@ export class ReleaseComponent implements OnInit {
   }
 
   async releaseGoToSlide(release: any): Promise<void> {
-    if (release.cd_position == this.currentCdIndex) {
+    if (release.cd_position == this.currentCdIndex && release.deck_number == this.currentDeckNumber) {
       this.hideCarousel();
       return;
     }
     let finalPosition = release;
-    const difference = Math.abs(release.cd_position - this.currentCdIndex);
+    let difference = Math.abs(release.cd_position - this.currentCdIndex);
+
+    if (finalPosition.deck_number > this.currentDeckNumber) {
+      difference += 300 - this.currentDeckNumber + 1;
+    } else if (finalPosition.deck_number < this.currentDeckNumber) {
+      difference += 300 - this.currentDeckNumber + 1;
+    }
 
     if (finalPosition.cd_position > this.currentCdIndex) {
       for (let i = 0; i < difference; i++) {
@@ -72,7 +79,7 @@ export class ReleaseComponent implements OnInit {
         this.nextSlide();
         // Wait for the currentCdIndex to be updated
         let waitTime = 0;
-        const maxWaitTime = 500; // Maximum wait time in milliseconds
+        const maxWaitTime = 400; // Maximum wait time in milliseconds
         while (this.currentCdIndex === oldIndex && waitTime < maxWaitTime) {
           await this.delay(1); // Delay for a short period (10 ms)
           waitTime += 1;
@@ -81,7 +88,6 @@ export class ReleaseComponent implements OnInit {
         // Break the loop if currentCdIndex didn't change within the maxWaitTime
         if (this.currentCdIndex === oldIndex) {
           console.error('Failed to update currentCdIndex after waiting');
-          
           break;
         }
       }
@@ -150,6 +156,7 @@ export class ReleaseComponent implements OnInit {
   }
 
   playSingleTrack(release: any, track: Track) {
+    track["deck_number"] = release.deck_number;
     track["cd_position"] = release.cd_position;
     track["artist"] = release.artists_sort;
     track["full_name"] = release.artists_sort + " - " + track.title;
@@ -188,7 +195,7 @@ export class ReleaseComponent implements OnInit {
         release.images[primaryImageIndex].primary_image = "/assets/default.png";
         const primaryImage = release.images[primaryImageIndex];
 
-        var sanitized = (release.artists_sort + "-" + release.title).replace(/[\\.,'`"/\\:*?<>| ]+/g, '');
+        var sanitized = (release.artists_sort + "-" + release.title).replace(/#/g,'-csharp-').replace(/[\\.,'`"/\\:*?<>| ]+/g, '');
         sanitized = sanitized.split(' ').map((word: string) => word.charAt(0).toUpperCase() + word.slice(1)).join('');
 
         this.imageService.downloadImage(primaryImage.uri, sanitized).subscribe(image => {
@@ -198,6 +205,14 @@ export class ReleaseComponent implements OnInit {
           console.error('Error downloading the image:', error);
         });
       }
+
+      // Add the deck number each track in release
+      release.tracklist.forEach((track: Track) => {
+        track.deck_number = release.deck_number;
+        track.cd_position = release.cd_position;
+        track.artist = release.artists_sort;
+        track.full_name = release.artists_sort + " - " + track.title;
+      });
     });
 
     this.releases = releases;
@@ -227,6 +242,7 @@ export class ReleaseComponent implements OnInit {
 
     this.release = this.releases[releaseIndex];
     this.currentCdIndex = this.release.cd_position;
+    this.currentDeckNumber = this.release.deck_number;
 
     // Notify that the index has been updated
     this.indexUpdated.next();

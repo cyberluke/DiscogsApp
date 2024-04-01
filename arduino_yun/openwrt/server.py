@@ -4,6 +4,7 @@ sys.path.insert(0, '/usr/lib/python2.7/bridge')
 import socket
 import time
 from bridgeclient import BridgeClient as bridgeclient
+import subprocess
 
 class PlaylistHandler():
     client = bridgeclient()
@@ -28,8 +29,49 @@ class PlaylistHandler():
 
 
     def send_to_arduino(self, track):
-        print("sending track to Arduino")
+        print("sending track to Arduino2")
+        # bug
         self.client.put('playlist', track)
+        #self.client.put('playlist', track)
+
+        self.send_webhook_prepare_next(track)
+
+    def send_socket(self, json_body):    
+        server_address = '192.168.1.122'
+        server_port = 5000
+        # Manually crafting the HTTP GET request with a body (unconventional use)
+        request = "POST /webhook HTTP/1.1\r\n"
+        request += "Host: 192.168.1.122:5000\r\n"
+        request += "Content-Type: application/json\r\n"
+        request += "Content-Length: " + str(len(json_body)) + "\r\n"
+        request += "\r\n"  # Header and body should be separated by an extra newline
+        request += json_body
+        
+        # Create a socket
+        sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        
+        try:
+            # Connect to server
+            sock.connect((server_address, server_port))
+            
+            # Send data
+            sock.sendall(request.encode('utf-8'))
+            
+            # Look for the response
+            response = sock.recv(4096)
+            print("Response from server:", response.decode('utf-8'))
+        
+        except socket.error as e:
+            print("Socket error:", e)
+        
+        finally:
+            # Close the socket to clean up
+            sock.close()    
+
+    def send_webhook_prepare_next(self, track):
+        # Convert the data dictionary to a JSON string
+        json_body = '{"status":"PREPARE_TRACK", "track":"%s"}' % track.replace('"', '\\"')
+        self.send_socket(json_body)
 
     def prepare_next_track(self, duration):
         print("prepare for next track")
@@ -75,16 +117,34 @@ class PlaylistHandler():
         path = path.split('/')
         print(path[1])
         print(len(path))
-        if path[1] == 'stop' and len(path) == 2:
+        if path[1] == 'playButton' and len(path) == 6:   
+            print("play button")          
+            # Convert the data dictionary to a JSON string
+            json_body = '{"status":"PLAY", "device":"%s", "cd":"%s", "track":"%s", "duration":"%s"}' % (path[2].replace('"', '\\"'), path[3].replace('"', '\\"'), path[4].replace('"', '\\"'), path[5].replace('"', '\\"'))
+            self.send_socket(json_body)
+            subprocess.call(["reset-mcu"])
+        elif path[1] == 'stop' and len(path) == 2:
             self.playlist = []
             self.current_index = 0
             self.start_time = None
-            self.duration = None        
+            self.duration = None    
+            print("stop")   
+            json_body = '{"status":"STOP"}'
+            self.send_socket(json_body) 
         elif path[1] == 'nextTrack' and len(path) == 2:
+            print("nextTrack")
             self.next_track()
+            json_body = '{"status":"NEXT_TRACK"}'
+            self.send_socket(json_body) 
         elif path[1] == 'prevTrack' and len(path) == 2:     
-            self.prev_track()       
+            print("prevTrack")
+            self.prev_track()      
+            json_body = '{"status":"PREV_TRACK"}'
+            self.send_socket(json_body)  
         elif path[1] == 'nextTrack' and len(path) == 3:
+            print("nextTrack with duration")
+            json_body = '{"status":"NEXT_TRACK_IN", "duration":"%s"}' % path[2].replace('"', '\\"')
+            self.send_socket(json_body) 
             try:
                 duration = int(path[2])
                 print("found duration")
@@ -113,7 +173,7 @@ def get_headers(data):
 def receive_request(sock):
     """Receive the full request from the socket"""
     request_data = ''
-    sock.settimeout(1)  # Set timeout to stop receiving if no data sent
+    sock.settimeout(10)  # Set timeout to stop receiving if no data sent
 
     while True:
         try:

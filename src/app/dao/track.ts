@@ -17,6 +17,7 @@ export interface Artist {
     duration: string;
     cd_position: number;
     full_name: string;
+    deck_number: number;
   }
 
   export interface Playlist {

@@ -5,13 +5,37 @@
     "version": "0.2.0",
     "configurations": [
         {
+            "name": "Python Debugger: Current File",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "${file}",
+            "console": "integratedTerminal"
+        },
+        {
             "command": "npm start",
             "name": "Run npm start",
             "request": "launch",
             "type": "node-terminal"
         },
-        
-        
+        {
+            "name": "Python: Flask2",
+            "type": "python",
+            "request": "launch",
+            "program": "server/app.py",
+            "envFile": "${workspaceFolder}/server/.env",
+            "env": {
+                "FLASK_APP": "server/app.py",
+                "FLASK_DEBUG": "1"
+            },
+            "args": [
+                "run",
+                "--no-debugger",
+                "--no-reload",
+                "--host=0.0.0.0"
+            ],
+            "jinja": true,
+            "justMyCode": true
+        },
         {
             "name": "Python: Flask",
             "type": "python",
@@ -37,17 +61,24 @@
             "request": "launch",
             "preLaunchTask": "tsc: build - tsconfig.json",
             "program": "${workspaceFolder}/node_modules/@angular/cli/bin/ng",
-            "args": ["serve"],
+            "args": [
+                "serve"
+            ],
             "restart": true,
             "console": "integratedTerminal",
             "internalConsoleOptions": "neverOpen",
-            "outFiles": ["${workspaceFolder}/dist/**/*.js"]
+            "outFiles": [
+                "${workspaceFolder}/dist/**/*.js"
+            ]
         }
     ],
     "compounds": [
         {
             "name": "Flask + Angular",
-            "configurations": ["Python: Flask", "Run npm start"]
+            "configurations": [
+                "Python: Flask",
+                "Run npm start"
+            ]
         }
     ]
 }

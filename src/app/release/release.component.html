@@ -46,7 +46,7 @@
 
         <mat-grid-list cols="7" rowHeight="1:1">
           <mat-grid-tile *ngFor="let release of (filteredOptions | async)">
-            <img [src]="getPrimaryImageUrl(release)" [alt]="release.title" [matTooltip]="release.title" class="d-block w-100" loading="lazy" (click)="releaseGoToSlide(release)" />
+            <img [src]="getPrimaryImageUrl(release)" [alt]="release.title" [matTooltip]="release.title + ' (DECK:' + release.deck_number + ', CD:' + release.cd_position + ')'" class="d-block w-100" loading="lazy" (click)="releaseGoToSlide(release)" />
           </mat-grid-tile>
         </mat-grid-list>
       </div>

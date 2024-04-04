@@ -4,7 +4,7 @@
 #include <map>
 #include <function_objects.h>
 #include <Bridge.h>
-#include <BridgeHttpClient.h>
+#include <HttpClient.h>
 
 #include <Process.h>
 
@@ -19,10 +19,10 @@ volatile byte bufferReadPosition = 0;
 volatile byte bufferWritePosition = 0;
 volatile byte pulseBuffer[PULSE_BUFFER_SIZE];
 
-BridgeHttpClient client;
+HttpClient client;
 
 // Define a buffer to hold the incoming playlist data
-char playlistBuffer[64]; // Adjust the size as needed for your data
+char playlistBuffer[128]; // Adjust the size as needed for your data
 int stopButtonCounter = 0;
 
 // Global variables
@@ -42,11 +42,13 @@ String pulseLengths;
 
 void setup()
 {
+  Bridge.begin();
+  Console.begin();
   pinMode(OUTPUT_PIN, OUTPUT);
   digitalWrite(OUTPUT_PIN, LOW);
   pinMode(INPUT_PIN, INPUT);
-
-    // Setup command handlers
+  Console.println("Booting User code...");
+  // Setup command handlers
   commandHandlers[0x01] = handleStopCommand; // Command byte for 'Stop'
   commandHandlers[0x02] = handleStopCommand; // Command byte for 'Pause'
   commandHandlers[0x03] = handleStopCommand; // Command byte for 'Pause'
@@ -56,15 +58,13 @@ void setup()
   commandHandlers[0x50] = handlePlayCommand; // Command byte for 'Play'
   commandHandlers[0x0C] = handle30SecCommand; // Command byte for '30 sec remaining'
   // Add more command handlers as needed
-
+  Console.println("attach interrupt");
   attachInterrupt(digitalPinToInterrupt(INPUT_PIN), busChange, CHANGE);
 
-  Bridge.begin();
-  // Console.begin();
-  // Serial.begin(115200L);
+  Serial.begin(115200L);
 
   Console.println("Bridge started.");
-  client.enableInsecure();
+
   startTime = readCurrentTimestamp();
 }
 
@@ -230,7 +230,7 @@ void handleStopCommand(const std::vector<byte>& message) {
   if (stopButtonCounter >= 2) {
     stopButtonCounter = 0;
  
-    client.getAsync("http://localhost:8080/stop");
+    client.get("http://localhost:8080/stop");
   }
   if (isTimerEnabled) {
     isTimerEnabled = false;
@@ -240,6 +240,13 @@ void handleStopCommand(const std::vector<byte>& message) {
 
 void handlePlayCommand(const std::vector<byte>& message) {
   Console.println("Incoming PLAY command");
+
+  if (isTimerEnabled) {
+    onTrackFinish();
+    isTimerEnabled = false;
+    //return;
+  }
+  
   int messageSize = message.size();
   Console.println("Message size: " + String(messageSize));
 
@@ -284,13 +291,9 @@ void handlePlayCommand(const std::vector<byte>& message) {
 
   Console.println("sending html get");
 
-  client.get("http://localhost:8080/playButton/" + String(deckId) + "/" + String(disc) + "/" + String(track) + "/" + String(duration));
+  //client.get("http://localhost:8080/playButton/" + String(deckId) + "/" + String(disc) + "/" + String(track) + "/" + String(duration));
 
-  if (isTimerEnabled) {
-    onTrackFinish();
-    isTimerEnabled = false;
-    //return;
-  }
+
 
 }
 
@@ -307,19 +310,19 @@ void handle30SecCommand(const std::vector<byte>& message) {
   isTimerEnabled = true;
   //Bridge.put("nextTrackTimer", duration);
 
-  client.getAsync("http://localhost:8080/nextTrack/" + String(duration-3));
+  client.get("http://localhost:8080/nextTrack/" + String(duration-3));
 }
 
 void handleNextCommand(const std::vector<byte>& message) {
   isTimerEnabled = false;
 
-  client.getAsync("http://localhost:8080/nextTrack");
+  client.get("http://localhost:8080/nextTrack");
 }
 
 void handlePrevCommand(const std::vector<byte>& message) {
   isTimerEnabled = false;
 
-  client.getAsync("http://localhost:8080/prevTrack");
+  client.get("http://localhost:8080/prevTrack");
 }
 
 void playNextFromPlaylist() {
@@ -494,7 +497,7 @@ void loop()
 
     // Process the playlist
     Console.println("Received data buffer:");
-    //Console.println(playlistBuffer);
+    Console.println(playlistBuffer);
 
     // Split the playlist into songs and print each song
     char* song = strtok(playlistBuffer, "\r\n");
@@ -546,6 +549,7 @@ void loop()
 
   if (hasReadData) {
     // Clear the playlist after processing
+    Console.println("Clear the playlist after processing");
     Bridge.put("playlist", "");
     if (isPlaylist) {
       onTrackFinish();

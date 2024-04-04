@@ -69,6 +69,7 @@ KODI_PASSWORD = os.getenv('KODI_PASSWORD')
 KODI_IP = '192.168.1.123'
 KODI_PORT = 8080 
 KODI_WEBSOCKET_PORT = 9090
+USE_KODI = False
 
 kodi_music_videos = []
 playlist_db = db.getDb("playlists.json")
@@ -353,7 +354,6 @@ def playlist():
     data = json.loads(request.data)
 
     slinkPlaylist(data)
-    slinkPlaylist(data)
     return jsonify({"status": "Playlist sent"}), 200    
 
 def slinkSend(slink_data):
@@ -488,6 +488,10 @@ def slinkTrack(track):
 def webhook():
     data = request.get_json()
     print(data)
+
+    if not USE_KODI:
+        print('Kodi is disabled.')
+        return 'OK', 200
 
     status = data.get('status', '')
 
@@ -655,15 +659,21 @@ def printAllMusicVideos():
         'Content-Type': 'application/json',
     }
     auth = (KODI_USER, KODI_PASSWORD)
-    response = requests.post(url=f"{TV_API_HTTP}/jsonrpc", headers=headers, auth=auth, data=json.dumps(payload))
+    try:
+        response = requests.post(url=f"{TV_API_HTTP}/jsonrpc", headers=headers, auth=auth, data=json.dumps(payload))
+        response.raise_for_status()  # Raises a HTTPError if the response was unsuccessful
+    except requests.exceptions.RequestException as e:
+        print(f"An error occurred: {e}")
+    else:
+        kodi_music_videos = response.json().get('result', {}).get('musicvideos', [])
 
-    kodi_music_videos = response.json().get('result', {}).get('musicvideos', [])
-
-    # Step 2: Print Music Videos on Console
-    for video in kodi_music_videos:
-        print(f"id: {video['musicvideoid']}, Title: {video['title']}, Artist: {video['artist'][0] if video['artist'] else 'Unknown'}, Year: {video.get('year', 'Unknown')}")
-
-    #return jsonify(kodi_music_videos)
+        # Step 2: Print Music Videos on Console
+        for video in kodi_music_videos:
+            try:
+                print(f"id: {video['musicvideoid']}, Title: {video['title']}, Artist: {video['artist'][0] if video['artist'] else 'Unknown'}, Year: {video.get('year', 'Unknown')}")
+            except KeyError as e:
+                print(f"KeyError: {e} not found in video")
+               
 
 # Function to send JSON-RPC requests to Kodi
 def send_jsonrpc_request(method, params={}, id=1):
@@ -919,8 +929,8 @@ def start_websocket():
         ws.run_forever()
         if not stop_event.is_set():
             time.sleep(10)  # Wait 10 seconds before attempting to reconnect
-            print("WebSocket disconnected. Reconnecting...")
-    print("WebSocket thread stopping")
+            print("KODI WebSocket disconnected. Reconnecting...")
+    print("KODI WebSocket thread stopping")
 
 def on_press(key):
 
@@ -933,7 +943,6 @@ def on_press(key):
 
 if __name__ == '__main__':
 
-
     # Initialize the keyboard listener
     listener = keyboard.Listener(on_press=on_press)
     listener.start()
@@ -945,8 +954,9 @@ if __name__ == '__main__':
         #t1 = threading.Thread(target=continuous_recording, daemon=False)
         #t1.start()
 
-        t2 = threading.Thread(target=start_websocket, daemon=True)
-        t2.start()
+        if USE_KODI:
+            t2 = threading.Thread(target=start_websocket, daemon=True)
+            t2.start()
 
         # Run the Flask server
         app.run(host='0.0.0.0', port=5000)

@@ -264,9 +264,9 @@ void handlePlayCommand(const std::vector<byte>& message) {
     // Extract timing information from the message
     // Assuming message[4] is minutes and message[5] is seconds
     Console.println("converting minutes");
-    int minutes = hexByteToDecimalInt(message[4]);
+    minutes = hexByteToDecimalInt(message[4]);
     Console.println("converting seconds");
-    int seconds = hexByteToDecimalInt(message[5]);
+    seconds = hexByteToDecimalInt(message[5]);
   }
   unsigned long duration = (minutes * 60ul) + (seconds); // Convert to s
   // Set a timer to call onTrackFinish after the duration

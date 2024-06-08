@@ -32,7 +32,7 @@ class PlaylistHandler():
         print("sending track to Arduino2")
         # bug
         self.client.put('playlist', track)
-        #self.client.put('playlist', track)
+        self.client.put('playlist', track)
 
         self.send_webhook_prepare_next(track)
 

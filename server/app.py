@@ -89,6 +89,7 @@ player_new_video = True
 stop_event = threading.Event()
 file_lock = threading.Lock()
 executor = ThreadPoolExecutor(1)  # Create a thread pool with one worker thread
+webhookExecutor = ThreadPoolExecutor(max_workers=2)
 
 @sleep_and_retry
 @limits(calls=CALLS, period=PERIOD)
@@ -395,7 +396,6 @@ def slinkPlaylist(playlist):
             track['cd_position'] = hex(int(track['cd_position']) - 200)[2:]
             slink_data += format_with_padding(track['cd_position'])
             slink_data += format_with_padding(track['position'])
-            slink_data += format_with_padding(track["position"])
 
         slink_data += "\r\n"
 
@@ -484,9 +484,7 @@ def slinkTrack(track):
     else:
         return jsonify(error=f"Failed to send track: {response.status_code} - {response.text}"), 500
 
-@app.route('/webhook', methods=['POST'])
-def webhook():
-    data = request.get_json()
+def process_webhook(data):
     print(data)
 
     if not USE_KODI:
@@ -507,7 +505,8 @@ def webhook():
         elif (cd >= 201):
             cd_position = cd-54
         else:
-            cd_position = cd    
+            #cd_position = cd 
+            cd_position =  int(data.get('cd', 1), 0)   
         track_position = track
 
         print(f"Playing track {track} from CD {cd} on device {device} with duration {duration} seconds.")
@@ -515,6 +514,8 @@ def webhook():
         deck_number = 1
         if (device == 146):
             deck_number = 2
+        if (device == 340):
+            deck_number = 2    
 
         print('CD position:', cd_position)
         print('Track position:', track_position)
@@ -640,7 +641,12 @@ def webhook():
         except ConnectionError:
             print('TV API Youtube is offline.')            
         except IndexError:
-            print('No matching track found.')
+            print('No matching track found.')    
+
+@app.route('/webhook', methods=['POST'])
+def webhook():
+    data = request.get_json()
+    webhookExecutor.submit(process_webhook, data)
     return 'OK', 200
 
 def printAllMusicVideos():
@@ -925,8 +931,7 @@ def start_websocket():
                             on_message=on_message)
 
     printAllMusicVideos()                        
-    while not stop_event.is_set():
-        ws.run_forever()
+    while not stop_event.is_set():  
         if not stop_event.is_set():
             time.sleep(10)  # Wait 10 seconds before attempting to reconnect
             print("KODI WebSocket disconnected. Reconnecting...")

@@ -2347,16 +2347,6 @@
          "name": "Lucky Luke",
          "tracks": [
             {
-               "duration": "3:30",
-               "position": "1",
-               "title": "I Want You (Original Radio Edit)",
-               "type_": "track",
-               "deck_number": 2,
-               "cd_position": 85,
-               "artist": "Filur Presents Magnum Coltrane Price",
-               "full_name": "Filur Presents Magnum Coltrane Price - I Want You (Original Radio Edit)"
-            },
-            {
                "_score": 1,
                "cd_position": 220,
                "deck_number": 1,
@@ -2378,6 +2368,39 @@
                "type_": "track"
             },
             {
+               "artist": "Filur Presents Magnum Coltrane Price",
+               "cd_position": 85,
+               "deck_number": 2,
+               "duration": "3:30",
+               "full_name": "Filur Presents Magnum Coltrane Price - I Want You (Original Radio Edit)",
+               "position": "1",
+               "title": "I Want You (Original Radio Edit)",
+               "type_": "track"
+            },
+            {
+               "artists": [
+                  {
+                     "anv": "PJ & Duncan AKA",
+                     "id": 36620,
+                     "join": "",
+                     "name": "PJ & Duncan",
+                     "resource_url": "https://api.discogs.com/artists/36620",
+                     "role": "",
+                     "tracks": ""
+                  }
+               ],
+               "cd_position": 284,
+               "deck_number": 1,
+               "duration": "3:13",
+               "full_name": "Various - If I Give You My Number (100% Radio Mix)",
+               "position": "2-5",
+               "title": "If I Give You My Number (100% Radio Mix)",
+               "type_": "track"
+            },
+            {
+               "artist": "Victoria Beckham",
+               "cd_position": 36,
+               "deck_number": 2,
                "duration": "3:16",
                "extraartists": [
                   {
@@ -2489,13 +2512,10 @@
                      "tracks": ""
                   }
                ],
+               "full_name": "Victoria Beckham - Not Such An Innocent Girl",
                "position": "1",
                "title": "Not Such An Innocent Girl",
-               "type_": "track",
-               "deck_number": 2,
-               "cd_position": 36,
-               "artist": "Victoria Beckham",
-               "full_name": "Victoria Beckham - Not Such An Innocent Girl"
+               "type_": "track"
             },
             {
                "_score": 1,
@@ -2525,26 +2545,6 @@
                "full_name": "Dr. Alban - Mr. DJ (Tokapi Mix)",
                "position": "1",
                "title": "Mr. DJ (Tokapi Mix)",
-               "type_": "track"
-            },
-            {
-               "artists": [
-                  {
-                     "anv": "PJ & Duncan AKA",
-                     "id": 36620,
-                     "join": "",
-                     "name": "PJ & Duncan",
-                     "resource_url": "https://api.discogs.com/artists/36620",
-                     "role": "",
-                     "tracks": ""
-                  }
-               ],
-               "cd_position": 284,
-               "deck_number": 1,
-               "duration": "3:13",
-               "full_name": "Various - If I Give You My Number (100% Radio Mix)",
-               "position": "2-5",
-               "title": "If I Give You My Number (100% Radio Mix)",
                "type_": "track"
             },
             {
@@ -4438,6 +4438,136 @@
             }
          ],
          "id": 105078256826225168
+      },
+      {
+         "name": "Alex Party",
+         "tracks": [
+            {
+               "duration": "3:55",
+               "position": "1",
+               "title": "Wrap Me Up (Radio Version)",
+               "type_": "track",
+               "deck_number": 1,
+               "cd_position": 80,
+               "artist": "Alex Party",
+               "full_name": "Alex Party - Wrap Me Up (Radio Version)"
+            },
+            {
+               "duration": "3:10",
+               "extraartists": [
+                  {
+                     "anv": "",
+                     "id": 12347,
+                     "join": "",
+                     "name": "Dancing Divaz",
+                     "resource_url": "https://api.discogs.com/artists/12347",
+                     "role": "Remix",
+                     "tracks": ""
+                  }
+               ],
+               "position": "2",
+               "title": "Don't Give Me Your Life (Dancing Divaz Edit)",
+               "type_": "track",
+               "deck_number": 2,
+               "cd_position": 11,
+               "artist": "Alex Party",
+               "full_name": "Alex Party - Don't Give Me Your Life (Dancing Divaz Edit)"
+            },
+            {
+               "duration": "5:00",
+               "extraartists": [
+                  {
+                     "anv": "",
+                     "id": 7282,
+                     "join": "",
+                     "name": "Alex Party",
+                     "resource_url": "https://api.discogs.com/artists/7282",
+                     "role": "Remix",
+                     "tracks": ""
+                  }
+               ],
+               "position": "2",
+               "title": "The Summer Is Magic (Alex Party Heavy Mix)",
+               "type_": "track",
+               "deck_number": 1,
+               "cd_position": 26,
+               "artist": "Playahitty",
+               "full_name": "Playahitty - The Summer Is Magic (Alex Party Heavy Mix)"
+            },
+            {
+               "duration": "3:52",
+               "extraartists": [
+                  {
+                     "anv": "",
+                     "id": 12347,
+                     "join": "",
+                     "name": "Dancing Divaz",
+                     "resource_url": "https://api.discogs.com/artists/12347",
+                     "role": "Remix",
+                     "tracks": ""
+                  }
+               ],
+               "position": "2",
+               "title": "Wrap Me Up (Dancing Divaz Edit)",
+               "type_": "track",
+               "deck_number": 1,
+               "cd_position": 80,
+               "artist": "Alex Party",
+               "full_name": "Alex Party - Wrap Me Up (Dancing Divaz Edit)"
+            },
+            {
+               "duration": "5:34",
+               "extraartists": [
+                  {
+                     "anv": "",
+                     "id": 7282,
+                     "join": "",
+                     "name": "Alex Party",
+                     "resource_url": "https://api.discogs.com/artists/7282",
+                     "role": "Remix",
+                     "tracks": ""
+                  },
+                  {
+                     "anv": "",
+                     "id": 495157,
+                     "join": "",
+                     "name": "Gianni Visnadi",
+                     "resource_url": "https://api.discogs.com/artists/495157",
+                     "role": "Remix, Producer [Additional]",
+                     "tracks": ""
+                  }
+               ],
+               "position": "2",
+               "title": "Transamazonia (Alex Party Aguirre Mix)",
+               "type_": "track",
+               "deck_number": 1,
+               "cd_position": 165,
+               "artist": "Shamen, The",
+               "full_name": "Shamen, The - Transamazonia (Alex Party Aguirre Mix)"
+            },
+            {
+               "artists": [
+                  {
+                     "anv": "",
+                     "id": 7282,
+                     "join": "",
+                     "name": "Alex Party",
+                     "resource_url": "https://api.discogs.com/artists/7282",
+                     "role": "",
+                     "tracks": ""
+                  }
+               ],
+               "duration": "",
+               "position": "19",
+               "title": "Read My Lips",
+               "type_": "track",
+               "deck_number": 2,
+               "cd_position": 49,
+               "artist": "Various",
+               "full_name": "Various - Read My Lips"
+            }
+         ],
+         "id": 109533132110674293
       }
    ]
 }

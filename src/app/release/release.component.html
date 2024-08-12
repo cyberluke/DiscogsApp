@@ -46,7 +46,7 @@
 
         <mat-grid-list cols="7" rowHeight="1:1">
           <mat-grid-tile *ngFor="let release of (filteredOptions | async)">
-            <img [src]="getPrimaryImageUrl(release)" [alt]="release.title" [matTooltip]="release.title + ' (DECK:' + release.deck_number + ', CD:' + release.cd_position + ')'" class="d-block w-100" loading="lazy" (click)="releaseGoToSlide(release)" />
+            <img loading="lazy" [src]="getPrimaryImageUrl(release)" [alt]="release.title" [matTooltip]="release.title + ' (DECK:' + release.deck_number + ', CD:' + release.cd_position + ')'" class="d-block w-100" (click)="releaseGoToSlide(release)" />
           </mat-grid-tile>
         </mat-grid-list>
       </div>
@@ -56,7 +56,7 @@
                 <c-carousel (itemChange)="onItemChange($event)" [interval]="0" *ngIf="releases && releases.length">
                   <c-carousel-inner>
                     <c-carousel-item *ngFor="let release of releases">
-                      <img [src]="getPrimaryImageUrl(release)" [alt]="release.title" class="d-block w-600" loading="lazy" />
+                      <img loading="lazy" [src]="getPrimaryImageUrl(release)" [alt]="release.title" class="d-block w-600"  />
                     </c-carousel-item>
                   </c-carousel-inner>
                   <c-carousel-control #prevControl [routerLink] caption="Previous" direction="prev"></c-carousel-control>

@@ -2,9 +2,11 @@
 #ifdef ESP32
 #include <WiFi.h>
 #include <AsyncTCP.h>
+#include <HTTPClient.h>
 #elif defined(ESP8266)
 #include <ESP8266WiFi.h>
 #include <ESPAsyncTCP.h>
+#include <ESP8266HTTPClient.h>
 #endif
 #include <ESPAsyncWebServer.h>
 
@@ -15,14 +17,14 @@
 #include <function_objects.h>
 #include <Process.h>
 
-// Webhook support
-//#include <HttpClient.h>
-
 #define DEBUG_PULSES
+
+// Webhook support
+const char* serverName = "http://192.168.1.122:5000/webhook";  
 
 const byte OUTPUT_PIN = 16; // 2
 const byte INPUT_PIN = 17; // 3
-const byte PULSE_BUFFER_SIZE = 200;
+const byte PULSE_BUFFER_SIZE = 600;
 
 volatile unsigned long timeLowTransition = 0;
 volatile byte bufferReadPosition = 0;
@@ -31,6 +33,7 @@ volatile byte pulseBuffer[PULSE_BUFFER_SIZE];
 
 // Define a buffer to hold the incoming playlist data
 char playlistBuffer[512]; // Adjust the size as needed for your data
+int playlistBufferLength = 0;
 int stopButtonCounter = 0;
 
 // Global variables
@@ -49,8 +52,8 @@ String pulseLengths;
 #endif
 
 AsyncWebServer server(8080);
-const char* ssid = "";
-const char* password = "";
+const char* ssid = "DILNA21";
+const char* password = "nanotriko";
 const char* PARAM_MESSAGE = "message";
 
 void notFound(AsyncWebServerRequest *request) {
@@ -59,15 +62,7 @@ void notFound(AsyncWebServerRequest *request) {
 
 void setup()
 {
-  //Bridge.begin();
   Serial.begin(115200L);
-
-      int minutes = 8;
-    int seconds = 8;
-    int64_t duration = (minutes * 60) + (seconds);
-
-    Serial.print("Duration2: ");
-    Serial.println(duration);  // Should print 488
 
   pinMode(OUTPUT_PIN, OUTPUT);
   digitalWrite(OUTPUT_PIN, LOW);
@@ -144,7 +139,8 @@ void processBodyHandler(AsyncWebServerRequest *request, uint8_t *data, size_t le
   
   // Ensure the buffer is null-terminated
   playlistBuffer[bodyLength] = '\0';
-  readSLinkBuffer(bodyLength);  
+  playlistBufferLength = bodyLength;
+  //readSLinkBuffer(bodyLength);  
 }
 
 String processBodyData(uint8_t *data, size_t len, size_t index, size_t total, String &bodyData) {
@@ -321,6 +317,7 @@ void handleStopCommand(const std::vector<byte>& message) {
     stopButtonCounter = 0;
  
     //client.get("http://localhost:8080/stop");
+    httpPost("{\"status\":\"STOP\"}");
   }
   if (isTimerEnabled) {
     isTimerEnabled = false;
@@ -369,9 +366,10 @@ void handlePlayCommand(const std::vector<byte>& message) {
   Serial.println(duration);
 
   // We Use handle30SecCommand() instead
-  //alarmTime = duration * 1000 * 1000; // convert to micro seconds
-  //startTime = readCurrentTimestamp();
-  //isTimerEnabled = true;
+  // TODO 3
+  alarmTime = duration * 1000 * 1000; // convert to micro seconds
+  startTime = readCurrentTimestamp();
+  isTimerEnabled = true;
 
   int disc = 0;
   int track = 0;
@@ -388,8 +386,15 @@ void handlePlayCommand(const std::vector<byte>& message) {
 
   Serial.println("sending html get");
 
-  //client.get("http://localhost:8080/playButton/" + String(deckId) + "/" + String(disc) + "/" + String(track) + "/" + String(duration));
+  char buffer[256];
 
+  // Format the string using sprintf
+  sprintf(buffer, "{\"status\":\"PLAY\", \"device\":\"%s\", \"cd\":\"%s\", \"track\":\"%s\", \"duration\":\"%s\"}", String(deckId), String(disc), String(track), String(duration));
+
+  // Convert the character buffer to a String
+  String jsonString = String(buffer);
+  //client.get("http://localhost:8080/playButton/" + String(deckId) + "/" + String(disc) + "/" + String(track) + "/" + String(duration));
+  //httpPost(jsonString); // using prepare_track instead
 
 
 }
@@ -407,19 +412,30 @@ void handle30SecCommand(const std::vector<byte>& message) {
   isTimerEnabled = true;
   //Bridge.put("nextTrackTimer", duration);
 
+  // Define a character buffer to hold the formatted string
+  char buffer[128];
+
+  // Format the string using sprintf
+  sprintf(buffer, "{\"status\":\"NEXT_TRACK_IN\", \"duration\":\"%s\"}", String(duration-3));
+
+  // Convert the character buffer to a String
+  String jsonString = String(buffer);
   //client.get("http://localhost:8080/nextTrack/" + String(duration-3));
+  httpPost(jsonString); 
 }
 
 void handleNextCommand(const std::vector<byte>& message) {
   isTimerEnabled = false;
 
   //client.get("http://localhost:8080/nextTrack");
+  httpPost("{\"status\":\"NEXT_TRACK\"}"); 
 }
 
 void handlePrevCommand(const std::vector<byte>& message) {
   isTimerEnabled = false;
 
   //client.get("http://localhost:8080/prevTrack");
+  httpPost("{\"status\":\"PREV_TRACK\"}"); 
 }
 
 void playNextFromPlaylist() {
@@ -450,6 +466,15 @@ void playNextFromPlaylist() {
     //bytesReceived = command + "\n" + bytesReceived;
     sendCommand(commandBytes, sizeof(commandBytes));
   }
+
+      char buffer[256];
+
+  // Format the string using sprintf
+  sprintf(buffer, "{\"status\":\"PREPARE_TRACK\", \"track\":\"%s\"}", String(command));
+
+  // Convert the character buffer to a String
+  String jsonString = String(buffer);
+  httpPost(jsonString); // using PREPARE_TRACK instead of PLAY
 }
 
 void onTrackFinish() {
@@ -578,6 +603,11 @@ void loop()
   processSlinkInput();
   //processSerialInput();
 
+  if (playlistBufferLength > 0) {
+    readSLinkBuffer(playlistBufferLength);
+    playlistBufferLength = 0;
+  }
+
   if (isTimerEnabled) {
     if (readCurrentTimestamp() - startTime >= alarmTime) {
       // Time to trigger the alarm
@@ -612,6 +642,9 @@ void readSLinkBuffer(int bytesRead) {
         isTimerEnabled = false;
         playlist.clear();
       } else {
+        if (!isPlaylist) {
+          playlist.clear(); // TODO
+        }
         String command = String(song);
         // A hexadecimal command is expected
         if (command.length() % 2 != 0) {
@@ -657,4 +690,38 @@ void readSLinkBuffer(int bytesRead) {
       onTrackFinish();
     }
   }
+}
+
+void httpPost(String jsonPayload) {
+  // Check WiFi connection status
+    if (WiFi.status() == WL_CONNECTED) {
+        HTTPClient http;
+
+        // Specify request destination
+        http.begin(serverName);
+
+        // Specify content type header
+        http.addHeader("Content-Type", "application/json");
+
+        // Send HTTP POST request
+        int httpResponseCode = http.POST(jsonPayload);
+
+        // Check the returning code
+        if (httpResponseCode > 0) {
+            Serial.print("HTTP Response code: ");
+            Serial.println(httpResponseCode);
+
+            // Get the response payload
+            String response = http.getString();
+            Serial.print("Response: ");
+            Serial.println(response);
+        }
+        else {
+            Serial.print("Error code: ");
+            Serial.println(httpResponseCode);
+        }
+
+        // Free resources
+        http.end();
+    }
 }

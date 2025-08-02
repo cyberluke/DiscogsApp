@@ -9,7 +9,7 @@ import requests
 from urllib.error import HTTPError
 import csv
 import re
-from pynput import keyboard
+import keyboard as kb
 from io import BytesIO, StringIO
 import logging
 from dotenv import load_dotenv
@@ -197,6 +197,41 @@ def custom_object_hook(d):
             d[k] = custom_object_hook(v)
     return SimpleNamespace(**d)
 
+@app.route('/favourite', methods=['GET'])
+def get_tracks_with_high_score():
+    # Retrieve all releases from the database
+    releases = json_db.getAll()
+    
+    # List to store tracks with a score greater than 1
+    high_score_tracks = []
+    
+    for release in releases:
+        # Filter tracks within each release
+        tracks = [track for track in release['tracklist'] if track.get('_score', 0) >= 1]
+        if tracks:
+            # Add the release id to each track and store them in the list
+            for track in tracks:
+                # Determine the artist name
+                artist_name = release['artists_sort']
+                if artist_name == "Various" and track.get('artists'):
+                    # Use the name of the first artist in the list if artists_sort is "Various"
+                    artist_name = track['artists'][0].get('name', 'Unknown Artist')
+
+                track['release_id'] = release['release_id']
+                track['deck_number'] = release['deck_number']
+                track['cd_position'] = release['cd_position']
+                track['full_name'] = artist_name + " - " + track['title']
+                track["artist"] = artist_name
+                high_score_tracks.append(track)
+    
+    # Return the filtered tracks as JSON
+    response_data = {
+        "name": "Favourite tracks",
+        "tracks": high_score_tracks
+    }
+
+    return jsonify(response_data), 200
+
 @app.route('/favourite', methods=['POST'])
 def add_to_favourites():
     data = json.loads(request.data, object_hook=custom_object_hook)
@@ -275,45 +310,51 @@ def get_or_create_release(deck_number, cd_position, release_id):
 
 @app.route('/download-image', methods=['POST'])
 def download_image():
-    # Get the JSON data sent to the endpoint
-    data = request.get_json()
-    image_url = data.get('image_url')
-    image_name = data.get('rename').replace('#','-csharp-') + ".jpeg"
-    local_folder = 'downloaded_images'
+    try:
+        # Get the JSON data sent to the endpoint
+        data = request.get_json()
+        if not data.get('rename'):
+            return jsonify({"error": "No image name provided."}), 400
 
-    if not image_url:
-        return jsonify({"error": "No image URL provided."}), 400
+        # Process image name and setup paths
+        image_name = data.get('rename').replace('#','-csharp-') + ".jpeg"
+        local_folder = os.path.join('server', 'downloaded_images')
+        local_image_path = os.path.join(local_folder, image_name)
+        default_image_path = os.path.join('src', 'assets', 'default.png')
 
-    # Ensure the local_folder exists
-    if not os.path.exists(local_folder):
-        os.makedirs(local_folder)
+        # Check if file exists in local directory
+        if os.path.isfile(local_image_path):
+            print(f"Using existing image at {local_image_path}")
+            return jsonify({"url": escape(f'{FRONTEND}/images/{image_name}')})
 
-    # Extract the image name from the URL
-    #image_name = image_url.split('/')[-1]
-    #header = response.info().getheader('Content-Disposition')
-    #value, params = cgi.parse_header(header)
-    #image_name = params['filename']
+        # If image doesn't exist locally, serve default image
+        if os.path.isfile(default_image_path):
+            print(f"Image not found, serving default image")
+            return jsonify({"url": escape(f'{FRONTEND}/assets/default.png')})
 
-    # Create the path for the local image
-    local_image_path = os.path.join(local_folder, image_name)
+        # If neither exists, return error
+        return jsonify({"error": "Image not found and default image unavailable"}), 404
 
-    # Check if the image already exists to avoid re-downloading
-    if not os.path.isfile(local_image_path):
-        print("Downloading image...")
-        # Get the image data using requests
-        response = call_discogs_api_binary(image_url, stream=True)
+        # Original download functionality commented out
+        '''
+        # Ensure download directory exists
+        os.makedirs(local_folder, exist_ok=True)
 
-        # Check if the request was successful
+        # Proceed with download only if file doesn't exist
+        print(f"Downloading image from {data['image_url']}...")
+        response = call_discogs_api_binary(data['image_url'], stream=True)
+        
         if response.status_code == 200:
-            # Open the local file for writing in binary mode
             i = Image.open(BytesIO(response.content))
             i.save(local_image_path)
+            print(f"Image successfully downloaded to {local_image_path}")
         else:
             return jsonify({"error": "Failed to retrieve image."}), response.status_code
+        '''
 
-    # Return the path to the local image file
-    local_image_url = f'{FRONTEND}/images/{image_name}'
-    return jsonify({"url": escape(local_image_url)})
+    except Exception as e:
+        print(f"Error in download_image: {str(e)}")
+        return jsonify({"error": f"Error processing image: {str(e)}"}), 500
 
 def send_request_with_retries(url, data, headers, max_retries=20, backoff_factor=1):
     retries = 0
@@ -334,6 +375,14 @@ def send_request_with_retries(url, data, headers, max_retries=20, backoff_factor
 @app.route('/playlists', methods=['GET'])
 def playlists():
     playlist = playlist_db.getAll()
+
+        # Call get_tracks_with_high_score() and get its JSON response
+    favourite_tracks_response, status_code = get_tracks_with_high_score()
+    favourite_tracks_data = favourite_tracks_response.get_json()  # Extract JSON data from the response
+    
+    # Append the favourite tracks to the data list
+    playlist.append(favourite_tracks_data)
+
     return jsonify(playlist), 200
 
 @app.route('/save-playlist', methods=['POST'])
@@ -397,6 +446,10 @@ def slinkPlaylist(playlist):
             slink_data += format_with_padding(track['cd_position'])
             slink_data += format_with_padding(track['position'])
 
+        if (track['duration'] == ""):
+            track['duration'] = "3:20"
+        slink_data += ':'
+        slink_data += str(duration_to_seconds(track['duration']))
         slink_data += "\r\n"
 
     response = slinkSend(slink_data)
@@ -418,6 +471,10 @@ def track():
     slinkTrack(track)
 
     return jsonify({"status": "Track sent"}), 200
+
+def duration_to_seconds(duration_str):
+    minutes, seconds = map(int, duration_str.split(':'))
+    return minutes * 60 + seconds
 
 def convert_duration_to_seconds(duration):
     if duration == "":
@@ -863,7 +920,17 @@ def loadMusicVideoOnKodi(musicvideoid):
 
 @app.route('/images/<filename>', methods=['GET'])
 def uploaded_file(filename):
-    return send_from_directory('../downloaded_images', unescape(filename.replace('-csharp-','#')), as_attachment=False)
+    # Convert filename back to original format
+    processed_filename = unescape(filename.replace('-csharp-','#'))
+    
+    # Use absolute path within server directory
+    images_dir = os.path.join('server', 'downloaded_images')
+    
+    # First check if file exists to avoid unnecessary processing
+    if not os.path.isfile(os.path.join(images_dir, processed_filename)):
+        abort(404)
+        
+    return send_from_directory(images_dir, processed_filename, as_attachment=False)
 
 
 @app.errorhandler(429)
@@ -937,20 +1004,15 @@ def start_websocket():
             print("KODI WebSocket disconnected. Reconnecting...")
     print("KODI WebSocket thread stopping")
 
-def on_press(key):
-
-    try:
-        if key.char == 'q':
-            stop_event.set()
-    except AttributeError:
-        pass
+def on_press(event):
+    if event.name == 'q':
+        stop_event.set()
 
 
 if __name__ == '__main__':
 
-    # Initialize the keyboard listener
-    listener = keyboard.Listener(on_press=on_press)
-    listener.start()
+    # Initialize the keyboard hook
+    kb.on_press(on_press)
     t1 = None
     t2 = None
 
@@ -976,8 +1038,8 @@ if __name__ == '__main__':
     except Exception as e:
         print("An exception occurred: %g. Stopping all threads and listeners.", e)
     finally:
-        # Stop the listener
-        listener.stop()
+        # Unhook keyboard listener
+        kb.unhook_all()
         stop_event.set()
         #t1.join()
         #t2.join()

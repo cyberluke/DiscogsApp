@@ -19,7 +19,7 @@
         },
         {
             "name": "Python: Flask2",
-            "type": "python",
+            "type": "debugpy",
             "request": "launch",
             "program": "server/app.py",
             "envFile": "${workspaceFolder}/server/.env",
@@ -38,7 +38,7 @@
         },
         {
             "name": "Python: Flask",
-            "type": "python",
+            "type": "debugpy",
             "request": "launch",
             "module": "flask",
             "envFile": "${workspaceFolder}/server/.env",

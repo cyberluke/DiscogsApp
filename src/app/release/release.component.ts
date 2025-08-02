@@ -52,11 +52,15 @@ export class ReleaseComponent implements OnInit {
   }
 
   prevSlide() {
-    this.prevControl.play();
+    if (this.prevControl) {
+      this.prevControl['play'](); // Using bracket notation to access the method
+    }
   }
 
   nextSlide() {
-    this.nextControl.play();
+    if (this.nextControl) {
+      this.nextControl['play'](); // Using bracket notation to access the method
+    }
   }
 
   async releaseGoToSlide(release: any): Promise<void> {

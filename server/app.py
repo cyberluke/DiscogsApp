@@ -920,17 +920,46 @@ def loadMusicVideoOnKodi(musicvideoid):
 
 @app.route('/images/<filename>', methods=['GET'])
 def uploaded_file(filename):
-    # Convert filename back to original format
-    processed_filename = unescape(filename.replace('-csharp-','#'))
+    # Debug logging
+    app.logger.info(f"DEBUG: Image route called with filename: '{filename}'")
+    app.logger.info(f"DEBUG: Current working directory: '{os.getcwd()}'")
     
-    # Use absolute path within server directory
-    images_dir = os.path.join('server', 'downloaded_images')
-    
-    # First check if file exists to avoid unnecessary processing
-    if not os.path.isfile(os.path.join(images_dir, processed_filename)):
-        abort(404)
+    try:
+        # Convert filename back to original format
+        processed_filename = unescape(filename.replace('-csharp-','#'))
+        app.logger.info(f"DEBUG: Processed filename: '{processed_filename}'")
         
-    return send_from_directory(images_dir, processed_filename, as_attachment=False)
+        # Use absolute path within server directory
+        images_dir = 'downloaded_images'
+        app.logger.info(f"DEBUG: Images directory path: '{images_dir}'")
+        
+        # Check full file path
+        full_path = os.path.join(images_dir, processed_filename)
+        app.logger.info(f"DEBUG: Full file path: '{full_path}'")
+        app.logger.info(f"DEBUG: File exists check: {os.path.isfile(full_path)}")
+        
+        # Check if images_dir exists
+        app.logger.info(f"DEBUG: Images directory exists: {os.path.isdir(images_dir)}")
+        
+        # List files in directory for debugging
+        if os.path.isdir(images_dir):
+            files_in_dir = os.listdir(images_dir)[:5]  # First 5 files for debugging
+            app.logger.info(f"DEBUG: First 5 files in directory: {files_in_dir}")
+        
+        # First check if file exists to avoid unnecessary processing
+        if not os.path.isfile(os.path.join(images_dir, processed_filename)):
+            app.logger.warning(f"DEBUG: File not found, returning 404: '{processed_filename}'")
+            abort(404)
+            
+        app.logger.info(f"DEBUG: Sending file from directory")
+        return send_from_directory(images_dir, processed_filename, as_attachment=False)
+        
+    except Exception as e:
+        app.logger.error(f"DEBUG: Exception in uploaded_file: {str(e)}")
+        app.logger.error(f"DEBUG: Exception type: {type(e)}")
+        import traceback
+        app.logger.error(f"DEBUG: Full traceback: {traceback.format_exc()}")
+        raise e
 
 
 @app.errorhandler(429)

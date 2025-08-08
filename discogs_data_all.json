@@ -50138,7 +50138,8 @@
                "position": "2",
                "type_": "track",
                "title": "Heyo (Nana Ae) (Extended Mix)",
-               "duration": "7:58"
+               "duration": "7:58",
+               "_score": 1
             },
             {
                "position": "3",
@@ -53427,13 +53428,15 @@
                "position": "3",
                "type_": "track",
                "title": "Something (Loop 2 Dub Mix)",
-               "duration": "4:46"
+               "duration": "4:46",
+               "_score": 1
             },
             {
                "position": "4",
                "type_": "track",
                "title": "Strangelove (Club Mix)",
-               "duration": "6:08"
+               "duration": "6:08",
+               "_score": 1
             },
             {
                "position": "5",
@@ -53831,7 +53834,8 @@
                "position": "1",
                "type_": "track",
                "title": "Your Woman",
-               "duration": "4:18"
+               "duration": "4:18",
+               "_score": 1
             },
             {
                "position": "2",
@@ -229214,7 +229218,8 @@
                   }
                ],
                "title": "Komodo (Alternative Mix)",
-               "duration": ""
+               "duration": "",
+               "_score": 1
             },
             {
                "position": "1.13",
@@ -229231,7 +229236,8 @@
                   }
                ],
                "title": "7 Suns",
-               "duration": ""
+               "duration": "",
+               "_score": 1
             },
             {
                "position": "1.14",

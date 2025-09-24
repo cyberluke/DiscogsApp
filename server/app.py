@@ -327,30 +327,33 @@ def download_image():
             logging.info(f"Using existing image at {local_image_path}")
             return jsonify({"url": escape(f'{FRONTEND}/images/{image_name}')})
 
-        # If image doesn't exist locally, serve default image
+        # If image doesn't exist locally, try to download from Discogs
+        if 'image_url' in data and data['image_url']:
+            # Ensure download directory exists
+            os.makedirs(local_folder, exist_ok=True)
+
+            # Proceed with download since file doesn't exist
+            logging.info(f"Downloading image from {data['image_url']}...")
+            try:
+                response = call_discogs_api_binary(data['image_url'], stream=True)
+                
+                if response.status_code == 200:
+                    i = Image.open(BytesIO(response.content))
+                    i.save(local_image_path)
+                    logging.info(f"Image successfully downloaded to {local_image_path}")
+                    return jsonify({"url": escape(f'{FRONTEND}/images/{image_name}')})
+                else:
+                    logging.warning(f"Failed to download image from Discogs: {response.status_code}")
+            except Exception as download_error:
+                logging.error(f"Error downloading image from Discogs: {str(download_error)}")
+
+        # If download failed or no image_url provided, serve default image
         if os.path.isfile(default_image_path):
             logging.info(f"Image not found at {local_image_path}, serving default image")
             return jsonify({"url": escape(f'{FRONTEND}/assets/default.png')})
 
         # If neither exists, return error
         return jsonify({"error": "Image not found and default image unavailable"}), 404
-
-        # Original download functionality commented out
-        '''
-        # Ensure download directory exists
-        os.makedirs(local_folder, exist_ok=True)
-
-        # Proceed with download only if file doesn't exist
-        print(f"Downloading image from {data['image_url']}...")
-        response = call_discogs_api_binary(data['image_url'], stream=True)
-        
-        if response.status_code == 200:
-            i = Image.open(BytesIO(response.content))
-            i.save(local_image_path)
-            print(f"Image successfully downloaded to {local_image_path}")
-        else:
-            return jsonify({"error": "Failed to retrieve image."}), response.status_code
-        '''
 
     except Exception as e:
         logging.error(f"Error in download_image: {str(e)}")

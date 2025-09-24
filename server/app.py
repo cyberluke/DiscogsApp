@@ -1,4 +1,4 @@
-from flask import Flask, request, jsonify, abort, send_from_directory
+from flask import Flask, request, jsonify, abort, send_from_directory, redirect
 import threading
 from types import SimpleNamespace
 from flask_cors import CORS
@@ -141,7 +141,7 @@ def import_csv():
 
         # Check if the current line is a duplicate of the last one
         if discogs_url == last_discogs_url:
-            print(f"Duplicate URL found and skipped: {discogs_url}")
+            logging.info(f"Duplicate URL found and skipped: {discogs_url}")
             continue
 
         # Update the last processed URL
@@ -184,7 +184,7 @@ def import_csv():
             #    print(f"Failed to process release ID {release_id}: {e}")
             #    continue
         else:
-            print(f"No release ID found in URL {discogs_url}")
+            logging.warning(f"No release ID found in URL {discogs_url}")
 
     return jsonify({"status": "Import completed"}), 200
 
@@ -316,20 +316,20 @@ def download_image():
         if not data.get('rename'):
             return jsonify({"error": "No image name provided."}), 400
 
-        # Process image name and setup paths
+        # Process image name and setup paths (use same directory as /images route)
         image_name = data.get('rename').replace('#','-csharp-') + ".jpeg"
-        local_folder = os.path.join('server', 'downloaded_images')
+        local_folder = 'downloaded_images'
         local_image_path = os.path.join(local_folder, image_name)
         default_image_path = os.path.join('src', 'assets', 'default.png')
 
         # Check if file exists in local directory
         if os.path.isfile(local_image_path):
-            print(f"Using existing image at {local_image_path}")
+            logging.info(f"Using existing image at {local_image_path}")
             return jsonify({"url": escape(f'{FRONTEND}/images/{image_name}')})
 
         # If image doesn't exist locally, serve default image
         if os.path.isfile(default_image_path):
-            print(f"Image not found, serving default image")
+            logging.info(f"Image not found at {local_image_path}, serving default image")
             return jsonify({"url": escape(f'{FRONTEND}/assets/default.png')})
 
         # If neither exists, return error
@@ -353,7 +353,7 @@ def download_image():
         '''
 
     except Exception as e:
-        print(f"Error in download_image: {str(e)}")
+        logging.error(f"Error in download_image: {str(e)}")
         return jsonify({"error": f"Error processing image: {str(e)}"}), 500
 
 def send_request_with_retries(url, data, headers, max_retries=20, backoff_factor=1):
@@ -925,41 +925,96 @@ def uploaded_file(filename):
     app.logger.info(f"DEBUG: Current working directory: '{os.getcwd()}'")
     
     try:
-        # Convert filename back to original format
-        processed_filename = unescape(filename.replace('-csharp-','#'))
-        app.logger.info(f"DEBUG: Processed filename: '{processed_filename}'")
-        
-        # Use absolute path within server directory
-        images_dir = 'downloaded_images'
+        # Use the main downloaded_images directory (most complete)
+        images_dir = os.path.abspath('downloaded_images')
         app.logger.info(f"DEBUG: Images directory path: '{images_dir}'")
+        app.logger.info(f"DEBUG: Directory exists: {os.path.isdir(images_dir)}")
         
-        # Check full file path
-        full_path = os.path.join(images_dir, processed_filename)
-        app.logger.info(f"DEBUG: Full file path: '{full_path}'")
-        app.logger.info(f"DEBUG: File exists check: {os.path.isfile(full_path)}")
-        
-        # Check if images_dir exists
-        app.logger.info(f"DEBUG: Images directory exists: {os.path.isdir(images_dir)}")
-        
-        # List files in directory for debugging
-        if os.path.isdir(images_dir):
-            files_in_dir = os.listdir(images_dir)[:5]  # First 5 files for debugging
-            app.logger.info(f"DEBUG: First 5 files in directory: {files_in_dir}")
-        
-        # First check if file exists to avoid unnecessary processing
-        if not os.path.isfile(os.path.join(images_dir, processed_filename)):
-            app.logger.warning(f"DEBUG: File not found, returning 404: '{processed_filename}'")
-            abort(404)
+        if not os.path.isdir(images_dir):
+            app.logger.warning(f"DEBUG: Images directory does not exist, falling back to default: '{images_dir}'")
+            return serve_default_image()
             
-        app.logger.info(f"DEBUG: Sending file from directory")
-        return send_from_directory(images_dir, processed_filename, as_attachment=False)
+        # List files in directory for debugging
+        files_in_dir = os.listdir(images_dir)[:5]  # First 5 files for debugging
+        app.logger.info(f"DEBUG: First 5 files in directory: {files_in_dir}")
+        
+        # Try multiple filename patterns to handle both old and new file storage methods
+        filename_candidates = [
+            unescape(filename),  # Try filename as-is first (for files stored with -csharp-)
+            unescape(filename.replace('-csharp-','#'))  # Then try converted (for files stored with #)
+        ]
+        
+        processed_filename = None
+        for candidate in filename_candidates:
+            full_path = os.path.join(images_dir, candidate)
+            app.logger.info(f"DEBUG: Trying filename: '{candidate}'")
+            app.logger.info(f"DEBUG: Full file path: '{full_path}'")
+            app.logger.info(f"DEBUG: File exists check: {os.path.isfile(full_path)}")
+            
+            if os.path.isfile(full_path):
+                processed_filename = candidate
+                app.logger.info(f"DEBUG: Found file with pattern: '{processed_filename}'")
+                break
+        
+        # If no file found with any pattern, serve default
+        if processed_filename is None:
+            app.logger.warning(f"DEBUG: File not found with any pattern, falling back to default: '{filename}'")
+            return serve_default_image()
+            
+        app.logger.info(f"DEBUG: Sending file from directory: '{images_dir}'")
+        
+        # Try to serve the file with retry mechanism for Windows file locking
+        max_retries = 3
+        retry_delay = 0.1
+        
+        for attempt in range(max_retries):
+            try:
+                return send_from_directory(images_dir, processed_filename, as_attachment=False)
+            except (OSError, IOError, PermissionError) as file_error:
+                if attempt < max_retries - 1:
+                    app.logger.warning(f"DEBUG: File access error on attempt {attempt + 1}, retrying: {str(file_error)}")
+                    time.sleep(retry_delay)
+                    retry_delay *= 2  # Exponential backoff
+                    continue
+                else:
+                    app.logger.error(f"DEBUG: File access failed after {max_retries} attempts, falling back to default: {str(file_error)}")
+                    return serve_default_image()
         
     except Exception as e:
         app.logger.error(f"DEBUG: Exception in uploaded_file: {str(e)}")
         app.logger.error(f"DEBUG: Exception type: {type(e)}")
         import traceback
         app.logger.error(f"DEBUG: Full traceback: {traceback.format_exc()}")
-        raise e
+        app.logger.warning(f"DEBUG: Serving default image due to exception")
+        return serve_default_image()
+
+def serve_default_image():
+    """Redirect to the default image on the frontend server (port 4200)"""
+    try:
+        # Check if default.png exists in src/assets
+        default_image_path = os.path.join('src', 'assets', 'default.png')
+        if os.path.isfile(default_image_path):
+            app.logger.info(f"DEBUG: Redirecting to frontend default image")
+            return redirect(f'{FRONTEND}/assets/default.png')
+        
+        # Fallback: try to find any .png file in src/assets as default
+        assets_dir = os.path.join('src', 'assets')
+        if os.path.isdir(assets_dir):
+            for file in os.listdir(assets_dir):
+                if file.lower().endswith('.png'):
+                    app.logger.info(f"DEBUG: Redirecting to frontend fallback image: {file}")
+                    return redirect(f'{FRONTEND}/assets/{file}')
+        
+        # Ultimate fallback: return 404
+        app.logger.error(f"DEBUG: No default image available, returning 404")
+        abort(404)
+        
+    except Exception as e:
+        app.logger.error(f"DEBUG: Error redirecting to default image: {str(e)}")
+        abort(404)
+    
+    # This line should never be reached due to abort(404) above, but ensures function always returns
+    abort(404)
 
 
 @app.errorhandler(429)

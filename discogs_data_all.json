@@ -3700,7 +3700,8 @@
                "position": "3",
                "type_": "track",
                "title": "Flying High (Belly Mix)",
-               "duration": "5:25"
+               "duration": "5:25",
+               "_score": 1
             },
             {
                "position": "4",
@@ -411882,7 +411883,8 @@
                      "resource_url": "https://api.discogs.com/artists/25574"
                   }
                ],
-               "duration": "6:14"
+               "duration": "6:14",
+               "_score": 1
             },
             {
                "position": "5",
@@ -417846,7 +417848,8 @@
                   }
                ],
                "title": "I Luv U Baby (Radio Mix)",
-               "duration": "3:35"
+               "duration": "3:35",
+               "_score": 1
             },
             {
                "position": "6",
@@ -472200,6 +472203,648 @@
          "deck_number": 2,
          "release_id": 378078,
          "cd_position": 289
+      },
+      {
+         "id": 168204551270851732,
+         "status": "Accepted",
+         "year": 2000,
+         "resource_url": "https://api.discogs.com/releases/1459709",
+         "uri": "https://www.discogs.com/release/1459709-JK-You-Got-Me-Dancing",
+         "artists": [
+            {
+               "name": "J.K.",
+               "anv": "",
+               "join": "",
+               "role": "",
+               "tracks": "",
+               "id": 43674,
+               "resource_url": "https://api.discogs.com/artists/43674",
+               "thumbnail_url": "https://i.discogs.com/Ddwy5EmUCPycX7hrFFSXfYZAN92UrLtzrKNR1uA-BsY/rs:fit/g:sm/q:90/h:600/w:431/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9BLTQzNjc0/LTEyNjkzOTEwODIu/anBlZw.jpeg"
+            }
+         ],
+         "artists_sort": "J.K.",
+         "labels": [
+            {
+               "name": "Blanco Y Negro (2)",
+               "catno": "BNCD 1092 (CM)",
+               "entity_type": "1",
+               "entity_type_name": "Label",
+               "id": 1967,
+               "resource_url": "https://api.discogs.com/labels/1967",
+               "thumbnail_url": "https://i.discogs.com/GbqNJW2ITt99IKYW-Vnj9GT0rnjftKMFHOsWAHNbk8E/rs:fit/g:sm/q:90/h:136/w:448/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9MLTE5Njct/MTQ4NTkyMjg3Ny05/NDc2LmpwZWc.jpeg"
+            }
+         ],
+         "series": [],
+         "companies": [
+            {
+               "name": "Off Limits Recording Studios",
+               "catno": "",
+               "entity_type": "27",
+               "entity_type_name": "Mixed At",
+               "id": 266007,
+               "resource_url": "https://api.discogs.com/labels/266007"
+            },
+            {
+               "name": "Off Limits",
+               "catno": "",
+               "entity_type": "21",
+               "entity_type_name": "Published By",
+               "id": 64813,
+               "resource_url": "https://api.discogs.com/labels/64813",
+               "thumbnail_url": "https://i.discogs.com/YHQslba2CKLstjuJGxDOP1KlHnITmejcQ8CYBXFLxvM/rs:fit/g:sm/q:90/h:354/w:550/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9MLTY0ODEz/LTEyNDE0NjA2MTYu/anBlZw.jpeg"
+            },
+            {
+               "name": "Energy Production S.r.l.",
+               "catno": "",
+               "entity_type": "21",
+               "entity_type_name": "Published By",
+               "id": 273219,
+               "resource_url": "https://api.discogs.com/labels/273219",
+               "thumbnail_url": "https://i.discogs.com/xvolKPE6ipmeJn8GMoZTFBl3mEnt3h3ssiy_lX0wPLo/rs:fit/g:sm/q:90/h:600/w:600/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9MLTI3MzIx/OS0xNjg4MDkzNDkz/LTQzNDMuanBlZw.jpeg"
+            }
+         ],
+         "formats": [
+            {
+               "name": "CD",
+               "qty": "1",
+               "descriptions": [
+                  "Maxi-Single"
+               ]
+            }
+         ],
+         "data_quality": "Needs Vote",
+         "community": {
+            "have": 36,
+            "want": 42,
+            "rating": {
+               "count": 14,
+               "average": 4.93
+            },
+            "submitter": {
+               "username": "nightclubdj",
+               "resource_url": "https://api.discogs.com/users/nightclubdj"
+            },
+            "contributors": [
+               {
+                  "username": "nightclubdj",
+                  "resource_url": "https://api.discogs.com/users/nightclubdj"
+               },
+               {
+                  "username": "Den_Pash",
+                  "resource_url": "https://api.discogs.com/users/Den_Pash"
+               },
+               {
+                  "username": "totalDJ",
+                  "resource_url": "https://api.discogs.com/users/totalDJ"
+               },
+               {
+                  "username": "Talismann",
+                  "resource_url": "https://api.discogs.com/users/Talismann"
+               },
+               {
+                  "username": "EuroRhythm",
+                  "resource_url": "https://api.discogs.com/users/EuroRhythm"
+               },
+               {
+                  "username": "AndreaCasanova",
+                  "resource_url": "https://api.discogs.com/users/AndreaCasanova"
+               },
+               {
+                  "username": "DanceMusic74",
+                  "resource_url": "https://api.discogs.com/users/DanceMusic74"
+               }
+            ],
+            "data_quality": "Needs Vote",
+            "status": "Accepted"
+         },
+         "format_quantity": 1,
+         "date_added": "2008-09-13T14:44:06-07:00",
+         "date_changed": "2021-03-20T04:38:36-07:00",
+         "num_for_sale": 4,
+         "lowest_price": 23.52,
+         "master_id": 101593,
+         "master_url": "https://api.discogs.com/masters/101593",
+         "title": "You Got Me Dancing",
+         "country": "Spain",
+         "released": "2000",
+         "notes": "Published by Off Limits / Energy Production Srl.\r\nArranged & mixed by Marco Soncini at Off Limits Rec. Studios (RE) Italy.\r\nLicensed from Energy Productions Srl. by Blanco y Negro Music, S.A.\n",
+         "released_formatted": "2000",
+         "identifiers": [
+            {
+               "type": "Barcode",
+               "value": "8 421597 026877",
+               "description": "Text"
+            },
+            {
+               "type": "Barcode",
+               "value": "8421597026877",
+               "description": "Scanned"
+            },
+            {
+               "type": "Rights Society",
+               "value": "S.G.A.E."
+            },
+            {
+               "type": "Depósito Legal",
+               "value": "B-44952/00"
+            }
+         ],
+         "genres": [
+            "Electronic"
+         ],
+         "styles": [
+            "Euro House"
+         ],
+         "tracklist": [
+            {
+               "position": "1",
+               "type_": "track",
+               "title": "You Got Me Dancing (Original Radio Edit)",
+               "duration": "3:33"
+            },
+            {
+               "position": "2",
+               "type_": "track",
+               "title": "You Got Me Dancing (Phase-D Radio Edit)",
+               "duration": "3:42"
+            },
+            {
+               "position": "3",
+               "type_": "track",
+               "title": "You Got Me Dancing (Phase-D Mix)",
+               "duration": "6:09"
+            },
+            {
+               "position": "4",
+               "type_": "track",
+               "title": "You Got Me Dancing (Original Extended Mix)",
+               "duration": "5:57"
+            },
+            {
+               "position": "5",
+               "type_": "track",
+               "title": "You Got Me Dancing (Original Extended Instrumental)",
+               "duration": "5:56"
+            }
+         ],
+         "extraartists": [
+            {
+               "name": "Sandy Chambers",
+               "anv": "",
+               "join": "",
+               "role": "Lead Vocals [Uncredited]",
+               "tracks": "",
+               "id": 253506,
+               "resource_url": "https://api.discogs.com/artists/253506"
+            },
+            {
+               "name": "Larry Pignagnoli",
+               "anv": "A. Larry Pignagnoli",
+               "join": "",
+               "role": "Producer",
+               "tracks": "",
+               "id": 83849,
+               "resource_url": "https://api.discogs.com/artists/83849"
+            },
+            {
+               "name": "Daniela Galli",
+               "anv": "",
+               "join": "",
+               "role": "Written-By",
+               "tracks": "",
+               "id": 299781,
+               "resource_url": "https://api.discogs.com/artists/299781"
+            },
+            {
+               "name": "Marco Soncini",
+               "anv": "",
+               "join": "",
+               "role": "Written-By",
+               "tracks": "",
+               "id": 118191,
+               "resource_url": "https://api.discogs.com/artists/118191"
+            },
+            {
+               "name": "Paul Sears",
+               "anv": "",
+               "join": "",
+               "role": "Written-By",
+               "tracks": "",
+               "id": 318107,
+               "resource_url": "https://api.discogs.com/artists/318107"
+            }
+         ],
+         "images": [
+            {
+               "type": "secondary",
+               "uri": "https://i.discogs.com/xrshpdBL5viNEtiA16MVpwX4dm9xJVjmlcYWKl8NJiE/rs:fit/g:sm/q:90/h:460/w:600/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTE0NTk3/MDktMTIyMTM0MjE2/OC5qcGVn.jpeg",
+               "resource_url": "https://i.discogs.com/xrshpdBL5viNEtiA16MVpwX4dm9xJVjmlcYWKl8NJiE/rs:fit/g:sm/q:90/h:460/w:600/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTE0NTk3/MDktMTIyMTM0MjE2/OC5qcGVn.jpeg",
+               "uri150": "https://i.discogs.com/rfSh2EsSmpTLrOjgWuZBEfBcOkIz-lfAq3UUDo2cnf8/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTE0NTk3/MDktMTIyMTM0MjE2/OC5qcGVn.jpeg",
+               "width": 600,
+               "height": 460
+            },
+            {
+               "type": "secondary",
+               "uri": "https://i.discogs.com/a0S_yD81L4BekuBHcYc-ZuWBHRKGZ4NUo9QS6PJg9y8/rs:fit/g:sm/q:90/h:462/w:600/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTE0NTk3/MDktMTIyMTM0MjE4/My5qcGVn.jpeg",
+               "resource_url": "https://i.discogs.com/a0S_yD81L4BekuBHcYc-ZuWBHRKGZ4NUo9QS6PJg9y8/rs:fit/g:sm/q:90/h:462/w:600/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTE0NTk3/MDktMTIyMTM0MjE4/My5qcGVn.jpeg",
+               "uri150": "https://i.discogs.com/dE0wMbcPS_A7-KoYdyKv2EVN_m4WCxsq0n1GjOIIzE0/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTE0NTk3/MDktMTIyMTM0MjE4/My5qcGVn.jpeg",
+               "width": 600,
+               "height": 462
+            }
+         ],
+         "thumb": "https://i.discogs.com/rfSh2EsSmpTLrOjgWuZBEfBcOkIz-lfAq3UUDo2cnf8/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTE0NTk3/MDktMTIyMTM0MjE2/OC5qcGVn.jpeg",
+         "estimated_weight": 85,
+         "blocked_from_sale": false,
+         "deck_number": 2,
+         "release_id": 1459709,
+         "cd_position": 290
+      },
+      {
+         "id": 307858785582465843,
+         "status": "Accepted",
+         "year": 1994,
+         "resource_url": "https://api.discogs.com/releases/192524",
+         "uri": "https://www.discogs.com/release/192524-PeCh-Smile-On-Your-Face",
+         "artists": [
+            {
+               "name": "PeCh",
+               "anv": "",
+               "join": "",
+               "role": "",
+               "tracks": "",
+               "id": 67766,
+               "resource_url": "https://api.discogs.com/artists/67766"
+            }
+         ],
+         "artists_sort": "PeCh",
+         "labels": [
+            {
+               "name": "Urban",
+               "catno": "853 399-2",
+               "entity_type": "1",
+               "entity_type_name": "Label",
+               "id": 2017,
+               "resource_url": "https://api.discogs.com/labels/2017",
+               "thumbnail_url": "https://i.discogs.com/mpz2nA18UyrUYl3z7HMjVZl-EBTh0rHAgoHSJuYMXsc/rs:fit/g:sm/q:90/h:138/w:300/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9MLTIwMTct/MTE1Nzg4NTU1MS5q/cGVn.jpeg"
+            }
+         ],
+         "series": [],
+         "companies": [
+            {
+               "name": "Motor Music GmbH",
+               "catno": "",
+               "entity_type": "13",
+               "entity_type_name": "Phonographic Copyright (p)",
+               "id": 27588,
+               "resource_url": "https://api.discogs.com/labels/27588",
+               "thumbnail_url": "https://i.discogs.com/EmX8POLe5ZH9sOKU81mxtNw_BRgSjisnB4kaXiYPi5o/rs:fit/g:sm/q:90/h:386/w:352/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9MLTI3NTg4/LTE2Mzk2MjcyNzAt/NDQ1MC5qcGVn.jpeg"
+            },
+            {
+               "name": "PMDC, Germany",
+               "catno": "",
+               "entity_type": "16",
+               "entity_type_name": "Made By",
+               "id": 342158,
+               "resource_url": "https://api.discogs.com/labels/342158",
+               "thumbnail_url": "https://i.discogs.com/hi8EBBXttQ98FIE_avlqbG5wx-mbFlVhiayCNLoTYrU/rs:fit/g:sm/q:90/h:503/w:600/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9MLTM0MjE1/OC0xNjkwNjM1ODUx/LTYwMDAuanBlZw.jpeg"
+            },
+            {
+               "name": "AMV Alster Musikverlag",
+               "catno": "",
+               "entity_type": "21",
+               "entity_type_name": "Published By",
+               "id": 286600,
+               "resource_url": "https://api.discogs.com/labels/286600",
+               "thumbnail_url": "https://i.discogs.com/dRzsX5CwcExo3NrlrA3jigHdbFCABTO7u0bEFEtWroY/rs:fit/g:sm/q:90/h:125/w:400/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9MLTI4NjYw/MC0xMzIwMDgwMTE0/LmpwZWc.jpeg"
+            },
+            {
+               "name": "Peterson",
+               "catno": "",
+               "entity_type": "21",
+               "entity_type_name": "Published By",
+               "id": 358987,
+               "resource_url": "https://api.discogs.com/labels/358987"
+            },
+            {
+               "name": "Warner/Chappell",
+               "catno": "",
+               "entity_type": "21",
+               "entity_type_name": "Published By",
+               "id": 138147,
+               "resource_url": "https://api.discogs.com/labels/138147",
+               "thumbnail_url": "https://i.discogs.com/XVZUzsBX2ir-z0LcRCtXF7_JnmzOQ_L6Rte6KNMK3J4/rs:fit/g:sm/q:90/h:600/w:571/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9MLTEzODE0/Ny0xNDMzMDg5NzA3/LTU3NjguanBlZw.jpeg"
+            },
+            {
+               "name": "AC Music (2)",
+               "catno": "",
+               "entity_type": "21",
+               "entity_type_name": "Published By",
+               "id": 336532,
+               "resource_url": "https://api.discogs.com/labels/336532"
+            },
+            {
+               "name": "BMG Ufa",
+               "catno": "",
+               "entity_type": "21",
+               "entity_type_name": "Published By",
+               "id": 263856,
+               "resource_url": "https://api.discogs.com/labels/263856",
+               "thumbnail_url": "https://i.discogs.com/_CaCkV1w_PSVB2_jDefE3KFPYTpcfvn9_-G1Bq3Ft18/rs:fit/g:sm/q:90/h:45/w:249/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9MLTI2Mzg1/Ni0xNTg5MjQyMDEx/LTk2NTcuanBlZw.jpeg"
+            }
+         ],
+         "formats": [
+            {
+               "name": "CD",
+               "qty": "1",
+               "descriptions": [
+                  "Maxi-Single"
+               ]
+            }
+         ],
+         "data_quality": "Needs Vote",
+         "community": {
+            "have": 356,
+            "want": 33,
+            "rating": {
+               "count": 59,
+               "average": 4.27
+            },
+            "submitter": {
+               "username": "whity",
+               "resource_url": "https://api.discogs.com/users/whity"
+            },
+            "contributors": [
+               {
+                  "username": "whity",
+                  "resource_url": "https://api.discogs.com/users/whity"
+               },
+               {
+                  "username": "Megara",
+                  "resource_url": "https://api.discogs.com/users/Megara"
+               },
+               {
+                  "username": "techno-fan",
+                  "resource_url": "https://api.discogs.com/users/techno-fan"
+               },
+               {
+                  "username": "Beyonder26",
+                  "resource_url": "https://api.discogs.com/users/Beyonder26"
+               },
+               {
+                  "username": "Marana",
+                  "resource_url": "https://api.discogs.com/users/Marana"
+               },
+               {
+                  "username": "Den_Pash",
+                  "resource_url": "https://api.discogs.com/users/Den_Pash"
+               },
+               {
+                  "username": "Promotion",
+                  "resource_url": "https://api.discogs.com/users/Promotion"
+               },
+               {
+                  "username": "Pedrozo",
+                  "resource_url": "https://api.discogs.com/users/Pedrozo"
+               },
+               {
+                  "username": "dancemania",
+                  "resource_url": "https://api.discogs.com/users/dancemania"
+               },
+               {
+                  "username": "Ilpo",
+                  "resource_url": "https://api.discogs.com/users/Ilpo"
+               },
+               {
+                  "username": "Onkel-Tom",
+                  "resource_url": "https://api.discogs.com/users/Onkel-Tom"
+               },
+               {
+                  "username": "Scala123",
+                  "resource_url": "https://api.discogs.com/users/Scala123"
+               },
+               {
+                  "username": "ubongo",
+                  "resource_url": "https://api.discogs.com/users/ubongo"
+               },
+               {
+                  "username": "VERSA",
+                  "resource_url": "https://api.discogs.com/users/VERSA"
+               },
+               {
+                  "username": "totalDJ",
+                  "resource_url": "https://api.discogs.com/users/totalDJ"
+               },
+               {
+                  "username": "cocktailmix",
+                  "resource_url": "https://api.discogs.com/users/cocktailmix"
+               },
+               {
+                  "username": "Waldlicht",
+                  "resource_url": "https://api.discogs.com/users/Waldlicht"
+               }
+            ],
+            "data_quality": "Needs Vote",
+            "status": "Accepted"
+         },
+         "format_quantity": 1,
+         "date_added": "2003-10-08T05:10:11-07:00",
+         "date_changed": "2024-09-25T12:27:33-07:00",
+         "num_for_sale": 53,
+         "lowest_price": 0.01,
+         "master_id": 194776,
+         "master_url": "https://api.discogs.com/masters/194776",
+         "title": "Smile On Your Face",
+         "country": "Germany",
+         "released": "1994",
+         "notes": "Track 1 & 2: Published by Alster Musikverlage.\nTrack 3 & 4: Published by Peterson - Warner Chappell / AC Music - BMG Ufa.\n[p] 1994 Motor Music GmbH, Hamburg\n\n\"Smile On Your Face\" is a cover of \"Loops & Tings\" by Jens.\n\nHas a sticker on cover saying:\nproduced by \nFrank Peterson\nPrince Ital. Joe feat. Marky Mark / Enigma\nAlex Christensen\nPrince Ital. Joe feat. Marky Mark / U96\n853 399-2",
+         "released_formatted": "1994",
+         "identifiers": [
+            {
+               "type": "Barcode",
+               "value": "0 42285 33992 5",
+               "description": "Text"
+            },
+            {
+               "type": "Barcode",
+               "value": "042285339925",
+               "description": "Scanned"
+            },
+            {
+               "type": "Label Code",
+               "value": "LC 6748"
+            },
+            {
+               "type": "SPARS Code",
+               "value": "DDD"
+            },
+            {
+               "type": "Rights Society",
+               "value": "BIEM / STEMRA"
+            },
+            {
+               "type": "Matrix / Runout",
+               "value": "MADE IN GERMANY BY PMDC A",
+               "description": "CD Mould Text"
+            },
+            {
+               "type": "Matrix / Runout",
+               "value": "853 399-2 01 +"
+            },
+            {
+               "type": "Mastering SID Code",
+               "value": "none"
+            },
+            {
+               "type": "Mould SID Code",
+               "value": "none"
+            }
+         ],
+         "genres": [
+            "Electronic"
+         ],
+         "styles": [
+            "Trance",
+            "Hard Trance",
+            "Euro House"
+         ],
+         "tracklist": [
+            {
+               "position": "1",
+               "type_": "track",
+               "title": "Smile On Your Face (7\" Version)",
+               "duration": "3:35"
+            },
+            {
+               "position": "2",
+               "type_": "track",
+               "title": "Smile On Your Face (12\" Version)",
+               "duration": "5:37"
+            },
+            {
+               "position": "3",
+               "type_": "track",
+               "title": "Let Yourself Go (7\" Version)",
+               "duration": "3:12"
+            },
+            {
+               "position": "4",
+               "type_": "track",
+               "title": "Let Yourself Go (12\" Version)",
+               "duration": "5:13"
+            }
+         ],
+         "extraartists": [
+            {
+               "name": "Alex Christensen",
+               "anv": "Christensen",
+               "join": "",
+               "role": "Music By, Lyrics By",
+               "tracks": "3, 4",
+               "id": 62994,
+               "resource_url": "https://api.discogs.com/artists/62994"
+            },
+            {
+               "name": "Frank Peterson",
+               "anv": "Peterson",
+               "join": "",
+               "role": "Music By, Lyrics By",
+               "tracks": "3, 4",
+               "id": 215591,
+               "resource_url": "https://api.discogs.com/artists/215591"
+            },
+            {
+               "name": "Gerret Frerichs",
+               "anv": "Gerrit Frerichs",
+               "join": "",
+               "role": "Music By, Lyrics By",
+               "tracks": "1, 2",
+               "id": 15914,
+               "resource_url": "https://api.discogs.com/artists/15914"
+            },
+            {
+               "name": "Jens Mahlstedt",
+               "anv": "",
+               "join": "",
+               "role": "Music By, Lyrics By",
+               "tracks": "1, 2",
+               "id": 9177,
+               "resource_url": "https://api.discogs.com/artists/9177"
+            },
+            {
+               "name": "PeCh",
+               "anv": "",
+               "join": "",
+               "role": "Producer",
+               "tracks": "",
+               "id": 67766,
+               "resource_url": "https://api.discogs.com/artists/67766"
+            },
+            {
+               "name": "Dirk Rudolph",
+               "anv": "D. Rudolph",
+               "join": "",
+               "role": "Sleeve [Sleeve Design]",
+               "tracks": "",
+               "id": 483648,
+               "resource_url": "https://api.discogs.com/artists/483648"
+            }
+         ],
+         "images": [
+            {
+               "type": "primary",
+               "uri": "https://i.discogs.com/WfCpWii-P2UyegB5Kak3sLkuVIDjAjb9HzBuEGuaaSc/rs:fit/g:sm/q:90/h:522/w:600/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTE5MjUy/NC0xNzI3MjQ4NTc3/LTY2NzMuanBlZw.jpeg",
+               "resource_url": "https://i.discogs.com/WfCpWii-P2UyegB5Kak3sLkuVIDjAjb9HzBuEGuaaSc/rs:fit/g:sm/q:90/h:522/w:600/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTE5MjUy/NC0xNzI3MjQ4NTc3/LTY2NzMuanBlZw.jpeg",
+               "uri150": "https://i.discogs.com/8FahyHmQnoCvkouktq1ScY61GaYtPnkYslj3IxMfh4s/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTE5MjUy/NC0xNzI3MjQ4NTc3/LTY2NzMuanBlZw.jpeg",
+               "width": 600,
+               "height": 522
+            },
+            {
+               "type": "secondary",
+               "uri": "https://i.discogs.com/d7npoYfLRbHzvSDT9e3ExHEZMaSPR8xsPxDQuD6cgHg/rs:fit/g:sm/q:90/h:90/w:600/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTE5MjUy/NC0xNzI3MjQ4NDcw/LTMwMDcuanBlZw.jpeg",
+               "resource_url": "https://i.discogs.com/d7npoYfLRbHzvSDT9e3ExHEZMaSPR8xsPxDQuD6cgHg/rs:fit/g:sm/q:90/h:90/w:600/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTE5MjUy/NC0xNzI3MjQ4NDcw/LTMwMDcuanBlZw.jpeg",
+               "uri150": "https://i.discogs.com/D_99VqrECPL9kTMpnytkP7U4YtrDiIX5R24sTbCVOH4/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTE5MjUy/NC0xNzI3MjQ4NDcw/LTMwMDcuanBlZw.jpeg",
+               "width": 600,
+               "height": 90
+            },
+            {
+               "type": "secondary",
+               "uri": "https://i.discogs.com/R3IcN3dfV68u4PLcXlwtnG0ekT6BAGqKRc8N0wI50VI/rs:fit/g:sm/q:90/h:462/w:600/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTE5MjUy/NC0xNzI3MjQ4NTc5/LTQ1MTguanBlZw.jpeg",
+               "resource_url": "https://i.discogs.com/R3IcN3dfV68u4PLcXlwtnG0ekT6BAGqKRc8N0wI50VI/rs:fit/g:sm/q:90/h:462/w:600/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTE5MjUy/NC0xNzI3MjQ4NTc5/LTQ1MTguanBlZw.jpeg",
+               "uri150": "https://i.discogs.com/S6vmOhNQNAv0xASJMIHNbX42dRqMXdGXdQwA_hvOCw8/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTE5MjUy/NC0xNzI3MjQ4NTc5/LTQ1MTguanBlZw.jpeg",
+               "width": 600,
+               "height": 462
+            },
+            {
+               "type": "secondary",
+               "uri": "https://i.discogs.com/3a-0e4AfyhOpghcCGnrFqVbQVfAlesM0PyRWTgOGCa0/rs:fit/g:sm/q:90/h:535/w:600/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTE5MjUy/NC0xNzI3MjQ4NTc5/LTg1OTYuanBlZw.jpeg",
+               "resource_url": "https://i.discogs.com/3a-0e4AfyhOpghcCGnrFqVbQVfAlesM0PyRWTgOGCa0/rs:fit/g:sm/q:90/h:535/w:600/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTE5MjUy/NC0xNzI3MjQ4NTc5/LTg1OTYuanBlZw.jpeg",
+               "uri150": "https://i.discogs.com/OsGLIhO5nLq6RyFYPDieyFTM2AA_rfOJNZjYYTI4jFw/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTE5MjUy/NC0xNzI3MjQ4NTc5/LTg1OTYuanBlZw.jpeg",
+               "width": 600,
+               "height": 535
+            },
+            {
+               "type": "secondary",
+               "uri": "https://i.discogs.com/340Z7oqatHiE6NkqD_eXBmupfP0zXwk4NieI7pM7Tkw/rs:fit/g:sm/q:90/h:600/w:600/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTE5MjUy/NC0xNjgyNzYwNDE0/LTI1MzkuanBlZw.jpeg",
+               "resource_url": "https://i.discogs.com/340Z7oqatHiE6NkqD_eXBmupfP0zXwk4NieI7pM7Tkw/rs:fit/g:sm/q:90/h:600/w:600/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTE5MjUy/NC0xNjgyNzYwNDE0/LTI1MzkuanBlZw.jpeg",
+               "uri150": "https://i.discogs.com/fMLNkr8i5CfMc4OP6YuB9peMvVQAIQVCS14cMQpeM2A/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTE5MjUy/NC0xNjgyNzYwNDE0/LTI1MzkuanBlZw.jpeg",
+               "width": 600,
+               "height": 600
+            },
+            {
+               "type": "secondary",
+               "uri": "https://i.discogs.com/7_vTb2tmeHS5uhuveujoLy9NNz2AH5j9gapzeaByhj0/rs:fit/g:sm/q:90/h:600/w:598/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTE5MjUy/NC0xNzI3MjQ4NDQz/LTg4NTguanBlZw.jpeg",
+               "resource_url": "https://i.discogs.com/7_vTb2tmeHS5uhuveujoLy9NNz2AH5j9gapzeaByhj0/rs:fit/g:sm/q:90/h:600/w:598/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTE5MjUy/NC0xNzI3MjQ4NDQz/LTg4NTguanBlZw.jpeg",
+               "uri150": "https://i.discogs.com/IN5707b1lFqDyjVKROFTOhGQeS_DQgqu6X-l3n_Qe5A/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTE5MjUy/NC0xNzI3MjQ4NDQz/LTg4NTguanBlZw.jpeg",
+               "width": 598,
+               "height": 600
+            }
+         ],
+         "thumb": "https://i.discogs.com/8FahyHmQnoCvkouktq1ScY61GaYtPnkYslj3IxMfh4s/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTE5MjUy/NC0xNzI3MjQ4NTc3/LTY2NzMuanBlZw.jpeg",
+         "estimated_weight": 85,
+         "blocked_from_sale": false,
+         "deck_number": 2,
+         "release_id": 192524,
+         "cd_position": 291
       }
    ]
 }

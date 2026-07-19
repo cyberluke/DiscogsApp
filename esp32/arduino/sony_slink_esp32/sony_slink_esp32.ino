@@ -15,9 +15,9 @@
 #include <functional>
 #include <map>
 #include <function_objects.h>
-#include <Process.h>
+//#include <Process.h>
 
-//#define DEBUG_PULSES
+#define DEBUG_PULSES
 
 // Webhook support
 const char* serverName = "http://192.168.1.122:5000/webhook";  
@@ -40,11 +40,7 @@ int stopButtonCounter = 0;
 std::vector<byte> messageBytes;
 std::map<byte, FunctionObject<void(const std::vector<byte>&)>> commandHandlers;
 // Global playlist and current position
-struct PlaylistItem {
-  String command;
-  int duration; 
-};
-std::vector<PlaylistItem> playlist;
+std::vector<String> playlist;
 unsigned int currentPlaylistPosition = 0;
 
 int64_t startTime = 0;
@@ -106,9 +102,9 @@ void setup()
   Serial.println("Booting User code...");
   // Setup command handlers
   commandHandlers[0x01] = handleStopCommand; // Command byte for 'Stop'
-  commandHandlers[0x02] = handleStopCommand; // Command byte for 'Pause'
-  commandHandlers[0x03] = handleStopCommand; // Command byte for 'Pause'
-  commandHandlers[0x04] = handleStopCommand; // Command byte for 'Eject'
+  commandHandlers[0x02] = handlePauseCommand; // Command byte for 'Pause'
+  commandHandlers[0x03] = handlePauseToggleCommand; // Command byte for 'Pause toggle'
+  commandHandlers[0x04] = handleEjectCommand; // Command byte for 'Eject'
   commandHandlers[0x08] = handleNextCommand; // Command byte for 'Next'  
   commandHandlers[0x09] = handlePrevCommand; // Command byte for 'Prev'  
   commandHandlers[0x50] = handlePlayCommand; // Command byte for 'Play'
@@ -318,17 +314,27 @@ int hexByteToDecimalInt(byte hexByte) {
 }
 
 void handleStopCommand(const std::vector<byte>& message) {
-  stopButtonCounter++;
-  if (stopButtonCounter >= 2) {
-    stopButtonCounter = 0;
- 
-    //client.get("http://localhost:8080/stop");
-    httpPost("{\"status\":\"STOP\"}");
-  }
+  stopButtonCounter = 0;
+  httpPost("{\"status\":\"STOP\"}");
   if (isTimerEnabled) {
     isTimerEnabled = false;
     return;
   }
+}
+
+void handlePauseCommand(const std::vector<byte>& message) {
+  isTimerEnabled = false;
+  httpPost("{\"status\":\"PAUSE\"}");
+}
+
+void handlePauseToggleCommand(const std::vector<byte>& message) {
+  isTimerEnabled = false;
+  httpPost("{\"status\":\"PAUSE_TOGGLE\"}");
+}
+
+void handleEjectCommand(const std::vector<byte>& message) {
+  isTimerEnabled = false;
+  httpPost("{\"status\":\"EJECT\"}");
 }
 
 void handlePlayCommand(const std::vector<byte>& message) {
@@ -373,20 +379,9 @@ void handlePlayCommand(const std::vector<byte>& message) {
 
   // We Use handle30SecCommand() instead
   // TODO 3
-  //alarmTime = duration * 1000 * 1000; // convert to micro seconds
-  //startTime = readCurrentTimestamp();
-  //isTimerEnabled = true;
-
-  int disc = 0;
-  int track = 0;
-  if (messageSize >= 3) {
-    Serial.println("converting disc");
-    disc = hexByteToDecimalInt(message[2]);
-  }
-  if (messageSize >= 4) {
-    Serial.println("converting track");
-    track = hexByteToDecimalInt(message[3]);
-  }
+  alarmTime = duration * 1000 * 1000; // convert to micro seconds
+  startTime = readCurrentTimestamp();
+  isTimerEnabled = true;
 
   int deckId = message[0];
 
@@ -394,13 +389,11 @@ void handlePlayCommand(const std::vector<byte>& message) {
 
   char buffer[256];
 
-  // Format the string using sprintf
-  sprintf(buffer, "{\"status\":\"PLAY\", \"device\":\"%s\", \"cd\":\"%s\", \"track\":\"%s\", \"duration\":\"%s\"}", String(deckId), String(disc), String(track), String(duration));
+  snprintf(buffer, sizeof(buffer), "{\"status\":\"PLAY\", \"device\":\"%02X\", \"cd\":\"%02X\", \"track\":\"%02X\", \"duration\":\"%lld\"}", deckId, messageSize >= 3 ? message[2] : 0, messageSize >= 4 ? message[3] : 0, static_cast<long long>(duration));
 
   // Convert the character buffer to a String
   String jsonString = String(buffer);
-  //client.get("http://localhost:8080/playButton/" + String(deckId) + "/" + String(disc) + "/" + String(track) + "/" + String(duration));
-  //httpPost(jsonString); // using prepare_track instead
+  httpPost(jsonString);
 
 
 }
@@ -421,12 +414,10 @@ void handle30SecCommand(const std::vector<byte>& message) {
   // Define a character buffer to hold the formatted string
   char buffer[128];
 
-  // Format the string using sprintf
-  sprintf(buffer, "{\"status\":\"NEXT_TRACK_IN\", \"duration\":\"%s\"}", String(duration-3));
+  snprintf(buffer, sizeof(buffer), "{\"status\":\"NEXT_TRACK_IN\", \"duration\":\"%lld\"}", static_cast<long long>(duration - 3));
 
   // Convert the character buffer to a String
   String jsonString = String(buffer);
-  //client.get("http://localhost:8080/nextTrack/" + String(duration-3));
   httpPost(jsonString); 
 }
 
@@ -448,15 +439,13 @@ void playNextFromPlaylist() {
   Serial.println("playNextFromPlaylist() COMMAND:");
   Serial.println(currentPlaylistPosition);
 
-  PlaylistItem item = playlist[currentPlaylistPosition];
-  String command = item.command;
+  String command = playlist[currentPlaylistPosition];
 
   currentPlaylistPosition++;
 
   if (playlist.size() < currentPlaylistPosition) {
     currentPlaylistPosition = 0;
-    item = playlist[currentPlaylistPosition];
-    command = item.command;
+    command = playlist[currentPlaylistPosition];
     currentPlaylistPosition = 1;
   }
 
@@ -475,20 +464,9 @@ void playNextFromPlaylist() {
     sendCommand(commandBytes, sizeof(commandBytes));
   }
 
-  if (item.duration != 0) {
-    int delay = 15;
-    if (currentPlaylistPosition <= 1) {
-      delay = 20;
-    }
-    alarmTime = (item.duration + delay) * 1000 * 1000; // convert to micro seconds
-    startTime = readCurrentTimestamp();
-    isTimerEnabled = true;
-  }
+      char buffer[256];
 
-  char buffer[256];
-
-  // Format the string using sprintf
-  sprintf(buffer, "{\"status\":\"PREPARE_TRACK\", \"track\":\"%s\"}", String(command));
+  snprintf(buffer, sizeof(buffer), "{\"status\":\"PREPARE_TRACK\", \"track\":\"%s\"}", command.c_str());
 
   // Convert the character buffer to a String
   String jsonString = String(buffer);
@@ -630,33 +608,11 @@ void loop()
     if (readCurrentTimestamp() - startTime >= alarmTime) {
       // Time to trigger the alarm
       Serial.println("Alarm!");
-      isTimerEnabled = false;
       onTrackFinish();
+      isTimerEnabled = false;
     }
   }
 
-}
-
-int splitString(String data, char delimiter, String result[], int maxParts) {
-  int startIndex = 0;
-  int endIndex = 0;
-  int partCount = 0;
-
-  // Loop to find and extract each part
-  while (endIndex != -1 && partCount < maxParts) {
-    endIndex = data.indexOf(delimiter, startIndex);
-
-    if (endIndex == -1) {
-      result[partCount] = data.substring(startIndex);
-    } else {
-      result[partCount] = data.substring(startIndex, endIndex);
-      startIndex = endIndex + 1;
-    }
-
-    partCount++;
-  }
-
-  return partCount;
 }
 
 void readSLinkBuffer(int bytesRead) {
@@ -686,15 +642,6 @@ void readSLinkBuffer(int bytesRead) {
           playlist.clear(); // TODO
         }
         String command = String(song);
-        int duration = 0;
-        if (isPlaylist) {
-            String parts[2];
-            int numberOfParts = splitString(command, ':', parts, 2);
-            if (numberOfParts > 1) {
-              command = parts[0];
-              duration = parts[1].toInt();
-            }
-        }
         // A hexadecimal command is expected
         if (command.length() % 2 != 0) {
           Serial.println(F("Uneven length of Serial input"));
@@ -709,7 +656,7 @@ void readSLinkBuffer(int bytesRead) {
         }
 
         if (isPlaylist) {
-          playlist.push_back({command, duration});
+          playlist.push_back(command);
           Serial.print("Song: ");
           Serial.println(song);
         } else {

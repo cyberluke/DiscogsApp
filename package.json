@@ -7,10 +7,14 @@
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
+    "ai:enrich": "node scripts/ai-enrich-collection.mjs",
     "dev:ssr": "ng run app:serve-ssr",
     "serve:ssr": "node dist/app/server/main.js",
     "build:ssr": "ng build && ng run app:server",
     "prerender": "ng run app:prerender"
+  },
+  "bin": {
+    "ai-enrich-collection": "./scripts/ai-enrich-collection.mjs"
   },
   "private": true,
   "dependencies": {

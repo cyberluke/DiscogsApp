@@ -1,0 +1,29 @@
+:host {
+  display: block;
+  min-height: 100%;
+}
+
+.app-nav {
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  display: flex;
+  gap: 4px;
+  align-items: center;
+  padding: 8px 12px;
+  background: #181818;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+.app-nav a {
+  color: rgba(255, 255, 255, 0.72);
+  padding: 8px 12px;
+  text-decoration: none;
+  font-weight: 700;
+}
+
+.app-nav a.active,
+.app-nav a:hover {
+  color: #fff;
+  background: #3b3b3b;
+}

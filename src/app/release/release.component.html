@@ -69,6 +69,47 @@
                 <h3>(D:{{ release.deck_number }}) ({{ release.cd_position }}) {{ release.artists_sort }} - {{ release.title }}</h3>
                 <!-- Add more details as needed -->
                 <p><strong>{{ release.released_formatted }} - {{ release.genres.join(', ') }}</strong></p>
+                <section class="ai-panel">
+                  <div class="ai-header">
+                    <div>
+                      <span class="ai-kicker">AI Music Intelligence</span>
+                      <h4>{{ aiMetadata?.scene || 'Not enriched yet' }}</h4>
+                    </div>
+                    <div class="ai-actions">
+                      <button mat-button type="button" (click)="enrichAi(false)" [disabled]="aiLoading || aiEnriching">
+                        <mat-icon>auto_awesome</mat-icon>
+                        {{ aiMetadata ? 'Use Cache' : 'Enrich' }}
+                      </button>
+                      <button mat-icon-button type="button" (click)="enrichAi(true)" [disabled]="aiLoading || aiEnriching" aria-label="Refresh AI metadata">
+                        <mat-icon>refresh</mat-icon>
+                      </button>
+                    </div>
+                  </div>
+                  <div class="ai-status" *ngIf="aiLoading || aiEnriching">{{ aiEnriching ? 'Enriching with Azure OpenAI...' : 'Checking cached AI metadata...' }}</div>
+                  <div class="ai-error" *ngIf="aiError">{{ aiError }}</div>
+                  <ng-container *ngIf="aiMetadata; else aiEmpty">
+                    <p class="ai-summary">{{ aiMetadata.summary }}</p>
+                    <div class="ai-score-grid">
+                      <div class="ai-score" *ngFor="let score of aiScoreEntries(aiMetadata)">
+                        <span>{{ score.label }}</span>
+                        <strong>{{ score.value }}</strong>
+                        <div class="ai-meter"><i [style.width.%]="score.value"></i></div>
+                      </div>
+                    </div>
+                    <div class="ai-tags" *ngIf="aiMetadata.mood?.length">
+                      <span *ngFor="let mood of aiMetadata.mood">{{ mood }}</span>
+                    </div>
+                    <p class="ai-recommendations" *ngIf="aiMetadata.recommended_after?.length">
+                      Recommended after: {{ joinAiList(aiMetadata.recommended_after) }}
+                    </p>
+                    <p class="ai-recommendations" *ngIf="aiMetadata.similar_artists?.length">
+                      Similar DNA: {{ joinAiList(aiMetadata.similar_artists) }}
+                    </p>
+                  </ng-container>
+                  <ng-template #aiEmpty>
+                    <p class="ai-summary muted">No cached AI metadata for this release yet.</p>
+                  </ng-template>
+                </section>
                 <h4>&nbsp;</h4>
                 <ul cListGroup>
                   <li cListGroupItem *ngFor="let track of getTracksForDisc(release)" class="flex-li">
@@ -95,6 +136,18 @@
         </c-container>
       </div>
     
+    </ng-template>
+  </c-accordion-item>
+  <c-accordion-item #itemNowPlaying="cAccordionItem" [visible]="false">
+    <ng-template cTemplateId="accordionHeaderTemplate">
+      <button (click)="itemNowPlaying.toggleItem()" [collapsed]="!itemNowPlaying.visible" cAccordionButton>
+        Now Playing
+      </button>
+    </ng-template>
+    <ng-template cTemplateId="accordionBodyTemplate">
+      <div class="accordion-body">
+        <app-now-playing></app-now-playing>
+      </div>
     </ng-template>
   </c-accordion-item>
 </c-accordion>

@@ -1,15 +1,16 @@
 // playlist.service.ts
 
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpClientModule } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { Playlist, Track } from '../dao/track'; // Assuming Track is a class or interface
 import { environment } from '../../environments/environment';
+import { PlaybackService } from '../now-playing/playback.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class PlaylistService {
-  private serviceUrl = environment.serviceUrl;
+  private readonly serviceUrl = environment.serviceUrl;
 
   // Your playlist array
   private playlist: Playlist = {
@@ -18,12 +19,10 @@ export class PlaylistService {
   };
   private playlists: Playlist[] = [];
 
-  constructor(private http: HttpClient) { }
+  constructor(private readonly http: HttpClient, private readonly playbackService: PlaybackService) { }
 
   addToPlaylist(track: Track) {
     this.playlist.tracks.push(track);
-    console.log(this.playlist);
-    // Additional logic to handle the playlist
   }
 
   removeAtIndex(index: number) {
@@ -39,32 +38,30 @@ export class PlaylistService {
   }
 
   playPlaylist(playlist: Playlist) {
-    this.http.post(`${this.serviceUrl}/playlist`, playlist)
-    .subscribe(response => {
-      console.log(response);
-      // Handle response here
-    });
+    this.playbackService.playPlaylist(playlist).subscribe({ error: error => console.error('Playlist playback failed', error) });
   }
 
   playSingleTrack(track: Track) {
-    this.http.post(`${this.serviceUrl}/track`, track)
-      .subscribe(response => {
-        console.log(response);
-        // Handle response here
-      });
+    this.playbackService.playTrack(track).subscribe({ error: error => console.error('Track playback failed', error) });
+  }
+
+  pausePlaylist() {
+    this.playbackService.pause().subscribe({ error: error => console.error('Pause failed', error) });
+  }
+
+  stopPlaylist() {
+    this.playbackService.stop().subscribe({ error: error => console.error('Stop failed', error) });
   }
   
   loadAll(): void {
     this.http.get<Playlist[]>(`${this.serviceUrl}/playlists`)
     .subscribe({
       next: (response) => {
-        console.log(response);
         this.playlists = response;
       },
       error: (error) => {
         console.error('Error fetching playlists:', error);
-      },
-      complete: () => console.log('Playlist loading completed')
+      }
     });
   }
 
@@ -76,10 +73,7 @@ export class PlaylistService {
     this.playlist.name = playlistName;
 
     this.http.post<Playlist>(`${this.serviceUrl}/save-playlist`, this.playlist)
-      .subscribe(response => {
-        console.log(response);
-        // Handle response here
-      });
+      .subscribe({ error: error => console.error('Playlist save failed', error) });
   }
   
 }

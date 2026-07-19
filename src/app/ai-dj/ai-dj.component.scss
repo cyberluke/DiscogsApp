@@ -1,0 +1,118 @@
+:host {
+  display: block;
+  height: calc(100dvh - 49px);
+  overflow-y: auto;
+  background: #f4f0e7;
+  color: #241f1b;
+}
+
+.ai-dj-shell {
+  display: grid;
+  gap: 18px;
+  max-width: 1360px;
+  margin: 0 auto;
+  padding: 22px;
+}
+
+.now-context, .conversation-panel, .recommendation-panel, .error, .loading, .explanation {
+  border: 1px solid rgba(36, 31, 27, 0.14);
+  background: rgba(255, 252, 245, 0.9);
+}
+
+.now-context {
+  display: grid;
+  grid-template-columns: 128px minmax(0, 1fr) auto;
+  gap: 18px;
+  align-items: center;
+}
+
+.now-artwork {
+  width: 128px;
+  height: 128px;
+  object-fit: cover;
+  background: #ded6c7;
+}
+
+.eyebrow, .message span {
+  display: block;
+  color: #8a3f25;
+  font-size: 0.75rem;
+  font-weight: 800;
+  text-transform: uppercase;
+}
+
+h1, h2, h3, p { margin: 0; }
+h1 { font-size: clamp(1.6rem, 3vw, 3.2rem); line-height: 1.02; }
+.now-copy p, .recommendation-copy p { margin-top: 6px; color: #62594f; }
+
+.now-meta, .dna, .suggestions, .panel-header, .recommendation, .actions {
+  display: flex;
+  gap: 8px;
+}
+
+.now-meta, .dna, .suggestions { flex-wrap: wrap; margin-top: 12px; }
+.panel-header, .recommendation, .actions { align-items: center; }
+.panel-header { justify-content: space-between; margin-bottom: 14px; }
+
+.now-meta span, .dna span {
+  border: 1px solid rgba(36, 31, 27, 0.16);
+  padding: 5px 8px;
+  background: #fff8ea;
+  font-size: 0.82rem;
+}
+
+.collection-pulse, .confidence {
+  display: grid;
+  place-items: center;
+  background: #263c39;
+  color: #fff8ea;
+}
+
+.conversation-panel, .recommendation-panel { padding: 18px; }
+
+.conversation-log {
+  display: grid;
+  gap: 10px;
+}
+
+.message { padding: 10px; background: #eee4d3; }
+
+.message.user {
+  justify-self: end;
+  background: #263c39;
+  color: #fff8ea;
+}
+
+.input-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 64px;
+  gap: 12px;
+  align-items: start;
+  margin-top: 16px;
+}
+
+.input-row mat-form-field { width: 100%; }
+
+.recommendation {
+  padding: 14px 0;
+  border-top: 1px solid rgba(36, 31, 27, 0.12);
+}
+
+.confidence {
+  width: 74px;
+  height: 74px;
+  flex: 0 0 74px;
+  background: #8a3f25;
+}
+
+.confidence span { font-size: 1.55rem; font-weight: 800; }
+.confidence small { font-size: 0.65rem; text-transform: uppercase; }
+.recommendation-copy { min-width: 0; flex: 1; }
+.error, .loading, .explanation { padding: 12px; }
+.error { color: #9a2c1f; }
+
+@media (min-width: 980px) {
+  .ai-dj-shell { grid-template-columns: minmax(0, 0.92fr) minmax(420px, 1.08fr); }
+  .now-context { grid-column: 1 / -1; }
+}
+

@@ -1,0 +1,143 @@
+<section class="now-playing" *ngIf="status$ | async as status">
+  <div class="status-strip">
+    <span class="state">{{ status.playback_state }}</span>
+    <span>{{ (liveConnected$ | async) ? 'Live' : 'Polling' }}</span>
+    <span *ngIf="status.current_playlist">{{ status.current_playlist }}</span>
+    <span *ngIf="status.current_deck">Deck {{ status.current_deck }}</span>
+    <span *ngIf="status.current_cd">CD {{ status.current_cd }}</span>
+  </div>
+
+  <div class="current-row">
+    <ng-container *ngIf="status.current_track as currentTrack">
+      <img
+        *ngIf="currentTrack.artwork_url"
+        class="artwork"
+        [src]="currentTrack.artwork_url"
+        [alt]="currentTrack.album_title || currentTrack.title"
+      />
+    </ng-container>
+    <div class="track-block">
+      <h2>{{ trackName(status.current_track) }}</h2>
+      <p *ngIf="status.current_track as currentTrack">
+        {{ currentTrack.album_title || 'Unknown album' }} · Track {{ currentTrack.position }} · {{ currentTrack.duration || formatTime(status.duration) }}
+      </p>
+    </div>
+
+    <div class="controls">
+      <button mat-icon-button type="button" (click)="previousTrack()" [disabled]="!status.current_track" aria-label="Previous track">
+        <mat-icon>skip_previous</mat-icon>
+      </button>
+      <button mat-icon-button type="button" (click)="resume()" [disabled]="!status.current_track" aria-label="Play playback">
+        <mat-icon>play_arrow</mat-icon>
+      </button>
+      <button mat-icon-button type="button" (click)="pause()" aria-label="Pause playback">
+        <mat-icon>pause</mat-icon>
+      </button>
+      <button mat-icon-button type="button" (click)="stop()" aria-label="Stop playback">
+        <mat-icon>stop</mat-icon>
+      </button>
+      <button mat-icon-button type="button" (click)="nextTrack()" [disabled]="!status.current_track" aria-label="Next track">
+        <mat-icon>skip_next</mat-icon>
+      </button>
+    </div>
+  </div>
+
+  <div class="progress-shell" aria-label="Playback progress">
+    <div class="progress-bar" [style.width.%]="status.progress"></div>
+  </div>
+
+  <div class="changer-delay" *ngIf="status.load_delay_remaining > 0">
+    Loading changer · audio starts in {{ formatTime(status.load_delay_remaining) }}
+  </div>
+
+  <div class="timing">
+    <span>{{ formatTime(status.elapsed) }}</span>
+    <span>{{ status.progress | number:'1.0-0' }}%</span>
+    <span>-{{ formatTime(status.remaining) }}</span>
+  </div>
+
+  <div class="runtime-error" *ngIf="status.error">
+    {{ status.error }}
+  </div>
+
+  <div class="queue" *ngIf="status.upcoming.length">
+    <span class="queue-label">Up next</span>
+    <ol>
+      <li *ngFor="let track of status.upcoming.slice(0, 5)">{{ trackName(track) }}</li>
+    </ol>
+  </div>
+
+  <section class="recommendations" aria-label="Local recommendations">
+    <div class="recommendation-header">
+      <span class="queue-label">Recommendations</span>
+      <button mat-button type="button" (click)="searchRecommendations()" [disabled]="recommendationLoading">
+        {{ recommendationLoading ? 'Searching' : 'Search' }}
+      </button>
+    </div>
+
+    <div class="recommendation-form">
+      <mat-form-field appearance="outline">
+        <mat-label>Search</mat-label>
+        <input id="recommendation-query" matInput type="text" aria-label="Search" [(ngModel)]="recommendationQuery" (keyup.enter)="searchRecommendations()" />
+      </mat-form-field>
+      <mat-form-field appearance="outline">
+        <mat-label>Artist</mat-label>
+        <input id="recommendation-artist" matInput type="text" aria-label="Artist" [(ngModel)]="recommendationArtist" (keyup.enter)="searchRecommendations()" />
+      </mat-form-field>
+      <mat-form-field appearance="outline">
+        <mat-label>Album</mat-label>
+        <input id="recommendation-album" matInput type="text" aria-label="Album" [(ngModel)]="recommendationAlbum" (keyup.enter)="searchRecommendations()" />
+      </mat-form-field>
+      <mat-form-field appearance="outline">
+        <mat-label>Genre</mat-label>
+        <input id="recommendation-genre" matInput type="text" aria-label="Genre" [(ngModel)]="recommendationGenre" (keyup.enter)="searchRecommendations()" />
+      </mat-form-field>
+      <mat-form-field appearance="outline">
+        <mat-label>Style</mat-label>
+        <input id="recommendation-style" matInput type="text" aria-label="Style" [(ngModel)]="recommendationStyle" (keyup.enter)="searchRecommendations()" />
+      </mat-form-field>
+      <mat-form-field appearance="outline">
+        <mat-label>Year</mat-label>
+        <input id="recommendation-year" matInput type="number" aria-label="Year" [(ngModel)]="recommendationYear" (keyup.enter)="searchRecommendations()" />
+      </mat-form-field>
+      <mat-form-field appearance="outline">
+        <mat-label>Label</mat-label>
+        <input id="recommendation-label" matInput type="text" aria-label="Label" [(ngModel)]="recommendationLabel" (keyup.enter)="searchRecommendations()" />
+      </mat-form-field>
+      <mat-form-field appearance="outline">
+        <mat-label>Deck</mat-label>
+        <input id="recommendation-deck" matInput type="number" aria-label="Deck" [(ngModel)]="recommendationDeck" (keyup.enter)="searchRecommendations()" />
+      </mat-form-field>
+      <mat-form-field appearance="outline">
+        <mat-label>CD</mat-label>
+        <input id="recommendation-cd" matInput type="number" aria-label="CD" [(ngModel)]="recommendationCd" (keyup.enter)="searchRecommendations()" />
+      </mat-form-field>
+      <mat-checkbox [(ngModel)]="favouritesOnly">Favourites</mat-checkbox>
+    </div>
+
+    <div class="runtime-error" *ngIf="recommendationError">
+      {{ recommendationError }}
+    </div>
+
+    <div class="recommendation-grid" *ngIf="recommendationResults.length">
+      <article class="recommendation-card" *ngFor="let release of recommendationResults">
+        <img [src]="primaryImageUrl(release)" [alt]="release.title" />
+        <div class="recommendation-copy">
+          <h3>{{ release.artists_sort }} - {{ release.title }}</h3>
+          <p>{{ release.year || 'Unknown year' }} · Deck {{ release.deck_number }} · CD {{ release.cd_position }}</p>
+          <ul>
+            <li *ngFor="let track of release.tracklist.slice(0, 4)">
+              <span>{{ track.position }} {{ track.title }}</span>
+              <button mat-icon-button type="button" (click)="playRecommendedTrack(release, track)" aria-label="Play recommended track">
+                <mat-icon>play_arrow</mat-icon>
+              </button>
+              <button mat-icon-button type="button" (click)="addRecommendedTrack(release, track)" aria-label="Add recommended track to playlist">
+                <mat-icon>add_circle_outline</mat-icon>
+              </button>
+            </li>
+          </ul>
+        </div>
+      </article>
+    </div>
+  </section>
+</section>

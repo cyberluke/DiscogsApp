@@ -17,7 +17,7 @@
 #include <function_objects.h>
 #include <Process.h>
 
-#define DEBUG_PULSES
+//#define DEBUG_PULSES
 
 // Webhook support
 const char* serverName = "http://192.168.1.122:5000/webhook";  
@@ -40,7 +40,11 @@ int stopButtonCounter = 0;
 std::vector<byte> messageBytes;
 std::map<byte, FunctionObject<void(const std::vector<byte>&)>> commandHandlers;
 // Global playlist and current position
-std::vector<String> playlist;
+struct PlaylistItem {
+  String command;
+  int duration; 
+};
+std::vector<PlaylistItem> playlist;
 unsigned int currentPlaylistPosition = 0;
 
 int64_t startTime = 0;
@@ -369,9 +373,9 @@ void handlePlayCommand(const std::vector<byte>& message) {
 
   // We Use handle30SecCommand() instead
   // TODO 3
-  alarmTime = duration * 1000 * 1000; // convert to micro seconds
-  startTime = readCurrentTimestamp();
-  isTimerEnabled = true;
+  //alarmTime = duration * 1000 * 1000; // convert to micro seconds
+  //startTime = readCurrentTimestamp();
+  //isTimerEnabled = true;
 
   int disc = 0;
   int track = 0;
@@ -444,13 +448,15 @@ void playNextFromPlaylist() {
   Serial.println("playNextFromPlaylist() COMMAND:");
   Serial.println(currentPlaylistPosition);
 
-  String command = playlist[currentPlaylistPosition];
+  PlaylistItem item = playlist[currentPlaylistPosition];
+  String command = item.command;
 
   currentPlaylistPosition++;
 
   if (playlist.size() < currentPlaylistPosition) {
     currentPlaylistPosition = 0;
-    command = playlist[currentPlaylistPosition];
+    item = playlist[currentPlaylistPosition];
+    command = item.command;
     currentPlaylistPosition = 1;
   }
 
@@ -469,7 +475,17 @@ void playNextFromPlaylist() {
     sendCommand(commandBytes, sizeof(commandBytes));
   }
 
-      char buffer[256];
+  if (item.duration != 0) {
+    int delay = 15;
+    if (currentPlaylistPosition <= 1) {
+      delay = 20;
+    }
+    alarmTime = (item.duration + delay) * 1000 * 1000; // convert to micro seconds
+    startTime = readCurrentTimestamp();
+    isTimerEnabled = true;
+  }
+
+  char buffer[256];
 
   // Format the string using sprintf
   sprintf(buffer, "{\"status\":\"PREPARE_TRACK\", \"track\":\"%s\"}", String(command));
@@ -614,11 +630,33 @@ void loop()
     if (readCurrentTimestamp() - startTime >= alarmTime) {
       // Time to trigger the alarm
       Serial.println("Alarm!");
-      onTrackFinish();
       isTimerEnabled = false;
+      onTrackFinish();
     }
   }
 
+}
+
+int splitString(String data, char delimiter, String result[], int maxParts) {
+  int startIndex = 0;
+  int endIndex = 0;
+  int partCount = 0;
+
+  // Loop to find and extract each part
+  while (endIndex != -1 && partCount < maxParts) {
+    endIndex = data.indexOf(delimiter, startIndex);
+
+    if (endIndex == -1) {
+      result[partCount] = data.substring(startIndex);
+    } else {
+      result[partCount] = data.substring(startIndex, endIndex);
+      startIndex = endIndex + 1;
+    }
+
+    partCount++;
+  }
+
+  return partCount;
 }
 
 void readSLinkBuffer(int bytesRead) {
@@ -648,6 +686,15 @@ void readSLinkBuffer(int bytesRead) {
           playlist.clear(); // TODO
         }
         String command = String(song);
+        int duration = 0;
+        if (isPlaylist) {
+            String parts[2];
+            int numberOfParts = splitString(command, ':', parts, 2);
+            if (numberOfParts > 1) {
+              command = parts[0];
+              duration = parts[1].toInt();
+            }
+        }
         // A hexadecimal command is expected
         if (command.length() % 2 != 0) {
           Serial.println(F("Uneven length of Serial input"));
@@ -662,7 +709,7 @@ void readSLinkBuffer(int bytesRead) {
         }
 
         if (isPlaylist) {
-          playlist.push_back(command);
+          playlist.push_back({command, duration});
           Serial.print("Song: ");
           Serial.println(song);
         } else {

@@ -1,3 +1,14 @@
+:host {
+  display: block;
+  min-height: 100vh;
+}
+
+ion-content {
+  display: block;
+  min-height: 100vh;
+  height: 100vh;
+}
+
 img.w-600 {
     width: 600px;
     height: auto;
@@ -39,6 +50,81 @@ img.w-100 {
 }
 .release-info h3 {
   font-size: xx-large;
+}
+.ai-panel {
+  border: 1px solid #3b3f49;
+  border-radius: 8px;
+  margin: 18px 0;
+  padding: 16px;
+  background: #15181f;
+  color: #e9edf5;
+}
+.ai-header {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+}
+.ai-kicker {
+  color: #7bd7bd;
+  font-size: 12px;
+  text-transform: uppercase;
+}
+.ai-header h4 {
+  margin: 4px 0 0;
+  font-size: 22px;
+}
+.ai-actions {
+  display: flex;
+  gap: 6px;
+}
+.ai-status, .ai-error, .ai-summary, .ai-recommendations {
+  margin: 12px 0 0;
+}
+.ai-error {
+  color: #ffb4a9;
+}
+.ai-summary {
+  line-height: 1.45;
+}
+.ai-score-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  gap: 10px;
+  margin-top: 14px;
+}
+.ai-score {
+  background: #20242d;
+  border-radius: 6px;
+  padding: 10px;
+}
+.ai-score span, .ai-score strong {
+  display: block;
+}
+.ai-score strong {
+  font-size: 22px;
+}
+.ai-meter {
+  height: 5px;
+  margin-top: 8px;
+  background: #343944;
+  border-radius: 999px;
+  overflow: hidden;
+}
+.ai-meter i {
+  display: block;
+  height: 100%;
+  background: #7bd7bd;
+}
+.ai-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 14px;
+}
+.ai-tags span {
+  border: 1px solid #596070;
+  border-radius: 999px;
+  padding: 4px 10px;
 }
 mat-grid-tile {
   background: lightblue;

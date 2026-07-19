@@ -68,5 +68,13 @@ export class PlaylistComponent {
     this.playlistService.playPlaylist(playlist);
   }
 
+  pausePlaylist() {
+    this.playlistService.pausePlaylist();
+  }
+
+  stopPlaylist() {
+    this.playlistService.stopPlaylist();
+  }
+
   
 }

@@ -1,14 +1,12 @@
 // release.component.ts
 
-import { Component, OnInit, HostListener, ViewChild, EventEmitter } from '@angular/core';
+import { Component, OnInit, HostListener, ViewChild } from '@angular/core';
 import { ReleaseService } from './release.service';
 import { PlaylistService } from '../playlist/playlist.service';
-import { ImageService } from '../image.service';
 import { CarouselControlComponent } from '@coreui/angular';
-import { Track } from '../dao/track';
-import { first, map, startWith } from 'rxjs/operators';
+import { AiMetadata, Track } from '../dao/track';
+import { map, startWith, take } from 'rxjs/operators';
 import { Observable, Subject } from 'rxjs';
-import { take } from 'rxjs/operators';
 import { ChipColor } from '../app.module';
 import { FormControl } from '@angular/forms';
 
@@ -26,8 +24,12 @@ export class ReleaseComponent implements OnInit {
   releases: any[] = [];
   currentCdIndex: number = 1;
   currentDeckNumber: number = 1;
-  private indexUpdated = new Subject<void>();
+  private readonly indexUpdated = new Subject<void>();
   carouselButtonSelected: boolean = false;
+  aiMetadata: AiMetadata | null = null;
+  aiLoading: boolean = false;
+  aiEnriching: boolean = false;
+  aiError: string = '';
 
   availableColors: ChipColor[] = [
     {name: 'none', color: undefined},
@@ -39,8 +41,7 @@ export class ReleaseComponent implements OnInit {
   myControl = new FormControl('');
   filteredOptions!: Observable<any[]>;
 
-  constructor(private releaseService: ReleaseService, private playlistService: PlaylistService,
-    private imageService: ImageService) {}
+  constructor(private readonly releaseService: ReleaseService, private readonly playlistService: PlaylistService) {}
 
   @HostListener('window:keydown', ['$event'])
   handleKeyboardEvent(event: KeyboardEvent) {
@@ -144,6 +145,8 @@ export class ReleaseComponent implements OnInit {
   addTrackToPlaylist(release: any, track: any) {
     track["cd_position"] = release.cd_position;
     track["full_name"] = release.artists_sort + " - " + track.title;
+    track["album_title"] = release.title;
+    track["artwork_url"] = this.getPrimaryImageUrl(release);
     this.playlistService.addToPlaylist(track);
   }
 
@@ -164,6 +167,8 @@ export class ReleaseComponent implements OnInit {
     track["cd_position"] = release.cd_position;
     track["artist"] = release.artists_sort;
     track["full_name"] = release.artists_sort + " - " + track.title;
+    track["album_title"] = release.title;
+    track["artwork_url"] = this.getPrimaryImageUrl(release);
     this.playlistService.playSingleTrack(track);
   }
 
@@ -187,27 +192,6 @@ export class ReleaseComponent implements OnInit {
       if (!release.images) {
         console.debug("Release Images are missing!");
         release.images = [];
-        release.images[primaryImageIndex] = {};
-        release.images[primaryImageIndex].primary_image = "/assets/default.png";
-        return;
-      }
-      var primaryImageIndex = release.images.findIndex((image: { type: string; }) => image.type === 'primary');
-      if (primaryImageIndex == -1) {
-        primaryImageIndex = release.images.findIndex((image: { type: string; }) => image.type === 'secondary');
-      }
-      if (primaryImageIndex !== -1) {
-        release.images[primaryImageIndex].primary_image = "/assets/default.png";
-        const primaryImage = release.images[primaryImageIndex];
-
-        var sanitized = (release.artists_sort + "-" + release.title).replace(/#/g,'-csharp-').replace(/[\\.,'`"/\\:*?<>| ]+/g, '');
-        sanitized = sanitized.split(' ').map((word: string) => word.charAt(0).toUpperCase() + word.slice(1)).join('');
-
-        this.imageService.downloadImage(primaryImage.uri, sanitized).subscribe(image => {
-          release.images[primaryImageIndex].uri = image.url;
-          release.images[primaryImageIndex].primary_image = this.getPrimaryImageUrl(release);
-        }, error => {
-          console.error('Error downloading the image:', error);
-        });
       }
 
       // Add the deck number each track in release
@@ -216,11 +200,14 @@ export class ReleaseComponent implements OnInit {
         track.cd_position = release.cd_position;
         track.artist = release.artists_sort;
         track.full_name = release.artists_sort + " - " + track.title;
+        track.album_title = release.title;
+        track.artwork_url = this.getPrimaryImageUrl(release);
       });
     });
 
     this.releases = releases;
     this.release = this.releases[0];
+    this.loadAiForRelease(this.release);
   }
 
   // Helper function to get the primary image URL
@@ -247,9 +234,73 @@ export class ReleaseComponent implements OnInit {
     this.release = this.releases[releaseIndex];
     this.currentCdIndex = this.release.cd_position;
     this.currentDeckNumber = this.release.deck_number;
+    this.loadAiForRelease(this.release);
 
     // Notify that the index has been updated
     this.indexUpdated.next();
+  }
+
+  loadAiForRelease(release: any): void {
+    this.aiMetadata = release?.ai || null;
+    this.aiError = '';
+    if (!release?.release_id) {
+      return;
+    }
+
+    this.aiLoading = true;
+    this.releaseService.getReleaseAi(release.release_id).subscribe({
+      next: metadata => {
+        this.aiMetadata = metadata;
+        release.ai = metadata;
+        this.aiLoading = false;
+      },
+      error: error => {
+        this.aiError = error?.error?.error || 'AI metadata unavailable';
+        this.aiLoading = false;
+      }
+    });
+  }
+
+  enrichAi(force = false): void {
+    if (!this.release?.release_id || this.aiEnriching) {
+      return;
+    }
+
+    this.aiError = '';
+    this.aiEnriching = true;
+    this.releaseService.enrichRelease(this.release.release_id, force).subscribe({
+      next: metadata => {
+        this.aiMetadata = metadata;
+        this.release.ai = metadata;
+        this.aiEnriching = false;
+      },
+      error: error => {
+        this.aiError = error?.error?.error || 'AI enrichment failed';
+        this.aiEnriching = false;
+      }
+    });
+  }
+
+  aiScoreEntries(metadata: AiMetadata | null): Array<{ label: string; value: number }> {
+    if (!metadata) {
+      return [];
+    }
+
+    return [
+      ['Energy', metadata.energy],
+      ['Danceability', metadata.danceability],
+      ['Euphoria', metadata.euphoria],
+      ['Commercial', metadata.commercial],
+      ['Club', metadata.club],
+      ['Radio', metadata.radio],
+      ['Nostalgia', metadata.nostalgia],
+      ['Cheese', metadata.cheese]
+    ].filter(([, value]) => value !== undefined && value !== null)
+      .map(([label, value]) => ({ label: label as string, value: Number(value) }));
+  }
+
+  joinAiList(items: string[] | undefined): string {
+    return (items || []).join(', ');
   }
 
   private _filter(value: string): any[] {

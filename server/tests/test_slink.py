@@ -49,6 +49,7 @@ class SLinkTest(unittest.TestCase):
         client = SLinkClient('http://esp32.local:8080')
         response = Mock()
         response.raise_for_status.return_value = None
+        response.json.return_value = {'webhook_url': 'http://192.168.1.57:5000/webhook'}
 
         with patch('server.sony.slink.requests.post', return_value=response) as post:
             client.send_stop()
@@ -61,6 +62,31 @@ class SLinkTest(unittest.TestCase):
         self.assertEqual(post.call_args_list[1].kwargs['data'], '9002\r\n')
         self.assertEqual(post.call_args_list[2].kwargs['data'], '9208\r\n')
         self.assertEqual(post.call_args_list[3].kwargs['data'], '9025\r\n')
+
+    def test_configure_webhook_target_posts_discovered_backend_url_to_esp32(self):
+        client = SLinkClient('http://esp32.local:8080')
+        response = Mock()
+        response.raise_for_status.return_value = None
+        response.json.return_value = {'webhook_url': 'http://192.168.1.57:5000/webhook'}
+
+        with patch.object(client, '_local_ip_for_server', return_value='192.168.1.57'), \
+                patch('server.sony.slink.requests.post', return_value=response) as post:
+            client.configure_webhook_target()
+
+        self.assertEqual(post.call_args.args, ('http://esp32.local:8080/webhook-target',))
+        self.assertEqual(post.call_args.kwargs['json'], {'webhook_url': 'http://192.168.1.57:5000/webhook'})
+        self.assertEqual(post.call_args.kwargs['timeout'], 3)
+
+    def test_configure_webhook_target_rejects_legacy_esp32_ok_response(self):
+        client = SLinkClient('http://esp32.local:8080')
+        response = Mock()
+        response.raise_for_status.return_value = None
+        response.json.side_effect = ValueError('not json')
+
+        with patch.object(client, '_local_ip_for_server', return_value='192.168.1.57'), \
+                patch('server.sony.slink.requests.post', return_value=response), \
+                self.assertRaisesRegex(RuntimeError, 'flash updated firmware'):
+            client.configure_webhook_target()
 
 
 if __name__ == '__main__':

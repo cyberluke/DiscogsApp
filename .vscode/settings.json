@@ -1,5 +1,4 @@
 {
     "git.ignoreLimitWarning": true,
-    "java.configuration.updateBuildConfiguration": "automatic",
-    "python-envs.pythonProjects": []
+    "java.configuration.updateBuildConfiguration": "automatic"
 }

@@ -1,8 +1,10 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { BehaviorSubject } from 'rxjs';
 import { NowPlayingComponent } from './now-playing.component';
 import { PlaybackService } from './playback.service';
 import { PlaybackStatus } from '../dao/track';
+import { PlaylistService } from '../playlist/playlist.service';
 
 describe('NowPlayingComponent', () => {
   let fixture: ComponentFixture<NowPlayingComponent>;
@@ -36,24 +38,34 @@ describe('NowPlayingComponent', () => {
     last_update_timestamp: 1,
       load_delay_seconds: 0,
       load_delay_remaining: 0,
+    playback_start_delay_seconds: 0,
+    playback_start_delay_enabled: true,
     error: null
   };
 
   beforeEach(() => {
     statusSubject = new BehaviorSubject(status);
     TestBed.configureTestingModule({
-      imports: [NowPlayingComponent],
+      imports: [NowPlayingComponent, NoopAnimationsModule],
       providers: [
         {
           provide: PlaybackService,
           useValue: {
             status$: statusSubject.asObservable(),
             liveConnected$: statusSubject.asObservable(),
+            playTrack: jasmine.createSpy('playTrack'),
             resume: jasmine.createSpy('resume'),
             pause: jasmine.createSpy('pause'),
             stop: jasmine.createSpy('stop'),
             nextTrack: jasmine.createSpy('nextTrack'),
-            previousTrack: jasmine.createSpy('previousTrack')
+            previousTrack: jasmine.createSpy('previousTrack'),
+            setStartDelayEnabled: jasmine.createSpy('setStartDelayEnabled')
+          }
+        },
+        {
+          provide: PlaylistService,
+          useValue: {
+            addToPlaylist: jasmine.createSpy('addToPlaylist')
           }
         }
       ]

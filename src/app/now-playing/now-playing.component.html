@@ -2,9 +2,15 @@
   <div class="status-strip">
     <span class="state">{{ status.playback_state }}</span>
     <span>{{ (liveConnected$ | async) ? 'Live' : 'Polling' }}</span>
+    <span *ngIf="status.hardware_state_verified === false">Restored snapshot</span>
     <span *ngIf="status.current_playlist">{{ status.current_playlist }}</span>
     <span *ngIf="status.current_deck">Deck {{ status.current_deck }}</span>
     <span *ngIf="status.current_cd">CD {{ status.current_cd }}</span>
+    <mat-checkbox
+      class="cd-delay-toggle"
+      [checked]="status.playback_start_delay_enabled"
+      (change)="setPlaybackStartDelayEnabled($event.checked)"
+    >CD delay</mat-checkbox>
   </div>
 
   <div class="current-row">
@@ -27,7 +33,7 @@
       <button mat-icon-button type="button" (click)="previousTrack()" [disabled]="!status.current_track" aria-label="Previous track">
         <mat-icon>skip_previous</mat-icon>
       </button>
-      <button mat-icon-button type="button" (click)="resume()" [disabled]="!status.current_track" aria-label="Play playback">
+      <button mat-icon-button type="button" (click)="play(status)" [disabled]="!status.current_track" aria-label="Play playback">
         <mat-icon>play_arrow</mat-icon>
       </button>
       <button mat-icon-button type="button" (click)="pause()" aria-label="Pause playback">
@@ -41,6 +47,29 @@
       </button>
     </div>
   </div>
+
+  <section class="hardware-panel" [class.unverified]="status.hardware_state_verified === false" [class.loading]="['loading_disc', 'carousel_moving', 'resync_requested'].includes(status.mechanical_state || '')">
+    <div class="cdp-frame">
+      <img src="/assets/sony_cdp.jpg" alt="Sony CDP-CX changer" />
+      <span class="hardware-pulse" [class.spin]="status.mechanical_state === 'carousel_moving'"></span>
+    </div>
+    <div class="hardware-copy">
+      <span class="queue-label">Sony CDP-CX</span>
+      <h3>{{ hardwareStateLabel(status) }}</h3>
+      <div class="hardware-meta">
+        <span>{{ status.hardware_state_verified === false ? 'Restored snapshot' : 'Live hardware' }}</span>
+        <span *ngIf="status.last_hardware_event">Last {{ status.last_hardware_event }}</span>
+        <span *ngIf="status.display_disc">Display disc {{ status.display_disc }}</span>
+        <span *ngIf="status.loaded_disc">Loaded disc {{ status.loaded_disc }}</span>
+        <span *ngIf="status.power_state">Power {{ status.power_state }}</span>
+        <span *ngIf="status.hardware_ready">Ready</span>
+      </div>
+      <div class="hardware-actions">
+        <button mat-stroked-button type="button" (click)="resyncHardware()">Resync</button>
+        <button mat-stroked-button type="button" (click)="enableContinuousStatus()">Continuous status</button>
+      </div>
+    </div>
+  </section>
 
   <div class="progress-shell" aria-label="Playback progress">
     <div class="progress-bar" [style.width.%]="status.progress"></div>

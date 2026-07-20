@@ -79,7 +79,7 @@ class LocalDataRepository:
                 favourite_track['album_title'] = release.get('title')
                 high_score_tracks.append(favourite_track)
 
-        return {'name': 'Favourite tracks', 'tracks': high_score_tracks}
+        return {'name': 'Favourite Tracks', 'tracks': high_score_tracks}
 
     def add_track_to_favourites(self, release_id: int, track_position: str) -> dict[str, Any] | None:
         releases = self.find_release_by_id(release_id)

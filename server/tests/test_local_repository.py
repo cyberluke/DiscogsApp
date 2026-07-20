@@ -29,6 +29,7 @@ class LocalDataRepositoryTest(unittest.TestCase):
 
             self.assertEqual(repository.all_releases()[0]['title'], 'Release')
             self.assertEqual(repository.all_playlists()[0]['name'], 'Playlist')
+            self.assertEqual(repository.favourite_tracks_playlist()['name'], 'Favourite Tracks')
             self.assertEqual(repository.find_release_by_id(10)[0]['title'], 'Release')
             self.assertEqual(repository.image_path('cover.jpeg'), os.path.join(images_dir, 'cover.jpeg'))
 

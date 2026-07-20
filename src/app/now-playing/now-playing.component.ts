@@ -45,6 +45,42 @@ export class NowPlayingComponent {
     this.playbackService.resume().subscribe();
   }
 
+  play(status: PlaybackStatus): void {
+    if (!status.current_track) {
+      return;
+    }
+    const command = status.playback_state === 'paused'
+      ? this.playbackService.resume()
+      : this.playbackService.playTrack(status.current_track);
+    command.subscribe();
+  }
+
+  setPlaybackStartDelayEnabled(enabled: boolean): void {
+    this.playbackService.setStartDelayEnabled(enabled).subscribe();
+  }
+
+  resyncHardware(): void {
+    this.playbackService.resyncHardware().subscribe();
+  }
+
+  enableContinuousStatus(): void {
+    this.playbackService.setContinuousStatusEnabled(true).subscribe();
+  }
+
+  hardwareStateLabel(status: PlaybackStatus): string {
+    if (status.door_open) {
+      return 'Door open';
+    }
+    if (status.power_state === 'off') {
+      return 'Powered off';
+    }
+    return (status.mechanical_state || 'unknown').replace(/_/g, ' ');
+  }
+
+  hardwareStateClass(status: PlaybackStatus): string {
+    return (status.mechanical_state || 'unknown').replace(/_/g, '-');
+  }
+
   stop(): void {
     this.playbackService.stop().subscribe();
   }

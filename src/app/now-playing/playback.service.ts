@@ -30,6 +30,17 @@ const idleStatus: PlaybackStatus = {
   last_update_timestamp: 0,
   load_delay_seconds: 0,
   load_delay_remaining: 0,
+  playback_start_delay_seconds: 0,
+  playback_start_delay_enabled: true,
+  mechanical_state: 'unknown',
+  hardware_ready: false,
+  display_disc: null,
+  loaded_disc: null,
+  door_open: false,
+  power_state: 'unknown',
+  model: null,
+  player_status_raw: null,
+  last_hardware_event: null,
   error: null
 };
 
@@ -78,6 +89,28 @@ export class PlaybackService implements OnDestroy {
 
   resume(): Observable<PlaybackStatus> {
     return this.http.post<PlaybackStatus>(`${this.serviceUrl}/playlist/resume`, {}).pipe(
+      tap(status => this.statusSubject.next(status)),
+      catchError(error => this.handleCommandError(error))
+    );
+  }
+
+  setStartDelayEnabled(enabled: boolean): Observable<PlaybackStatus> {
+    return this.http.post<PlaybackStatus>(`${this.serviceUrl}/playback/start-delay`, { enabled }).pipe(
+      tap(status => this.statusSubject.next(status)),
+      catchError(error => this.handleCommandError(error))
+    );
+  }
+
+  resyncHardware(): Observable<PlaybackStatus> {
+    return this.http.post<PlaybackStatus>(`${this.serviceUrl}/playback/resync`, {}).pipe(
+      tap(status => this.statusSubject.next(status)),
+      catchError(error => this.handleCommandError(error))
+    );
+  }
+
+  setContinuousStatusEnabled(enabled: boolean): Observable<PlaybackStatus> {
+    const suffix = enabled ? 'enable' : 'disable';
+    return this.http.post<PlaybackStatus>(`${this.serviceUrl}/hardware/continuous-status/${suffix}`, {}).pipe(
       tap(status => this.statusSubject.next(status)),
       catchError(error => this.handleCommandError(error))
     );

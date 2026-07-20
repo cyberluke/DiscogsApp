@@ -22,6 +22,8 @@ import json
 import time
 from concurrent.futures import ThreadPoolExecutor
 
+LOGGER = logging.getLogger(__name__)
+
 try:
     from api.ai import create_ai_api
     from api.chat import create_chat_api
@@ -30,10 +32,14 @@ try:
     from api.imports import create_imports_api
     from api.library import create_library_api
     from api.playback import create_playback_api
+    from api.video import create_video_api
+    from api.youtube import create_youtube_api
     from playback.runtime import PlaybackRuntime
     from repository.local import LocalDataRepository
     from recommendation.engine import RecommendationEngine
     from services.ai import MusicAnalysisService
+    from services.video import VideoCache, VideoLibraryService, VideoOffsetStore, VideoSyncService, YouTubeVideoResolver, YtDlpAcquisitionProvider
+    from services.youtube import YouTubeSearchService
     from sony.slink import SLinkClient, duration_to_seconds as slink_duration_to_seconds
 except ImportError:
     from server.api.ai import create_ai_api
@@ -43,10 +49,14 @@ except ImportError:
     from server.api.imports import create_imports_api
     from server.api.library import create_library_api
     from server.api.playback import create_playback_api
+    from server.api.video import create_video_api
+    from server.api.youtube import create_youtube_api
     from server.playback.runtime import PlaybackRuntime
     from server.repository.local import LocalDataRepository
     from server.recommendation.engine import RecommendationEngine
     from server.services.ai import MusicAnalysisService
+    from server.services.video import VideoCache, VideoLibraryService, VideoOffsetStore, VideoSyncService, YouTubeVideoResolver, YtDlpAcquisitionProvider
+    from server.services.youtube import YouTubeSearchService
     from server.sony.slink import SLinkClient, duration_to_seconds as slink_duration_to_seconds
 
 try:
@@ -61,23 +71,13 @@ except ImportError:
 app = Flask(__name__)
 CORS(app)
 
-# These two lines enable debugging at httplib level (requests->urllib3->http.client)
-# You will see the REQUEST, including HEADERS and DATA, and RESPONSE with HEADERS but without DATA.
-# The only thing missing will be the response.body which is not logged.
-try:
-    import http.client as http_client
-except ImportError:
-    # Python 2
-    import httplib as http_client
-http_client.HTTPConnection.debuglevel = 1
-
-
-# You must initialize logging, otherwise you'll not see debug output.
 logging.basicConfig()
-logging.getLogger().setLevel(logging.DEBUG)
+logging.getLogger().setLevel(logging.INFO)
 requests_log = logging.getLogger("requests.packages.urllib3")
-requests_log.setLevel(logging.DEBUG)
-requests_log.propagate = True
+requests_log.setLevel(logging.WARNING)
+requests_log.propagate = False
+logging.getLogger("urllib3").setLevel(logging.WARNING)
+logging.getLogger("urllib3").propagate = False
 
 def load_environment():
     server_dir = os.path.dirname(os.path.abspath(__file__))
@@ -94,6 +94,9 @@ TV_API = os.getenv('TV_API')
 TV_API_HTTP = os.getenv('TV_API_HTTP')
 KODI_USER = os.getenv('KODI_USER')
 KODI_PASSWORD = os.getenv('KODI_PASSWORD')
+YOUTUBE_API_KEY = os.getenv('YOUTUBE_API_KEY') or os.getenv('GOOGLE_API_KEY')
+LOCAL_VIDEO_DIRS = [path.strip() for path in os.getenv('LOCAL_VIDEO_DIRS', 'server/local_videos;local_videos').split(';') if path.strip()]
+YT_DLP_PATH = os.getenv('YT_DLP_PATH', 'yt-dlp')
 KODI_IP = '192.168.1.123'
 KODI_PORT = 8080 
 KODI_WEBSOCKET_PORT = 9090
@@ -102,10 +105,13 @@ PLAYBACK_ADVANCE_LEAD_SECONDS = int(os.getenv('PLAYBACK_ADVANCE_LEAD_SECONDS', '
 CHANGER_LOAD_BASE_SECONDS = float(os.getenv('CHANGER_LOAD_BASE_SECONDS', '4'))
 CHANGER_LOAD_SECONDS_PER_SLOT = float(os.getenv('CHANGER_LOAD_SECONDS_PER_SLOT', '0.08'))
 CHANGER_LOAD_MAX_SECONDS = float(os.getenv('CHANGER_LOAD_MAX_SECONDS', '35'))
-PLAYBACK_START_OFFSET_SECONDS = float(os.getenv('PLAYBACK_START_OFFSET_SECONDS', '1'))
+PLAYBACK_START_OFFSET_SECONDS = float(os.getenv('PLAYBACK_START_OFFSET_SECONDS', '2'))
 PLAYBACK_STATE_PATH = os.getenv('PLAYBACK_STATE_PATH', os.path.join('server', 'playback_state.json'))
 CHANGER_INITIAL_DECK = os.getenv('CHANGER_INITIAL_DECK')
 CHANGER_INITIAL_CD = os.getenv('CHANGER_INITIAL_CD')
+BACKEND_WEBHOOK_HOST = os.getenv('BACKEND_WEBHOOK_HOST')
+BACKEND_WEBHOOK_PORT = int(os.getenv('BACKEND_WEBHOOK_PORT', '5000'))
+BACKEND_WEBHOOK_SCHEME = os.getenv('BACKEND_WEBHOOK_SCHEME', 'http')
 
 slink_client = SLinkClient(SONY_SLINK_SERVER)
 data_repository = LocalDataRepository()
@@ -124,13 +130,31 @@ playback_runtime = PlaybackRuntime(
 music_analysis_service = MusicAnalysisService(data_repository)
 
 kodi_music_videos = []
+youtube_search_service = YouTubeSearchService(data_repository, api_key=YOUTUBE_API_KEY)
+video_cache = VideoCache(LOCAL_VIDEO_DIRS)
+video_library_service = VideoLibraryService(
+    video_cache,
+    resolvers=[YouTubeVideoResolver(youtube_search_service)],
+    acquisition_provider=YtDlpAcquisitionProvider(YT_DLP_PATH),
+)
+video_sync_service = VideoSyncService(video_library_service, playback_runtime, VideoOffsetStore('video_offsets.json'))
 recommendation_engine = RecommendationEngine(data_repository.all_releases())
 app.register_blueprint(create_library_api(data_repository))
 app.register_blueprint(create_ai_api(data_repository, music_analysis_service))
 app.register_blueprint(create_chat_api(data_repository, playback_runtime))
 app.register_blueprint(create_compat_api(lambda: playback_runtime))
 app.register_blueprint(create_playback_api(playback_runtime, recommendation_engine))
+app.register_blueprint(create_video_api(video_library_service, video_sync_service))
+app.register_blueprint(create_youtube_api(youtube_search_service, video_sync_service))
 create_playback_socket(app, playback_runtime, playback_runtime.event_hub)
+
+def initialize_slink_adapter():
+    try:
+        slink_client.configure_webhook_target(port=BACKEND_WEBHOOK_PORT, host=BACKEND_WEBHOOK_HOST, scheme=BACKEND_WEBHOOK_SCHEME)
+    except Exception as error:
+        LOGGER.warning('Could not configure ESP32 webhook target: %s', error)
+
+threading.Thread(target=initialize_slink_adapter, daemon=True).start()
 
 # Constants for rate limiting
 CALLS = 55
@@ -197,16 +221,23 @@ def slinkTrack(track):
 
 def process_webhook(data):
     data = data or {}
+    data = enrich_hardware_payload(data)
     print(data)
 
     status = data.get('status', '')
+    LOGGER.info('S-Link webhook status=%s payload=%s', status or 'UNKNOWN', data)
     if status:
-        if status == 'PLAY':
-            observed_track = resolve_observed_play_track(data)
-            if observed_track:
-                playback_runtime.observe_track(observed_track)
-            else:
-                playback_runtime.handle_transport_status(status, data)
+        observed_track = resolve_observed_track(data)
+        if observed_track:
+            playback_runtime.observe_track(observed_track)
+        elif status == 'NEXT_TRACK_IN':
+            playback_status = playback_runtime.handle_transport_status(status, data)
+            LOGGER.info(
+                'Playback NEXT_TRACK_IN synchronized remaining=%s elapsed=%s current=%s',
+                playback_status.get('remaining'),
+                playback_status.get('elapsed'),
+                (playback_status.get('current_track') or {}).get('full_name'),
+            )
         else:
             playback_runtime.handle_transport_status(status, data)
 
@@ -364,11 +395,56 @@ def process_webhook(data):
         except IndexError:
             print('No matching track found.')    
 
+def enrich_hardware_payload(data):
+    if not isinstance(data, dict) or 'decoded_disc' in data:
+        return data
+    if data.get('disc') is None:
+        return data
+    try:
+        enriched = dict(data)
+        enriched['decoded_disc'] = decode_disc_position(parse_slink_byte(data.get('device'), 0x98), parse_slink_byte(data.get('disc'), 1))
+        return enriched
+    except (TypeError, ValueError):
+        return data
+
+def resolve_observed_track(data):
+    if data.get('status') == 'PREPARE_TRACK':
+        return resolve_prepared_track(data.get('track'))
+    if data.get('status') == 'PLAY' or {'device', 'cd', 'track'}.issubset(data.keys()):
+        return resolve_observed_play_track(data)
+    return None
+
 def resolve_observed_play_track(data):
     try:
         device = parse_slink_byte(data.get('device'), 0x98)
         encoded_cd = parse_slink_byte(data.get('cd'), 1)
         track_position = decode_bcd_byte(parse_slink_byte(data.get('track'), 1))
+        cd_position = decode_disc_position(device, encoded_cd)
+        deck_number = decode_deck_number(device)
+    except (TypeError, ValueError):
+        return None
+
+    releases = data_repository.find_releases_by_deck_cd(deck_number, cd_position)
+    if not releases:
+        return None
+
+    release = releases[0]
+    matching_track = find_release_track(release, track_position)
+    if matching_track is None:
+        return None
+
+    return release_track_payload(release, matching_track, deck_number, cd_position)
+
+def resolve_prepared_track(slink_data):
+    if not slink_data:
+        return None
+    try:
+        hex_pairs = [str(slink_data)[index:index + 2] for index in range(0, len(str(slink_data)), 2)]
+        if len(hex_pairs) < 4:
+            return None
+        device = int(hex_pairs[0], 16)
+        encoded_cd = int(hex_pairs[2], 16)
+        track_position = decode_bcd_byte(int(hex_pairs[3], 16))
         cd_position = decode_disc_position(device, encoded_cd)
         deck_number = decode_deck_number(device)
     except (TypeError, ValueError):
@@ -487,7 +563,7 @@ def printAllMusicVideos():
         "jsonrpc": "2.0",
         "method": "VideoLibrary.GetMusicVideos",
         "params": {
-            "properties": ["title", "artist", "year", "file"]
+            "properties": ["title", "artist", "year", "file", "thumbnail", "runtime"]
         },
         "id": 1
     }
@@ -509,6 +585,8 @@ def printAllMusicVideos():
                 print(f"id: {video['musicvideoid']}, Title: {video['title']}, Artist: {video['artist'][0] if video['artist'] else 'Unknown'}, Year: {video.get('year', 'Unknown')}")
             except KeyError as e:
                 print(f"KeyError: {e} not found in video")
+
+        youtube_search_service.set_kodi_music_videos(kodi_music_videos)
                
 
 # Function to send JSON-RPC requests to Kodi
@@ -574,13 +652,17 @@ def jumpToZero():
 
 def jumpToStart(selectedVideo):
     updated_video = data_repository.ensure_video_offset(selectedVideo['title'], selectedVideo['artist'])
+    jumpToOffsetParts(updated_video['videos_offsets'])
+
+
+def jumpToOffsetParts(offset_parts):
 
     new_time = {
         "time": {
             "hours": 0,
-            "minutes": updated_video['videos_offsets'][0],
-            "seconds": updated_video['videos_offsets'][1],
-            "milliseconds": updated_video['videos_offsets'][2]
+            "minutes": offset_parts[0],
+            "seconds": offset_parts[1],
+            "milliseconds": offset_parts[2]
         }
     }  
 
@@ -601,35 +683,15 @@ def tryToPlayMusicVideoOnKodi(artist, title, duration):
     global kodi_music_videos
 
     # Step 1: Find the Music Video
-    musicvideoid = None
-    selectedVideo = None
-    for video in kodi_music_videos:
-        video_title = video['title'].lower()
-        video_artist = video['artist'][0].lower()
-        input_title = title.lower()
-        input_artist = artist.lower()
-
-        # override by alias if needed
-        print(f"Searching by alias: {input_title}")
-        existing_video = data_repository.find_video_offset_by_alias(input_title)
-        if existing_video:
-            input_title = existing_video['title'].lower()
-            input_artist = existing_video['artist'].lower()
-
-        video_title_words = video_title.split()
-        video_artist_words = video_artist.split()
-        input_title_words = input_title.split()
-        input_artist_words = input_artist.split()
-
-        title_similarity = len(set(video_title_words) & set(input_title_words))
-        artist_similarity = len(set(video_artist_words) & set(input_artist_words))
-
-        #if title_similarity >= len(video_title_words) * 0.5 and artist_similarity >= len(video_artist_words) * 0.5:
-      
-        if title_similarity >= len(video_title_words):
-            selectedVideo = video
-            musicvideoid = video['musicvideoid']
-            break
+    if not kodi_music_videos:
+        printAllMusicVideos()
+    selected_video = youtube_search_service.find_best_kodi_music_video(
+        artist=artist,
+        title=title,
+        duration=duration,
+        music_videos=kodi_music_videos,
+    )
+    musicvideoid = selected_video.get('provider_id') if selected_video else None
 
     # Step 2: Play the Music Video
     if musicvideoid:
@@ -650,7 +712,7 @@ def tryToPlayMusicVideoOnKodi(artist, title, duration):
         response = requests.post(url=f"{TV_API_HTTP}/jsonrpc", headers=headers, auth=auth, data=json.dumps(play_payload))
         jumpToZero()
 
-        jumpToStart(selectedVideo)
+        jumpToOffsetParts(selected_video.get('offset_parts') or [0, 0, 0])
         pause()
         #jumpToStart(selectedVideo)
         #pause()
@@ -795,6 +857,11 @@ if __name__ == '__main__':
         if USE_KODI:
             t2 = threading.Thread(target=start_websocket, daemon=True)
             t2.start()
+
+        try:
+            slink_client.configure_webhook_target(port=BACKEND_WEBHOOK_PORT, host=BACKEND_WEBHOOK_HOST, scheme=BACKEND_WEBHOOK_SCHEME)
+        except Exception as error:
+            LOGGER.warning('Could not configure ESP32 webhook target: %s', error)
 
         # Run the Flask server
         app.run(host='0.0.0.0', port=5000)

@@ -15,7 +15,7 @@ class MusicAnalysisService:
         prompt: MusicAnalysisPrompt | None = None,
         parser: MusicAnalysisParser | None = None,
         cache: MusicAnalysisCache | None = None,
-        version: int = 1,
+        version: int = 2,
     ):
         self.repository = repository
         self.version = version

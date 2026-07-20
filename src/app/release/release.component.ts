@@ -132,7 +132,11 @@ export class ReleaseComponent implements OnInit {
     this.releaseService.addToFavourites(release, track).subscribe(
       response => {
         console.log('Track added to favourites successfully', response);
-        // Handle successful response here
+        track._score = 1;
+        const updatedTrack = response?.tracklist?.find((item: any) => item.position === track.position);
+        if (updatedTrack) {
+          Object.assign(track, updatedTrack);
+        }
       },
       error => {
         console.error('Error adding track to favourites', error);

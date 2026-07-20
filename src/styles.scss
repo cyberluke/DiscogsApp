@@ -6,35 +6,238 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; background-
 app-ai-dj .mat-mdc-form-field,
 app-ai-dj .mat-mdc-form-field .mdc-floating-label,
 app-ai-dj .mat-mdc-form-field .mdc-text-field__input {
-  color: #241f1b !important;
-  caret-color: #8a3f25 !important;
+  color: #f7f4ec !important;
+  caret-color: #7bd7bd !important;
 }
 
 app-ai-dj .mat-mdc-form-field .mdc-text-field--outlined {
-  background: #fffdf7 !important;
+  background: #20242d !important;
 }
 
 app-ai-dj .mat-mdc-form-field .mdc-notched-outline > * {
-  border-color: rgba(36, 31, 27, 0.42) !important;
+  border-color: rgba(255, 255, 255, 0.24) !important;
 }
 
 app-ai-dj button[mat-fab] {
-  background: #8a3f25 !important;
-  color: #fff8ea !important;
+  background: #7bd7bd !important;
+  color: #10201d !important;
 }
 
 app-ai-dj button[mat-fab] mat-icon {
-  color: #fff8ea !important;
+  color: #10201d !important;
 }
 
 app-ai-dj .suggestions button[mat-stroked-button] {
-  border-color: rgba(36, 31, 27, 0.28) !important;
-  background: #fff8ea !important;
-  color: #263c39 !important;
+  border-color: rgba(123, 215, 189, 0.36) !important;
+  background: #17191d !important;
+  color: #dfe6e4 !important;
 }
 
 app-ai-dj .suggestions .mdc-button__label {
-  color: #263c39 !important;
+  color: #dfe6e4 !important;
+}
+
+app-ai-dj .mat-mdc-icon-button {
+  color: #dfe6e4 !important;
+}
+
+app-ai-dj .message-recommendations {
+  display: grid;
+  gap: 6px;
+  margin-top: 10px;
+}
+
+app-ai-dj .message-track {
+  background: #17191d;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  color: #f7f4ec;
+  cursor: pointer;
+  padding: 8px;
+  text-align: left;
+}
+
+app-ai-dj .message-track strong,
+app-ai-dj .message-track small {
+  display: block;
+}
+
+app-ai-dj .message-track small {
+  color: #aeb9b7;
+  margin-top: 3px;
+}
+
+app-ai-dj .now-context {
+  grid-template-columns: minmax(180px, 260px) minmax(0, 1fr) auto !important;
+  min-height: 260px;
+  background: linear-gradient(135deg, #17191d 0%, #101214 58%, #182823 100%) !important;
+}
+
+app-ai-dj .now-artwork-frame {
+  aspect-ratio: 1;
+  background: #0b0c0e;
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+}
+
+app-ai-dj .now-artwork {
+  height: 100% !important;
+  width: 100% !important;
+}
+
+app-ai-dj .cd-controls {
+  display: flex;
+  gap: 6px;
+  margin-top: 16px;
+}
+
+app-ai-dj .ai-progress {
+  margin-top: 16px;
+  max-width: 560px;
+}
+
+app-ai-dj .ai-progress-shell {
+  background: rgba(255, 255, 255, 0.14);
+  height: 10px;
+  overflow: hidden;
+}
+
+app-ai-dj .ai-progress-shell i {
+  background: #7bd7bd;
+  display: block;
+  height: 100%;
+}
+
+app-ai-dj .ai-timing {
+  color: #aeb9b7;
+  display: flex;
+  justify-content: space-between;
+  margin-top: 6px;
+}
+
+app-ai-dj .youtube-panel {
+  background: #101214;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  margin-bottom: 16px;
+  padding: 14px;
+}
+
+app-ai-dj .youtube-stage {
+  aspect-ratio: 16 / 9;
+  background: #050607;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  overflow: hidden;
+}
+
+app-ai-dj .youtube-stage iframe,
+app-ai-dj .youtube-thumbnail {
+  border: 0;
+  height: 100%;
+  width: 100%;
+}
+
+app-ai-dj .youtube-thumbnail {
+  align-items: center;
+  background: #080a0c;
+  color: #fff;
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  position: relative;
+}
+
+app-ai-dj .youtube-thumbnail img {
+  height: 100%;
+  inset: 0;
+  object-fit: cover;
+  opacity: 0.72;
+  position: absolute;
+  width: 100%;
+}
+
+app-ai-dj .youtube-thumbnail mat-icon {
+  font-size: 70px;
+  height: 70px;
+  position: relative;
+  width: 70px;
+}
+
+app-ai-dj .youtube-caption,
+app-ai-dj .youtube-empty {
+  align-items: center;
+  color: #aeb9b7;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+app-ai-dj .youtube-caption strong {
+  color: #fff;
+}
+
+app-ai-dj .youtube-empty {
+  background: rgba(255, 255, 255, 0.05);
+  justify-content: center;
+  min-height: 180px;
+}
+
+app-ai-dj .recommendation-panel {
+  background: #101214 !important;
+}
+
+app-ai-dj .recommendation {
+  align-items: stretch !important;
+  background: #17191d;
+  border: 1px solid rgba(255, 255, 255, 0.12) !important;
+  display: grid !important;
+  grid-template-columns: 132px minmax(0, 1fr) max-content;
+  margin-bottom: 12px;
+  padding: 12px !important;
+}
+
+app-ai-dj .recommendation-artwork {
+  background: #0b0c0e;
+  display: grid;
+  grid-template-rows: minmax(0, 1fr) auto;
+  overflow: hidden;
+}
+
+app-ai-dj .recommendation-artwork img {
+  aspect-ratio: 1;
+  height: 100%;
+  object-fit: cover;
+  width: 100%;
+}
+
+app-ai-dj .recommendation-artwork span {
+  background: #8f3f2d;
+  color: #fff;
+  font-size: 0.78rem;
+  font-weight: 800;
+  padding: 6px;
+  text-align: center;
+}
+
+app-ai-dj .match-label {
+  color: #7bd7bd;
+  display: block;
+  font-size: 0.76rem;
+  font-weight: 800;
+  margin-bottom: 6px;
+  text-transform: uppercase;
+}
+
+@media (max-width: 760px) {
+  app-ai-dj .now-context,
+  app-ai-dj .recommendation {
+    grid-template-columns: 1fr !important;
+  }
+
+  app-ai-dj .recommendation .actions {
+    justify-content: flex-start;
+  }
 }
 /* styles.css */
 @include mat.core();

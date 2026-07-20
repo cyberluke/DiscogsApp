@@ -21,10 +21,10 @@ export class ReleaseService {
     return this.http.get<any[]>(this.releasesUrl);
   }
 
-  addToFavourites(release: any, track: any): Observable<any[]>  {
+  addToFavourites(release: any, track: any): Observable<any>  {
     const payload = { release, track }; // Adjust payload as per your API requirements
 
-    return this.http.post<any[]>(this.favouriteUrl, payload);
+    return this.http.post<any>(this.favouriteUrl, payload);
   }
 
   getReleaseAi(releaseId: number): Observable<AiMetadata | null> {

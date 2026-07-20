@@ -2,8 +2,8 @@
   display: block;
   height: calc(100dvh - 49px);
   overflow-y: auto;
-  background: #f4f0e7;
-  color: #241f1b;
+  background: #121212;
+  color: #f7f4ec;
 }
 
 .ai-dj-shell {
@@ -15,8 +15,8 @@
 }
 
 .now-context, .conversation-panel, .recommendation-panel, .error, .loading, .explanation {
-  border: 1px solid rgba(36, 31, 27, 0.14);
-  background: rgba(255, 252, 245, 0.9);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: #17191d;
 }
 
 .now-context {
@@ -30,12 +30,11 @@
   width: 128px;
   height: 128px;
   object-fit: cover;
-  background: #ded6c7;
 }
 
 .eyebrow, .message span {
   display: block;
-  color: #8a3f25;
+  color: #7bd7bd;
   font-size: 0.75rem;
   font-weight: 800;
   text-transform: uppercase;
@@ -43,7 +42,7 @@
 
 h1, h2, h3, p { margin: 0; }
 h1 { font-size: clamp(1.6rem, 3vw, 3.2rem); line-height: 1.02; }
-.now-copy p, .recommendation-copy p { margin-top: 6px; color: #62594f; }
+.now-copy p, .recommendation-copy p { margin-top: 6px; color: #aeb9b7; }
 
 .now-meta, .dna, .suggestions, .panel-header, .recommendation, .actions {
   display: flex;
@@ -54,33 +53,125 @@ h1 { font-size: clamp(1.6rem, 3vw, 3.2rem); line-height: 1.02; }
 .panel-header, .recommendation, .actions { align-items: center; }
 .panel-header { justify-content: space-between; margin-bottom: 14px; }
 
+.video-offset-controls {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-left: auto;
+  color: #dfe6e4;
+}
+
+.manual-offset-field {
+  width: 116px;
+}
+
+.manual-offset-field ::ng-deep .mat-mdc-form-field-infix {
+  min-height: 40px;
+  padding-top: 8px;
+  padding-bottom: 8px;
+}
+
+.cd-delay-toggle {
+  color: #dfe6e4;
+}
+
 .now-meta span, .dna span {
-  border: 1px solid rgba(36, 31, 27, 0.16);
+  border: 1px solid rgba(255, 255, 255, 0.12);
   padding: 5px 8px;
-  background: #fff8ea;
+  background: #20242d;
+  color: #dfe6e4;
   font-size: 0.82rem;
 }
 
 .collection-pulse, .confidence {
   display: grid;
   place-items: center;
-  background: #263c39;
-  color: #fff8ea;
+  background: #20332f;
+  color: #f7f4ec;
+}
+
+.hardware-mini {
+  align-items: center;
+  background: #101820;
+  border: 1px solid rgba(123, 215, 189, 0.25);
+  display: grid;
+  gap: 10px;
+  grid-template-columns: 112px minmax(0, 1fr) 40px 40px;
+  margin-top: 12px;
+  padding: 8px;
+}
+
+.hardware-mini.loading img {
+  filter: saturate(1.15) brightness(1.12);
+}
+
+.hardware-mini img {
+  aspect-ratio: 16 / 9;
+  display: block;
+  object-fit: cover;
+  width: 112px;
+}
+
+.hardware-mini strong,
+.hardware-mini small {
+  display: block;
+  text-transform: capitalize;
+}
+
+.hardware-mini small {
+  color: #aeb9b7;
 }
 
 .conversation-panel, .recommendation-panel { padding: 18px; }
+
+.youtube-panel {
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: #17191d;
+  padding: 18px;
+}
+
+.youtube-stage {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  overflow: hidden;
+  background: #0a0d11;
+}
+
+.youtube-stage video,
+.youtube-stage ::ng-deep iframe {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.youtube-caption {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 12px;
+  margin-top: 10px;
+  color: #aeb9b7;
+}
+
+.youtube-caption strong {
+  color: #f7f4ec;
+}
 
 .conversation-log {
   display: grid;
   gap: 10px;
 }
 
-.message { padding: 10px; background: #eee4d3; }
+.message {
+  padding: 10px;
+  background: #20242d;
+}
 
 .message.user {
   justify-self: end;
-  background: #263c39;
-  color: #fff8ea;
+  background: #20332f;
+  color: #f7f4ec;
 }
 
 .input-row {
@@ -95,21 +186,23 @@ h1 { font-size: clamp(1.6rem, 3vw, 3.2rem); line-height: 1.02; }
 
 .recommendation {
   padding: 14px 0;
-  border-top: 1px solid rgba(36, 31, 27, 0.12);
+  border-top: 1px solid rgba(255, 255, 255, 0.12);
 }
 
 .confidence {
   width: 74px;
   height: 74px;
   flex: 0 0 74px;
-  background: #8a3f25;
+  background: #8f3f2d;
 }
 
 .confidence span { font-size: 1.55rem; font-weight: 800; }
 .confidence small { font-size: 0.65rem; text-transform: uppercase; }
 .recommendation-copy { min-width: 0; flex: 1; }
 .error, .loading, .explanation { padding: 12px; }
-.error { color: #9a2c1f; }
+.error {
+  color: #ffb4a9;
+}
 
 @media (min-width: 980px) {
   .ai-dj-shell { grid-template-columns: minmax(0, 0.92fr) minmax(420px, 1.08fr); }

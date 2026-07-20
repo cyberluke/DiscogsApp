@@ -20,16 +20,17 @@
 #define DEBUG_PULSES
 
 // Webhook support
-const char* serverName = "http://192.168.1.122:5000/webhook";  
+String webhookUrl = "http://192.168.137.1:5000/webhook";
 
 const byte OUTPUT_PIN = 16; // 2
-const byte INPUT_PIN = 17; // 3
+const byte INPUT_PIN = 14; // 3
 const byte PULSE_BUFFER_SIZE = 200;
 
 volatile unsigned long timeLowTransition = 0;
 volatile byte bufferReadPosition = 0;
 volatile byte bufferWritePosition = 0;
 volatile byte pulseBuffer[PULSE_BUFFER_SIZE];
+volatile unsigned int pulseBufferOverflows = 0;
 
 // Define a buffer to hold the incoming playlist data
 char playlistBuffer[512]; // Adjust the size as needed for your data
@@ -52,8 +53,8 @@ String pulseLengths;
 #endif
 
 AsyncWebServer server(8080);
-const char* ssid = "DILNA21";
-const char* password = "nanotriko";
+const char* ssid = "COREI9 4939";
+const char* password = "12345678";
 const char* PARAM_MESSAGE = "message";
 
 void notFound(AsyncWebServerRequest *request) {
@@ -83,7 +84,7 @@ void IRAM_ATTR busChange()
   int timeLow = timeNow - timeLowTransition;
 
   if ((bufferWritePosition + 1) % PULSE_BUFFER_SIZE == bufferReadPosition) {
-    Serial.println(F("Pulse buffer overflow when receiving data"));
+    pulseBufferOverflows++;
     return;
   }
 
@@ -101,33 +102,50 @@ void setup()
   pinMode(INPUT_PIN, INPUT);
   Serial.println("Booting User code...");
   // Setup command handlers
-  commandHandlers[0x01] = handleStopCommand; // Command byte for 'Stop'
-  commandHandlers[0x02] = handlePauseCommand; // Command byte for 'Pause'
-  commandHandlers[0x03] = handlePauseToggleCommand; // Command byte for 'Pause toggle'
-  commandHandlers[0x04] = handleEjectCommand; // Command byte for 'Eject'
-  commandHandlers[0x08] = handleNextCommand; // Command byte for 'Next'  
-  commandHandlers[0x09] = handlePrevCommand; // Command byte for 'Prev'  
-  commandHandlers[0x50] = handlePlayCommand; // Command byte for 'Play'
-  commandHandlers[0x0C] = handle30SecCommand; // Command byte for '30 sec remaining'
-  // Add more command handlers as needed
+  commandHandlers[0x00] = handlePlayStateCommand;
+  commandHandlers[0x01] = handleStopCommand;
+  commandHandlers[0x02] = handlePauseCommand;
+  commandHandlers[0x03] = handlePauseToggleCommand;
+  commandHandlers[0x06] = handleCarouselMovingCommand;
+  commandHandlers[0x08] = handleReadyCommand;
+  commandHandlers[0x0C] = handle30SecCommand;
+  commandHandlers[0x18] = handleDoorOpenCommand;
+  commandHandlers[0x2E] = handlePowerOnCommand;
+  commandHandlers[0x2F] = handlePowerOffCommand;
+  commandHandlers[0x50] = handlePlayCommand;
+  commandHandlers[0x51] = handleIgnoredStatusCommand;
+  commandHandlers[0x52] = handleDisplayDiscCommand;
+  commandHandlers[0x54] = handleLoadingDiscCommand;
+  commandHandlers[0x58] = handleDiscLoadedCommand;
+  commandHandlers[0x61] = handleModelIdCommand;
+  commandHandlers[0x70] = handlePlayerStatusCommand;
   Serial.println("attach interrupt");
   //attachInterrupt(digitalPinToInterrupt(INPUT_PIN), busChange, CHANGE);
-  attachInterrupt(digitalPinToInterrupt(INPUT_PIN), busChange, CHANGE);
 
 
 
   WiFi.mode(WIFI_STA);
-    WiFi.begin(ssid, password);
-    if (WiFi.waitForConnectResult() != WL_CONNECTED) {
-        Serial.printf("WiFi Failed!\n");
-        return;
-    }
+  WiFi.begin(ssid, password);
+  Serial.print("Connecting WiFi");
+  unsigned long wifiStart = millis();
+  while (WiFi.status() != WL_CONNECTED && millis() - wifiStart < 20000) {
+    delay(500);
+    Serial.print('.');
+  }
+  Serial.println();
 
+  bool wifiConnected = WiFi.status() == WL_CONNECTED;
+  if (!wifiConnected) {
+    Serial.print("WiFi Failed, status=");
+    Serial.println(WiFi.status());
+  } else {
     Serial.print("IP Address: ");
     Serial.println(WiFi.localIP());
+  }
 
   startTime = readCurrentTimestamp();
 
+  if (wifiConnected) {
   server.on("/", HTTP_GET, [](AsyncWebServerRequest *request){
         request->send(200, "text/plain", "Hello, world");
     });
@@ -143,6 +161,21 @@ void setup()
         request->send(200, "text/plain", "Hello, GET: " + message);
     });
 
+      server.on("/status", HTTP_GET, [](AsyncWebServerRequest *request) {
+        String payload = "{\"device\":\"sony_slink_esp32\",\"version\":\"main-rx14\",\"ip\":\"";
+        payload += WiFi.localIP().toString();
+        payload += "\",\"mac\":\"";
+        payload += WiFi.macAddress();
+        payload += "\",\"webhook_url\":\"";
+        payload += webhookUrl;
+        payload += "\",\"rx_pin\":14,\"tx_pin\":16}";
+        request->send(200, "application/json", payload);
+      });
+
+      server.on("/webhook-target", HTTP_GET, [](AsyncWebServerRequest *request) {
+        request->send(200, "application/json", "{\"webhook_url\":\"" + webhookUrl + "\"}");
+      });
+
     // Send a POST request to <IP>/post with a form field message set to <message>
     server.on("/post", HTTP_POST, [](AsyncWebServerRequest *request) {
         // request->send(200, "text/plain", "Hello, POST: " + message);
@@ -154,6 +187,20 @@ void setup()
     });
 
     server.onRequestBody([](AsyncWebServerRequest *request, uint8_t *data, size_t len, size_t index, size_t total){
+      if (request->url() == "/webhook-target") {
+        static String bodyData;
+        processBodyData(data, len, index, total, bodyData);
+        if (index + len == total) {
+          int keyIndex = bodyData.indexOf("webhook_url");
+          int valueStart = bodyData.indexOf('"', bodyData.indexOf(':', keyIndex));
+          int valueEnd = bodyData.indexOf('"', valueStart + 1);
+          if (keyIndex >= 0 && valueStart >= 0 && valueEnd > valueStart) {
+            webhookUrl = bodyData.substring(valueStart + 1, valueEnd);
+          }
+          request->send(200, "application/json", "{\"webhook_url\":\"" + webhookUrl + "\"}");
+        }
+        return;
+      }
       processBodyHandler(request, data, len, index, total);
       request->send(200, "text/plain", "OK");
     });
@@ -161,6 +208,9 @@ void setup()
     server.onNotFound(notFound);
 
     server.begin();
+  }
+    attachInterrupt(digitalPinToInterrupt(INPUT_PIN), busChange, CHANGE);
+    enableContinuousStatus();
 }
 
 void processBodyHandler(AsyncWebServerRequest *request, uint8_t *data, size_t len, size_t index, size_t total) {
@@ -232,9 +282,14 @@ void processSlinkInput()
         }
 
         Serial.print('\n');
+        if (currentBit == 0 && !messageBytes.empty() && (messageBytes[0] == 0x98 || messageBytes[0] == 0x99 || messageBytes[0] == 0x9A || messageBytes[0] == 0x9B || messageBytes[0] == 0x9C || messageBytes[0] == 0x9D)) {
+          handleCommand(messageBytes);
+        }
+        messageBytes.clear();
         partialOutput = false;
       }
 
+      currentByte = 0;
       currentBit = 0;
       continue;
     }
@@ -263,10 +318,12 @@ void processSlinkInput()
   if (partialOutput && isBusIdle()) {
     Serial.print('\n');
     partialOutput = false;
-    if (messageBytes[0] == 0x98 || messageBytes[0] == 0x99 || messageBytes[0] == 0x9A || messageBytes[0] == 0x9B || messageBytes[0] == 0x9C || messageBytes[0] == 0x9D) {
+    if (!messageBytes.empty() && (messageBytes[0] == 0x98 || messageBytes[0] == 0x99 || messageBytes[0] == 0x9A || messageBytes[0] == 0x9B || messageBytes[0] == 0x9C || messageBytes[0] == 0x9D)) {
       handleCommand(messageBytes);
     }
     messageBytes.clear(); // Clear the message bytes after handling
+    currentByte = 0;
+    currentBit = 0;
   }
 }
 
@@ -279,6 +336,49 @@ void handleCommand(const std::vector<byte>& message) {
   } else {
     // Handle unknown command or ignore
   }
+}
+
+String rawMessageHex(const std::vector<byte>& message) {
+  String raw;
+  for (size_t i = 0; i < message.size(); ++i) {
+    if (i > 0) {
+      raw += " ";
+    }
+    if (message[i] <= 0x0F) {
+      raw += "0";
+    }
+    raw += String(message[i], HEX);
+  }
+  raw.toUpperCase();
+  return raw;
+}
+
+String hexByteJson(byte value) {
+  String encoded;
+  if (value <= 0x0F) {
+    encoded += "0";
+  }
+  encoded += String(value, HEX);
+  encoded.toUpperCase();
+  return encoded;
+}
+
+void postSimpleStatus(const char* status, const std::vector<byte>& message) {
+  String json = "{\"status\":\"" + String(status) + "\",\"raw\":\"" + rawMessageHex(message) + "\"}";
+  httpPost(json);
+}
+
+void postDiscStatus(const char* status, const std::vector<byte>& message) {
+  if (message.size() >= 3) {
+    String json = "{\"status\":\"" + String(status) + "\",\"device\":\"" + hexByteJson(message[0]) + "\",\"disc\":\"" + hexByteJson(message[2]) + "\",\"raw\":\"" + rawMessageHex(message) + "\"}";
+    httpPost(json);
+    return;
+  }
+  postSimpleStatus(status, message);
+}
+
+void handlePlayStateCommand(const std::vector<byte>& message) {
+  postSimpleStatus("PLAY", message);
 }
 
 // Function to convert a hex string to an integer
@@ -335,6 +435,26 @@ void handlePauseToggleCommand(const std::vector<byte>& message) {
 void handleEjectCommand(const std::vector<byte>& message) {
   isTimerEnabled = false;
   httpPost("{\"status\":\"EJECT\"}");
+}
+
+void handleCarouselMovingCommand(const std::vector<byte>& message) {
+  postSimpleStatus("CAROUSEL_MOVING", message);
+}
+
+void handleReadyCommand(const std::vector<byte>& message) {
+  postSimpleStatus("READY", message);
+}
+
+void handleDoorOpenCommand(const std::vector<byte>& message) {
+  postSimpleStatus("DOOR_OPEN", message);
+}
+
+void handlePowerOnCommand(const std::vector<byte>& message) {
+  postSimpleStatus("POWER_ON", message);
+}
+
+void handlePowerOffCommand(const std::vector<byte>& message) {
+  postSimpleStatus("POWER_OFF", message);
 }
 
 void handlePlayCommand(const std::vector<byte>& message) {
@@ -435,6 +555,35 @@ void handlePrevCommand(const std::vector<byte>& message) {
   httpPost("{\"status\":\"PREV_TRACK\"}"); 
 }
 
+void handleDisplayDiscCommand(const std::vector<byte>& message) {
+  postDiscStatus("DISPLAY_DISC", message);
+}
+
+void handleLoadingDiscCommand(const std::vector<byte>& message) {
+  postDiscStatus("LOADING_DISC", message);
+}
+
+void handleDiscLoadedCommand(const std::vector<byte>& message) {
+  postDiscStatus("DISC_LOADED", message);
+}
+
+void handleModelIdCommand(const std::vector<byte>& message) {
+  postSimpleStatus("MODEL_ID", message);
+}
+
+void handlePlayerStatusCommand(const std::vector<byte>& message) {
+  postSimpleStatus("PLAYER_STATUS", message);
+}
+
+void handleUnknownStatusCommand(const std::vector<byte>& message) {
+  postSimpleStatus("UNKNOWN_STATUS", message);
+}
+
+void handleIgnoredStatusCommand(const std::vector<byte>& message) {
+  Serial.print("Ignoring status: ");
+  Serial.println(rawMessageHex(message));
+}
+
 void playNextFromPlaylist() {
   Serial.println("playNextFromPlaylist() COMMAND:");
   Serial.println(currentPlaylistPosition);
@@ -525,8 +674,12 @@ void idleAfterCommand()
 
 bool sendCommand(byte command[], int commandLength)
 {
-  if (!isBusIdle()) {
-    return false;
+  unsigned long waitStart = millis();
+  while (!isBusIdle()) {
+    if (millis() - waitStart > 250) {
+      return false;
+    }
+    delayMicroseconds(1000);
   }
 
   noInterrupts();
@@ -544,6 +697,19 @@ bool sendCommand(byte command[], int commandLength)
   interrupts();
   idleAfterCommand();
   return true;
+}
+
+void enableContinuousStatus()
+{
+  byte command[] = {0x90, 0x25};
+  for (int attempt = 0; attempt < 3; ++attempt) {
+    if (sendCommand(command, sizeof(command))) {
+      Serial.println("Continuous S-Link status enabled");
+      return;
+    }
+    delay(100);
+  }
+  Serial.println("Continuous S-Link status enable failed");
 }
 
 //void processSerialInput()
@@ -596,8 +762,20 @@ bool sendCommand(byte command[], int commandLength)
 
 void loop()
 {
+  static unsigned long lastStatusPrint = 0;
+
   processSlinkInput();
   //processSerialInput();
+
+  if (millis() - lastStatusPrint > 5000) {
+    lastStatusPrint = millis();
+    Serial.print("STATUS wifi=");
+    Serial.print(WiFi.status());
+    Serial.print(" ip=");
+    Serial.print(WiFi.localIP());
+    Serial.print(" rxOverflows=");
+    Serial.println(pulseBufferOverflows);
+  }
 
   if (playlistBufferLength > 0) {
     readSLinkBuffer(playlistBufferLength);
@@ -694,7 +872,7 @@ void httpPost(String jsonPayload) {
         HTTPClient http;
 
         // Specify request destination
-        http.begin(serverName);
+        http.begin(webhookUrl);
 
         // Specify content type header
         http.addHeader("Content-Type", "application/json");

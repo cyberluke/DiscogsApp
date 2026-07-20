@@ -29,6 +29,15 @@ class PlaybackState:
     paused_elapsed: int = 0
     load_delay_seconds: float = 0
     load_delay_remaining: float = 0
+    mechanical_state: str = 'unknown'
+    hardware_ready: bool = False
+    display_disc: Any = None
+    loaded_disc: Any = None
+    door_open: bool = False
+    power_state: str = 'unknown'
+    model: Any = None
+    player_status_raw: Any = None
+    last_hardware_event: str | None = None
     error: str | None = None
 
     @classmethod
@@ -54,6 +63,15 @@ class PlaybackState:
             'last_update_timestamp': self.last_update_timestamp,
             'load_delay_seconds': self.load_delay_seconds,
             'load_delay_remaining': self.load_delay_remaining,
+            'mechanical_state': self.mechanical_state,
+            'hardware_ready': self.hardware_ready,
+            'display_disc': self.display_disc,
+            'loaded_disc': self.loaded_disc,
+            'door_open': self.door_open,
+            'power_state': self.power_state,
+            'model': self.model,
+            'player_status_raw': self.player_status_raw,
+            'last_hardware_event': self.last_hardware_event,
             'error': self.error,
         }
 

@@ -45,6 +45,20 @@ export interface Artist {
     last_update_timestamp: number;
     load_delay_seconds: number;
     load_delay_remaining: number;
+    mechanical_state?: string;
+    hardware_ready?: boolean;
+    display_disc?: number | string | null;
+    loaded_disc?: number | string | null;
+    door_open?: boolean;
+    power_state?: string;
+    model?: unknown;
+    player_status_raw?: unknown;
+    last_hardware_event?: string | null;
+    playback_start_delay_seconds: number;
+    playback_start_delay_enabled: boolean;
+    hardware_sync_state?: string;
+    hardware_state_verified?: boolean;
+    hardware_state_source?: string;
     error: string | null;
   }
 
@@ -194,3 +208,57 @@ export interface Artist {
     playback?: PlaybackStatus;
     playlist_analysis?: unknown;
   }
+
+  export type VideoProvider = 'local' | 'youtube' | 'kodi' | (string & {});
+  export type VideoProviderId = number | string | null;
+
+  export interface VideoAsset {
+    video_id: string;
+    provider?: VideoProvider;
+    youtube_id?: string | null;
+    provider_id?: VideoProviderId;
+    title: string;
+    channel: string;
+    thumbnail?: string | null;
+    duration?: number | string | null;
+    embeddable?: boolean;
+    playback_safe?: boolean;
+    url?: string | null;
+    confidence?: number | null;
+    offset_seconds?: number;
+    detected_offset_seconds?: number;
+    manual_offset_seconds?: number;
+    use_detected_offset?: boolean;
+    effective_offset_seconds?: number;
+    offset_source?: string;
+    artist?: string;
+    track?: string;
+  }
+
+  export interface VideoAcquisitionCandidate {
+    provider: string;
+    provider_id: string;
+    title: string;
+    channel: string;
+    source_url?: string;
+    artist?: string;
+    track?: string;
+    duration?: number | string | null;
+    thumbnail?: string | null;
+    confidence?: number | null;
+  }
+
+  export interface VideoSyncState {
+    video: VideoAsset | null;
+    candidate?: VideoAcquisitionCandidate | null;
+    can_download?: boolean;
+    message: string | null;
+    playback_state: PlaybackStateName;
+    seek_seconds: number;
+    should_play: boolean;
+    should_pause: boolean;
+    source: string;
+  }
+
+  export type YouTubeVideo = VideoAsset;
+  export type YouTubeSyncState = VideoSyncState;

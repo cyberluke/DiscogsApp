@@ -1,11 +1,19 @@
+:host {
+  display: block;
+  height: calc(100dvh - 49px);
+  overflow-y: auto;
+  padding: 12px;
+  box-sizing: border-box;
+}
+
 .now-playing {
   background: #17191d;
   border: 1px solid rgba(255, 255, 255, 0.12);
-  border-radius: 8px;
   color: #f7f4ec;
   display: grid;
   gap: 12px;
-  margin: 12px 0 18px;
+  margin: 0 auto 18px;
+  max-width: 1360px;
   padding: 16px;
 }
 
@@ -22,6 +30,10 @@
   text-transform: uppercase;
 }
 
+.cd-delay-toggle {
+  color: #dfe6e4;
+}
+
 .current-row {
   align-items: center;
   display: grid;
@@ -31,7 +43,6 @@
 
 .artwork,
 .recommendation-card img {
-  border-radius: 6px;
   object-fit: cover;
 }
 
@@ -63,9 +74,84 @@
 
 .progress-shell {
   background: rgba(255, 255, 255, 0.14);
-  border-radius: 999px;
   height: 10px;
   overflow: hidden;
+}
+
+.hardware-panel {
+  align-items: center;
+  background: #101820;
+  border: 1px solid rgba(123, 215, 189, 0.25);
+  display: grid;
+  gap: 14px;
+  grid-template-columns: 220px minmax(0, 1fr);
+  padding: 12px;
+}
+
+.hardware-panel.unverified {
+  border-color: rgba(242, 197, 114, 0.45);
+}
+
+.hardware-panel.loading .cdp-frame img {
+  filter: saturate(1.15) brightness(1.12);
+}
+
+.cdp-frame {
+  aspect-ratio: 16 / 9;
+  background: #080b0f;
+  overflow: hidden;
+  position: relative;
+}
+
+.cdp-frame img {
+  display: block;
+  height: 100%;
+  object-fit: cover;
+  width: 100%;
+}
+
+.hardware-pulse {
+  border: 2px solid rgba(123, 215, 189, 0.85);
+  border-radius: 999px;
+  bottom: 12px;
+  box-shadow: 0 0 18px rgba(123, 215, 189, 0.55);
+  height: 42px;
+  position: absolute;
+  right: 16px;
+  width: 42px;
+}
+
+.hardware-pulse.spin {
+  animation: hardware-spin 1.2s linear infinite;
+  border-style: dashed;
+}
+
+@keyframes hardware-spin {
+  to { transform: rotate(360deg); }
+}
+
+.hardware-copy h3 {
+  font-size: 22px;
+  margin: 4px 0 8px;
+  text-transform: capitalize;
+}
+
+.hardware-meta,
+.hardware-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.hardware-meta span {
+  background: #20242d;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  color: #dfe6e4;
+  padding: 5px 8px;
+}
+
+.hardware-actions {
+  margin-top: 10px;
 }
 
 .progress-bar {
@@ -79,8 +165,6 @@
 
 .runtime-error {
   background: #6f1d1d;
-  border-radius: 6px;
-  color: #ffffff;
   padding: 8px 10px;
 }
 
@@ -91,7 +175,6 @@
 
 .queue-label {
   color: #f2c572;
-  font-size: 12px;
   text-transform: uppercase;
 }
 
@@ -103,10 +186,6 @@
 .queue li,
 .recommendation-card li span {
   color: #dfe6e4;
-}
-
-.queue li {
-  padding: 2px 0;
 }
 
 @media (max-width: 720px) {
@@ -122,6 +201,10 @@
   .controls {
     grid-column: 1 / -1;
     justify-content: start;
+  }
+
+  .hardware-panel {
+    grid-template-columns: 1fr;
   }
 }
 
@@ -158,8 +241,6 @@
 .recommendation-card {
   align-items: flex-start;
   background: rgba(255, 255, 255, 0.06);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  border-radius: 8px;
   padding: 10px;
 }
 
@@ -175,22 +256,12 @@
   margin: 0;
 }
 
-.recommendation-copy p {
-  font-size: 12px;
-  margin: 4px 0;
-}
-
 .recommendation-copy ul {
   list-style: none;
   margin: 0;
   padding: 0;
 }
 
-.recommendation-card li {
-  min-height: 36px;
-}
-
 .recommendation-card li span {
   flex: 1;
-  font-size: 13px;
 }

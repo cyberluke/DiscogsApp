@@ -24,7 +24,9 @@
             3,
             0
          ],
-         "id": 196250358451973016
+         "id": 196250358451973016,
+         "manual_offset_seconds": -1.0,
+         "use_detected_offset": false
       },
       {
          "title": "Not Such an Innocent Girl",

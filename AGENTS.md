@@ -109,6 +109,16 @@ The repository contains three independent software components:
 Together they form one application, but each layer has a single,
 well-defined responsibility.
 
+The canonical ESP32 firmware project is:
+
+```
+esp32/arduino/sony_slink_esp32/sony_slink_esp32.ino
+```
+
+Other similarly named ESP32 sketches are legacy/reference copies unless a
+task explicitly says otherwise. Protocol and webhook changes should be made
+against the canonical sketch first.
+
 ---
 
 # Architecture

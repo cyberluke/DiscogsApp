@@ -4,6 +4,7 @@ import unittest
 from flask import Flask
 
 from server.api.chat import create_chat_api
+from server.services.ai import MusicRecommendationService
 
 
 class FakeRepository:
@@ -91,6 +92,18 @@ class FakeRepository:
 
     def save_playlist(self, playlist):
         self.playlists.append(playlist)
+
+    def favourite_tracks_playlist(self):
+        favourite_track = {
+            'release_id': 200,
+            'position': '1',
+            'title': 'Protect Your Mind',
+            'artist': 'DJ Sakin',
+            'full_name': 'DJ Sakin - Protect Your Mind',
+            'deck_number': 1,
+            'cd_position': 11,
+        }
+        return {'name': 'Favourite Tracks', 'tracks': [favourite_track]}
 
 
 class FakePlaybackRuntime:
@@ -287,8 +300,125 @@ class ChatAPITest(unittest.TestCase):
         self.assertEqual(response.status_code, 200)
         prompt = json.loads(self.ai_client.user_prompt)
         self.assertTrue(any('do not flatten precise styles into Eurodance' in rule for rule in prompt['rules']))
+        self.assertTrue(any('separate selectable lanes' in rule for rule in prompt['rules']))
         self.assertIn('primaryStyle', prompt['candidate_tracks'][0])
         self.assertIn('styles', prompt['candidate_tracks'][0])
+
+    def test_more_eurodance_prefers_dj_friendly_90s_club_sound(self):
+        self.repository.releases.extend([
+            {
+                'id': 3,
+                'release_id': 300,
+                'title': 'Everybody, Everywhere!',
+                'artists_sort': 'Bang! (3)',
+                'year': 1995,
+                'country': 'Germany',
+                'genres': ['Electronic'],
+                'styles': ['Eurodance'],
+                'labels': [{'name': 'Club Zone'}],
+                'deck_number': 1,
+                'cd_position': 12,
+                'images': [],
+                'tracklist': [{'position': '1', 'title': 'Everybody, Everywhere! (Club Mix)', 'duration': '5:42'}],
+                'ai': {
+                    'version': 1,
+                    'scene': 'Proper 90s DJ Eurodance club/rave-pop',
+                    'summary': 'High-energy club mix with hard Eurodance drive and dancefloor utility.',
+                    'energy': 94,
+                    'danceability': 96,
+                    'club': 95,
+                    'radio': 45,
+                    'commercial': 55,
+                    'cheese': 28,
+                    'keywords': ['eurodance', 'club mix', 'hard mix', 'dj-friendly', 'rave-pop'],
+                },
+            },
+            {
+                'id': 4,
+                'release_id': 400,
+                'title': 'Soft Chart Dance',
+                'artists_sort': 'Radio Smile',
+                'year': 1996,
+                'country': 'Germany',
+                'genres': ['Electronic'],
+                'styles': ['Eurodance', 'Dance-pop'],
+                'labels': [{'name': 'Radio Hits'}],
+                'deck_number': 1,
+                'cd_position': 13,
+                'images': [],
+                'tracklist': [{'position': '1', 'title': 'Soft Radio Edit', 'duration': '3:20'}],
+                'ai': {
+                    'version': 1,
+                    'scene': 'Soft Eurodance radio dance-pop',
+                    'summary': 'Radio-led soft dance-pop crossover with lighter club pressure.',
+                    'energy': 62,
+                    'danceability': 68,
+                    'club': 35,
+                    'radio': 92,
+                    'commercial': 88,
+                    'cheese': 45,
+                    'keywords': ['eurodance', 'dance-pop', 'radio pop', 'soft'],
+                },
+            },
+        ])
+
+        response = self.client.post('/api/chat', json={'message': 'More Eurodance'})
+
+        self.assertEqual(response.status_code, 200)
+        prompt = json.loads(self.ai_client.user_prompt)
+        self.assertEqual(prompt['candidate_tracks'][0]['artist'], 'Bang! (3)')
+        self.assertGreater(prompt['candidate_tracks'][0]['localScore'], prompt['candidate_tracks'][1]['localScore'])
+
+    def test_recommendations_prioritize_production_signature_over_same_artist(self):
+        repository = FakeRepository()
+        current_ai = {
+            'version': 2,
+            'summary': 'Early raw German Eurodance production with rap-led verses and bright chorus lift.',
+            'energy': 88,
+            'danceability': 90,
+            'production_signature': ['early_90s_raw_eurodance', 'german_dance'],
+            'production': {
+                'energy': 88,
+                'drive': 91,
+                'groove': 86,
+                'rhythm_complexity': 42,
+                'percussion_style': 'aggressive kick and dry snare',
+                'bass_style': 'simple driving eurodance bass',
+                'synth_style': 'bright stab-led synth palette',
+                'vocal_style': 'male rap and female chorus',
+                'rap_presence': 85,
+                'vocal_balance': 75,
+                'harmony_density': 45,
+                'atmosphere': 'raw club pressure',
+                'dynamic_range': 55,
+                'production_density': 70,
+                'commercial_polish': 45,
+                'club_focus': 90,
+                'radio_focus': 35,
+                'emotional_intensity': 65,
+            },
+            'songwriting': {'hook_strength': 78, 'chorus_focus': 72, 'verse_focus': 60, 'instrumental_focus': 55, 'build_up': 50, 'breakdown': 45},
+        }
+        repository.releases = [
+            {**repository.releases[0], 'release_id': 100, 'artists_sort': 'Mr. President', 'title': 'Early Era', 'ai': current_ai},
+            {**repository.releases[0], 'release_id': 101, 'artists_sort': 'Mr. President', 'title': 'Later Polished Era', 'cd_position': 12, 'ai': {
+                **current_ai,
+                'summary': 'Later glossy commercial pop-dance production with radio polish.',
+                'production_signature': ['late_90s_commercial_dance_pop'],
+                'production': {**current_ai['production'], 'drive': 45, 'groove': 52, 'commercial_polish': 92, 'club_focus': 45, 'radio_focus': 90},
+            }},
+            {**repository.releases[1], 'release_id': 200, 'artists_sort': 'Intermission', 'title': 'Similar Production School', 'cd_position': 13, 'ai': {
+                **current_ai,
+                'summary': 'Early German Eurodance production with matching rap/chorus construction and club pressure.',
+            }},
+        ]
+        runtime = FakePlaybackRuntime()
+        runtime.status = lambda: {'current_track': {'release_id': 100, 'position': '1', 'title': 'Current Track'}}
+
+        recommendations = MusicRecommendationService(repository).recommend('similar production', runtime.status(), limit=2)
+
+        self.assertEqual(recommendations[0]['release']['artists_sort'], 'Intermission')
+        self.assertNotEqual(recommendations[0]['release']['artists_sort'], 'Mr. President')
 
     def test_play_endpoint_starts_recommended_track(self):
         track = {'title': 'Protect Your Mind', 'artist': 'DJ Sakin', 'deck_number': 1, 'cd_position': 11, 'position': '1'}
@@ -312,6 +442,14 @@ class ChatAPITest(unittest.TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertEqual(self.runtime.played_playlist['name'], 'Test Session')
         self.assertEqual(response.get_json()['playback']['current_playlist'], 'Test Session')
+
+    def test_chat_starts_dynamic_favourite_tracks_playlist(self):
+        response = self.client.post('/api/chat', json={'message': 'prehraj moje oblibene tracky'})
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(self.runtime.played_playlist['name'], 'Favourite Tracks')
+        self.assertEqual(self.runtime.played_playlist['tracks'][0]['title'], 'Protect Your Mind')
+        self.assertEqual(response.get_json()['playback']['current_playlist'], 'Favourite Tracks')
 
     def test_chat_creates_playlist_from_local_candidates(self):
         response = self.client.post('/api/chat', json={'message': 'vytvor playlist Night Drive', 'limit': 3})

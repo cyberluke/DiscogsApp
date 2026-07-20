@@ -1,19 +1,54 @@
 <section class="ai-dj-shell">
   <section class="now-context" aria-label="Current playing context">
-    <img class="now-artwork" [src]="primaryImageUrl()" alt="Current release artwork" />
+    <div class="now-artwork-frame">
+      <img class="now-artwork" [src]="primaryImageUrl()" alt="Current release artwork" />
+    </div>
     <div class="now-copy">
-      <span class="eyebrow">AI DJ</span>
+      <span class="eyebrow">Now Playing / AI DJ</span>
       <h1>{{ trackName(context?.current_track) }}</h1>
       <p *ngIf="context?.current_release as release">
         {{ release.artists_sort }} · {{ release.year || 'Unknown year' }} · {{ release.country || 'Unknown country' }}
       </p>
       <div class="now-meta" *ngIf="context?.now_playing as playback">
         <span>{{ playback.playback_state }}</span>
+        <span *ngIf="playback.hardware_state_verified === false">Restored snapshot</span>
         <span *ngIf="playback.current_deck">Deck {{ playback.current_deck }}</span>
         <span *ngIf="playback.current_cd">CD {{ playback.current_cd }}</span>
         <span>{{ playback.progress | number:'1.0-0' }}%</span>
         <span *ngIf="aiUsed">Azure AI</span>
+        <mat-checkbox
+          class="cd-delay-toggle"
+          [checked]="playback.playback_start_delay_enabled"
+          (change)="setPlaybackStartDelayEnabled($event.checked)"
+          matTooltip="Use observed CD audio start delay"
+        >CD delay</mat-checkbox>
       </div>
+      <div class="cd-controls" *ngIf="context?.now_playing as playback">
+        <button mat-icon-button type="button" (click)="previousTrack()" [disabled]="!playback.current_track" matTooltip="Previous" aria-label="Previous track"><mat-icon>skip_previous</mat-icon></button>
+        <button mat-icon-button type="button" (click)="playCurrentTrack()" [disabled]="!playback.current_track" matTooltip="Play current track" aria-label="Play current track"><mat-icon>play_arrow</mat-icon></button>
+        <button mat-icon-button type="button" (click)="pause()" matTooltip="Pause" aria-label="Pause"><mat-icon>pause</mat-icon></button>
+        <button mat-icon-button type="button" (click)="stop()" matTooltip="Stop" aria-label="Stop"><mat-icon>stop</mat-icon></button>
+        <button mat-icon-button type="button" (click)="nextTrack()" [disabled]="!playback.current_track" matTooltip="Next" aria-label="Next track"><mat-icon>skip_next</mat-icon></button>
+      </div>
+      <div class="ai-progress" *ngIf="context?.now_playing as playback">
+        <div class="ai-progress-shell"><i [style.width.%]="playback.progress"></i></div>
+        <div class="ai-timing">
+          <span>{{ formatTime(playback.elapsed) }}</span>
+          <span>{{ playback.progress | number:'1.0-0' }}%</span>
+          <span>-{{ formatTime(playback.remaining) }}</span>
+        </div>
+      </div>
+      <section class="hardware-mini" *ngIf="context?.now_playing as playback" [class.loading]="['loading_disc', 'carousel_moving', 'resync_requested'].includes(playback.mechanical_state || '')">
+        <img src="/assets/sony_cdp.jpg" alt="Sony CDP-CX changer" />
+        <div>
+          <span class="eyebrow">Sony CDP-CX</span>
+          <strong>{{ hardwareStateLabel(playback) }}</strong>
+          <small>{{ playback.hardware_state_verified === false ? 'Restored snapshot' : 'Live hardware' }}</small>
+          <small *ngIf="playback.last_hardware_event">Last {{ playback.last_hardware_event }}</small>
+        </div>
+        <button mat-icon-button type="button" (click)="resyncHardware()" matTooltip="Resync hardware" aria-label="Resync hardware"><mat-icon>sync</mat-icon></button>
+        <button mat-icon-button type="button" (click)="enableContinuousStatus()" matTooltip="Enable continuous status" aria-label="Enable continuous status"><mat-icon>settings_input_antenna</mat-icon></button>
+      </section>
     </div>
     <div class="collection-pulse" *ngIf="context?.collection as collection">
       <span>{{ collection.release_count }}</span>
@@ -21,6 +56,88 @@
       <span>{{ collection.ai_enriched_release_count }}</span>
       <small>AI enriched</small>
     </div>
+  </section>
+
+  <section class="youtube-panel" aria-label="Native synchronized video">
+    <div class="panel-header">
+      <div>
+        <span class="eyebrow">Synchronized visual companion</span>
+        <h2>Native Video Player</h2>
+      </div>
+      <button mat-icon-button type="button" (click)="loadVideoSync(true)" matTooltip="Refresh video" aria-label="Refresh video">
+        <mat-icon>refresh</mat-icon>
+      </button>
+      <div class="video-offset-controls">
+        <mat-checkbox
+          [checked]="useNativeVideoOffset"
+          (change)="setNativeVideoOffsetEnabled($event.checked)"
+          matTooltip="Use detected video offset"
+        >Offset</mat-checkbox>
+        <mat-form-field appearance="outline" class="manual-offset-field" subscriptSizing="dynamic">
+          <mat-label>Manual +/-s</mat-label>
+          <input
+            matInput
+            type="number"
+            step="0.5"
+            name="nativeVideoManualOffset"
+            [ngModel]="nativeVideoManualOffsetSeconds"
+            (ngModelChange)="setNativeVideoManualOffset($event)"
+            aria-label="Manual video offset in seconds"
+          />
+        </mat-form-field>
+      </div>
+    </div>
+
+    <div class="youtube-stage" *ngIf="videoSync?.video as video; else noVideo">
+      <video
+        *ngIf="nativeVideoUrl; else localVideoMissing"
+        #nativeVideo
+        [src]="nativeVideoUrl"
+        muted
+        playsinline
+        controls
+        preload="auto"
+        (loadedmetadata)="onNativeVideoReady()"
+        (canplay)="onNativeVideoReady()"
+        (play)="onNativeVideoPlay()"
+        (pause)="onNativeVideoPause()"
+        (error)="onNativeVideoError()"
+      ></video>
+      <ng-template #localVideoMissing>
+        <div class="youtube-empty">
+          <mat-icon>movie_off</mat-icon>
+          <span>{{ videoError || 'Local native video file is not available for this track.' }}</span>
+        </div>
+      </ng-template>
+    </div>
+
+    <div class="youtube-empty" *ngIf="!videoSync?.video && videoSync?.can_download">
+      <mat-icon>download</mat-icon>
+      <span>Local video is missing. Acquisition candidate is available.</span>
+      <button mat-stroked-button type="button" (click)="downloadVideo()" [disabled]="videoLoading">
+        Download to local cache
+      </button>
+    </div>
+
+    <div class="youtube-caption" *ngIf="videoSync as sync">
+      <ng-container *ngIf="sync.video as video">
+        <strong>{{ video.title }}</strong>
+        <span>{{ video.channel }}</span>
+        <span>{{ video.provider || 'youtube' }}</span>
+        <span *ngIf="video.duration">{{ video.duration }}s</span>
+        <span>Sync {{ formatTime(nativeVideoSeekSeconds()) }}</span>
+        <span>Detected {{ useNativeVideoOffset ? formatTime(video.offset_seconds) : 'off' }}</span>
+        <span>Manual {{ formatSignedSeconds(nativeVideoManualOffsetSeconds) }}</span>
+        <span>Total {{ formatSignedSeconds(nativeVideoTotalOffsetSeconds()) }}</span>
+      </ng-container>
+    </div>
+
+    <ng-template #noVideo>
+      <div class="youtube-empty">
+        <mat-icon>hide_image</mat-icon>
+        <span>{{ videoLoading ? 'Loading video...' : (videoSync?.message || videoError || 'No suitable local video found.') }}</span>
+      </div>
+    </ng-template>
   </section>
 
   <section class="conversation-panel" aria-label="AI DJ conversation">
@@ -32,6 +149,12 @@
       <article class="message" *ngFor="let message of messages" [class.user]="message.role === 'user'" [class.assistant]="message.role === 'assistant'">
         <span>{{ message.role === 'user' ? 'You' : 'AI DJ' }}</span>
         <p>{{ message.content }}</p>
+        <div class="message-recommendations" *ngIf="message.suggested_tracks?.length">
+          <button class="message-track" type="button" *ngFor="let recommendation of message.suggested_tracks" (click)="playRecommendation(recommendation)">
+            <strong>{{ trackName(recommendation.track) }}</strong>
+            <small>{{ matchLabel(recommendation) }} · {{ recommendation.reason }}</small>
+          </button>
+        </div>
       </article>
     </div>
 
@@ -39,12 +162,12 @@
       <mat-form-field appearance="outline">
         <mat-label>Ask about your music...</mat-label>
         <textarea
-          #chatInput
           id="ai-dj-input"
           matInput
           name="aiDjInput"
           rows="3"
           [(ngModel)]="inputText"
+          (ngModelChange)="persistDraft()"
           autocomplete="off"
           aria-label="Ask about your music"
           (keydown.control.enter)="sendMessage()"
@@ -78,11 +201,12 @@
     <div class="loading" *ngIf="recommendationLoading && !chatLoading">Loading local recommendations...</div>
 
     <article class="recommendation" *ngFor="let recommendation of recommendations">
-      <div class="confidence">
-        <span>{{ recommendation.confidence }}</span>
-        <small>confidence</small>
+      <div class="recommendation-artwork">
+        <img [src]="recommendationImageUrl(recommendation)" [alt]="recommendation.release.title" />
+        <span>{{ matchLabel(recommendation).split(' ')[0] }}</span>
       </div>
       <div class="recommendation-copy">
+        <span class="match-label">{{ matchLabel(recommendation).split(' ').slice(1).join(' ') }}</span>
         <h3>{{ trackName(recommendation.track) }}</h3>
         <p>{{ recommendation.reason }}</p>
         <div class="dna">

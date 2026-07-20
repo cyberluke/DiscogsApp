@@ -20,6 +20,7 @@ import {MatChipsModule} from '@angular/material/chips';
 import {MatAutocompleteModule} from '@angular/material/autocomplete';
 import {MatInputModule} from '@angular/material/input';
 import {MatFormFieldModule} from '@angular/material/form-field';
+import { MatCheckboxModule } from '@angular/material/checkbox';
 import { IonicModule } from '@ionic/angular';
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 import { NowPlayingComponent } from './now-playing/now-playing.component';
@@ -65,6 +66,7 @@ export interface ChipColor {
         MatChipsModule,
         MatFormFieldModule,
         MatInputModule,
+        MatCheckboxModule,
         MatAutocompleteModule,
         ReactiveFormsModule,
         AsyncPipe,

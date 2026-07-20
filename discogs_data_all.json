@@ -4652,7 +4652,8 @@
                      "resource_url": "https://api.discogs.com/artists/207629"
                   }
                ],
-               "duration": "3:19"
+               "duration": "3:19",
+               "_score": 1
             },
             {
                "position": "2",
@@ -14184,7 +14185,8 @@
                "position": "2",
                "type_": "track",
                "title": "Goin' On (Extended Mix)",
-               "duration": "5:30"
+               "duration": "5:30",
+               "_score": 1
             },
             {
                "position": "3",

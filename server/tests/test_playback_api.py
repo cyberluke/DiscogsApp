@@ -39,6 +39,9 @@ class FakeRuntime:
     def progress(self):
         return {'elapsed': 0, 'duration': 0, 'remaining': 0, 'progress': 0, 'playback_state': 'idle'}
 
+    def set_playback_start_delay_enabled(self, enabled):
+        return {'playback_state': 'idle', 'playback_start_delay_enabled': enabled}
+
     def queue(self):
         return {'queue': [], 'upcoming': [], 'current_track': None, 'current_playlist': None, 'playback_state': 'idle'}
 
@@ -72,6 +75,11 @@ class PlaybackApiTest(unittest.TestCase):
         self.assertEqual(self.client.get('/playback/status').get_json()['playback_state'], 'idle')
         self.assertEqual(self.client.get('/playback/progress').get_json()['progress'], 0)
         self.assertEqual(self.client.get('/queue').get_json()['queue'], [])
+
+    def test_playback_start_delay_route_delegates_to_runtime(self):
+        response = self.client.post('/playback/start-delay', json={'enabled': False})
+
+        self.assertFalse(response.get_json()['playback_start_delay_enabled'])
 
     def test_playlist_and_track_commands_delegate_to_runtime(self):
         playlist_response = self.client.post('/playlist/play', json={'name': 'Mix', 'tracks': []})

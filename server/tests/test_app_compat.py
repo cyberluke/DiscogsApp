@@ -117,6 +117,39 @@ class AppCompatibilityTest(unittest.TestCase):
         self.assertEqual(runtime.observed_tracks[0]['deck_number'], 1)
         self.assertEqual(runtime.observed_tracks[0]['artwork_url'], 'https://example.test/cover.jpg')
 
+    def test_webhook_prepare_track_updates_runtime_from_esp32_playlist_command(self):
+        runtime = FakeRuntime()
+        app_module.playback_runtime = runtime
+        original_repository = app_module.data_repository
+        original_use_kodi = app_module.USE_KODI
+        app_module.USE_KODI = False
+        self.addCleanup(lambda: setattr(app_module, 'data_repository', original_repository))
+        self.addCleanup(lambda: setattr(app_module, 'USE_KODI', original_use_kodi))
+
+        class FakeRepository:
+            def find_releases_by_deck_cd(self, deck_number, cd_position):
+                self.query = (deck_number, cd_position)
+                return [{
+                    'release_id': 456,
+                    'title': 'Next Album',
+                    'artists_sort': 'Next Artist',
+                    'images': [],
+                    'tracklist': [
+                        {'position': '1', 'title': 'New CD Track', 'duration': '0:32'},
+                    ],
+                }]
+
+        repository = FakeRepository()
+        app_module.data_repository = repository
+
+        response = app_module.process_webhook({'status': 'PREPARE_TRACK', 'track': '90500301'})
+
+        self.assertEqual(response, ('OK', 200))
+        self.assertEqual(repository.query, (1, 3))
+        self.assertEqual(runtime.observed_tracks[0]['title'], 'New CD Track')
+        self.assertEqual(runtime.observed_tracks[0]['cd_position'], 3)
+        self.assertEqual(runtime.transport_statuses, [])
+
     def test_adjacent_release_track_resolver_adds_display_metadata(self):
         original_repository = app_module.data_repository
         self.addCleanup(lambda: setattr(app_module, 'data_repository', original_repository))

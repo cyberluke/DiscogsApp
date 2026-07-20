@@ -80,6 +80,10 @@ class PlaybackRuntimeTest(unittest.TestCase):
         self.addCleanup(runtime.shutdown)
         return runtime, fake_slink
 
+    def start_playback(self, runtime, track):
+        runtime.play_track(track)
+        return runtime.observe_track(track)
+
     def test_play_track_returns_authoritative_status(self):
         runtime, fake_slink = self.make_runtime()
         track = make_track(title='First')
@@ -93,10 +97,16 @@ class PlaybackRuntimeTest(unittest.TestCase):
         self.assertEqual(status['remaining'], 30)
         self.assertEqual(status['current_deck'], 1)
         self.assertEqual(status['current_cd'], 1)
-        self.assertEqual(status['playback_state'], 'playing')
+        self.assertEqual(status['playback_state'], 'preparing')
         self.assertIn('last_update_timestamp', status)
         self.assertEqual(fake_slink.sent_tracks, [track])
         self.assertEqual(fake_slink.sent_continuous_status, [('enable', 1)])
+
+        observed = runtime.observe_track(track)
+
+        self.assertEqual(observed['playback_state'], 'playing')
+        self.assertEqual(observed['elapsed'], 0)
+        self.assertEqual(observed['remaining'], 30)
 
     def test_continuous_status_is_enabled_once_per_deck_before_playback(self):
         runtime, fake_slink = self.make_runtime()
@@ -110,22 +120,65 @@ class PlaybackRuntimeTest(unittest.TestCase):
 
     def test_playback_start_offset_keeps_elapsed_aligned_with_hardware(self):
         fake_slink = FakeSLinkClient()
-        runtime = PlaybackRuntime(fake_slink, playback_start_offset_seconds=1)
+        runtime = PlaybackRuntime(fake_slink, playback_start_offset_seconds=2)
         self.addCleanup(runtime.shutdown)
 
-        runtime.play_track(make_track(duration='1:00'))
+        track = make_track(duration='1:00')
+        self.start_playback(runtime, track)
         with runtime._lock:
-            runtime._state.started_at -= 1
+            runtime._state.started_at -= 1.9
         status = runtime.status()
 
         self.assertEqual(status['elapsed'], 0)
         self.assertEqual(status['remaining'], 60)
         self.assertEqual(status['load_delay_remaining'], 0)
 
+        with runtime._lock:
+            runtime._state.started_at -= 2
+        status = runtime.status()
+
+        self.assertEqual(status['elapsed'], 1)
+        self.assertEqual(status['remaining'], 59)
+
+    def test_playback_start_delay_can_be_disabled_for_immediate_ui_clock(self):
+        fake_slink = FakeSLinkClient()
+        runtime = PlaybackRuntime(fake_slink, playback_start_offset_seconds=2)
+        self.addCleanup(runtime.shutdown)
+
+        runtime.set_playback_start_delay_enabled(False)
+        track = make_track(duration='1:00')
+        self.start_playback(runtime, track)
+        with runtime._lock:
+            runtime._state.started_at -= 1
+        status = runtime.status()
+
+        self.assertFalse(status['playback_start_delay_enabled'])
+        self.assertEqual(status['playback_start_delay_seconds'], 0)
+        self.assertEqual(status['elapsed'], 1)
+        self.assertEqual(status['remaining'], 59)
+
+    def test_toggling_playback_start_delay_adjusts_active_clock(self):
+        fake_slink = FakeSLinkClient()
+        runtime = PlaybackRuntime(fake_slink, playback_start_offset_seconds=2)
+        self.addCleanup(runtime.shutdown)
+
+        track = make_track(duration='1:00')
+        self.start_playback(runtime, track)
+        with runtime._lock:
+            runtime._state.started_at -= 1
+
+        delayed = runtime.status()
+        immediate = runtime.set_playback_start_delay_enabled(False)
+        delayed_again = runtime.set_playback_start_delay_enabled(True)
+
+        self.assertEqual(delayed['elapsed'], 0)
+        self.assertEqual(immediate['elapsed'], 1)
+        self.assertEqual(delayed_again['elapsed'], 0)
+
     def test_pause_is_soft_scheduler_pause(self):
         runtime, fake_slink = self.make_runtime()
         track = make_track()
-        runtime.play_track(track)
+        self.start_playback(runtime, track)
 
         status = runtime.pause()
 
@@ -145,7 +198,8 @@ class PlaybackRuntimeTest(unittest.TestCase):
 
     def test_stop_resets_progress_to_start_but_keeps_current_track_display(self):
         runtime, _ = self.make_runtime()
-        runtime.play_track(make_track(duration='1:00'))
+        track = make_track(duration='1:00')
+        self.start_playback(runtime, track)
         with runtime._lock:
             runtime._state.started_at -= 20
 
@@ -171,12 +225,34 @@ class PlaybackRuntimeTest(unittest.TestCase):
             self.assertEqual(status['playback_state'], 'stopped')
             self.assertEqual(status['current_track']['title'], 'Persisted')
             self.assertEqual(status['duration'], 60)
+            self.assertFalse(status['hardware_state_verified'])
+            self.assertEqual(status['hardware_sync_state'], 'restored_unverified')
+
+            synced = restored.observe_track(make_track(title='Persisted', duration='1:00'))
+
+            self.assertTrue(synced['hardware_state_verified'])
+            self.assertEqual(synced['hardware_sync_state'], 'live')
+
+    def test_persistence_restores_playback_start_delay_preference(self):
+        with tempfile.TemporaryDirectory() as temp_dir:
+            persistence_path = f'{temp_dir}/playback_state.json'
+            runtime = PlaybackRuntime(FakeSLinkClient(), persistence_path=persistence_path, playback_start_offset_seconds=2)
+            self.addCleanup(runtime.shutdown)
+            runtime.play_track(make_track(title='Persisted', duration='1:00'))
+            runtime.set_playback_start_delay_enabled(False)
+
+            restored = PlaybackRuntime(FakeSLinkClient(), persistence_path=persistence_path, playback_start_offset_seconds=2)
+            self.addCleanup(restored.shutdown)
+            status = restored.status()
+
+            self.assertFalse(status['playback_start_delay_enabled'])
+            self.assertEqual(status['playback_start_delay_seconds'], 0)
 
     def test_transport_command_uses_current_deck_number(self):
         runtime, fake_slink = self.make_runtime()
         track = make_track()
         track['deck_number'] = '2'
-        runtime.play_track(track)
+        self.start_playback(runtime, track)
 
         runtime.pause()
 
@@ -184,7 +260,8 @@ class PlaybackRuntimeTest(unittest.TestCase):
 
     def test_observed_pause_and_stop_do_not_echo_transport_commands(self):
         runtime, fake_slink = self.make_runtime()
-        runtime.play_track(make_track())
+        track = make_track()
+        self.start_playback(runtime, track)
 
         pause_status = runtime.handle_transport_status('PAUSE')
         stop_status = runtime.handle_transport_status('STOP')
@@ -193,7 +270,7 @@ class PlaybackRuntimeTest(unittest.TestCase):
         self.assertEqual(stop_status['playback_state'], 'stopped')
         self.assertEqual(fake_slink.sent_transport, [])
 
-    def test_resume_from_stopped_known_track_restarts_runtime_progress(self):
+    def test_resume_from_stopped_known_track_does_not_send_resume_or_start_progress(self):
         runtime, fake_slink = self.make_runtime()
         runtime.play_track(make_track(duration='1:00'))
         runtime.stop(send_hardware=False)
@@ -203,11 +280,11 @@ class PlaybackRuntimeTest(unittest.TestCase):
 
         status = runtime.resume()
 
-        self.assertEqual(status['playback_state'], 'playing')
+        self.assertEqual(status['playback_state'], 'stopped')
         self.assertEqual(status['elapsed'], 6)
-        self.assertEqual(status['remaining'], 54)
-        self.assertEqual(status['progress'], 10)
-        self.assertEqual(fake_slink.sent_transport, [('resume', 1)])
+        self.assertEqual(status['remaining'], 60)
+        self.assertEqual(status['progress'], 0)
+        self.assertEqual(fake_slink.sent_transport, [])
 
     def test_observed_play_from_stopped_known_track_restarts_runtime_without_echo(self):
         runtime, fake_slink = self.make_runtime()
@@ -224,6 +301,7 @@ class PlaybackRuntimeTest(unittest.TestCase):
         first = make_track(position='1', title='First')
         second = make_track(position='2', title='Second')
         runtime.play_playlist({'name': 'Queue', 'tracks': [first, second]})
+        runtime.observe_track(first)
 
         status = runtime.handle_transport_status('NEXT_TRACK')
 
@@ -236,6 +314,7 @@ class PlaybackRuntimeTest(unittest.TestCase):
         first = make_track(position='1', title='First')
         second = make_track(position='2', title='Second')
         runtime.play_playlist({'name': 'Queue', 'tracks': [first, second]})
+        runtime.observe_track(first)
         runtime.handle_transport_status('NEXT_TRACK')
 
         status = runtime.handle_transport_status('PREV_TRACK')
@@ -249,7 +328,7 @@ class PlaybackRuntimeTest(unittest.TestCase):
         first = make_track(position='1', title='First')
         second = make_track(position='2', title='Second')
         runtime, fake_slink = self.make_runtime_with_adjacent([first, second])
-        runtime.play_track(first)
+        self.start_playback(runtime, first)
 
         next_status = runtime.next_track()
         previous_status = runtime.previous_track()
@@ -265,6 +344,7 @@ class PlaybackRuntimeTest(unittest.TestCase):
         first = make_track(position='1', title='First')
         second = make_track(position='2', title='Second')
         runtime.play_playlist({'name': 'Queue', 'tracks': [first, second]})
+        runtime.observe_track(first)
         runtime.handle_transport_status('NEXT_TRACK')
 
         status = runtime.previous_track()
@@ -319,7 +399,7 @@ class PlaybackRuntimeTest(unittest.TestCase):
         events = []
         event_hub.subscribe(lambda event_type, payload: events.append((event_type, payload['remaining'])))
         runtime, _ = self.make_runtime(event_hub)
-        runtime.play_track(make_track(duration='1:00'))
+        self.start_playback(runtime, make_track(duration='1:00'))
 
         status = runtime.handle_transport_status('NEXT_TRACK_IN', {'duration': '27'})
 
@@ -334,6 +414,7 @@ class PlaybackRuntimeTest(unittest.TestCase):
         first = make_track(position='1', title='First', duration='1:00')
         second = make_track(position='2', title='Second', duration='0:30')
         runtime.play_playlist({'name': 'Queue', 'tracks': [first, second]})
+        runtime.observe_track(first)
 
         runtime.handle_transport_status('NEXT_TRACK_IN', {'duration': '3'})
         runtime._scheduler.tick()
@@ -361,9 +442,10 @@ class PlaybackRuntimeTest(unittest.TestCase):
         first = make_track(position='1', title='First', duration='0:01')
         second = make_track(position='2', title='Second', duration='0:30')
         runtime.play_playlist({'name': 'Queue', 'tracks': [first, second]})
+        runtime.observe_track(first)
 
         with runtime._lock:
-            runtime._state.started_at -= 2
+            runtime._state.started_at -= runtime.playback_start_offset_seconds + 2
         runtime._scheduler.tick()
         status = runtime.status()
 
@@ -377,13 +459,15 @@ class PlaybackRuntimeTest(unittest.TestCase):
         second = make_track(position='2', title='Second', duration='0:01')
         third = make_track(position='3', title='Third', duration='0:30')
         runtime.play_playlist({'name': 'Queue', 'tracks': [first, second, third]})
+        runtime.observe_track(first)
 
         with runtime._lock:
-            runtime._state.started_at -= 2
+            runtime._state.started_at -= runtime.playback_start_offset_seconds + 2
         runtime._scheduler.tick()
+        runtime.observe_track(second)
 
         with runtime._lock:
-            runtime._state.started_at -= 2
+            runtime._state.started_at -= runtime.playback_start_offset_seconds + 2
         runtime._scheduler.tick()
         status = runtime.status()
 
@@ -391,7 +475,7 @@ class PlaybackRuntimeTest(unittest.TestCase):
         self.assertEqual(status['upcoming'], [])
         self.assertEqual([track['title'] for track in fake_slink.sent_tracks], ['First', 'Second', 'Third'])
 
-    def test_different_cd_load_delay_holds_elapsed_at_zero_until_audio_start(self):
+    def test_different_cd_waits_for_observed_track_before_counting(self):
         fake_slink = FakeSLinkClient()
         runtime = PlaybackRuntime(
             fake_slink,
@@ -399,21 +483,24 @@ class PlaybackRuntimeTest(unittest.TestCase):
             changer_load_base_seconds=4,
             changer_load_seconds_per_slot=0.5,
             changer_load_max_seconds=35,
-            playback_start_offset_seconds=1,
+            playback_start_offset_seconds=2,
         )
         self.addCleanup(runtime.shutdown)
 
         first = make_track_on_cd(1, title='First')
         second = make_track_on_cd(41, title='Second')
-        runtime.play_track(first)
+        self.start_playback(runtime, first)
         status = runtime.play_track(second)
 
-        self.assertEqual(status['load_delay_seconds'], 24)
+        self.assertEqual(status['playback_state'], 'preparing')
         self.assertEqual(status['elapsed'], 0)
         self.assertEqual(status['remaining'], 60)
 
+        status = runtime.observe_track(second)
+        self.assertEqual(status['playback_state'], 'playing')
+
         with runtime._lock:
-            runtime._state.started_at -= status['load_delay_seconds'] + runtime.playback_start_offset_seconds + 30
+            runtime._state.started_at -= status['playback_start_delay_seconds'] + 30
         status = runtime.status()
 
         self.assertEqual(status['elapsed'], 30)
@@ -435,12 +522,14 @@ class PlaybackRuntimeTest(unittest.TestCase):
         event_hub.subscribe(lambda event_type, payload: events.append((event_type, payload['playback_state'])))
         runtime, _ = self.make_runtime(event_hub)
 
-        runtime.play_track(make_track())
+        track = make_track()
+        runtime.play_track(track)
+        runtime.observe_track(track)
         runtime._scheduler.tick()
         runtime.pause()
         runtime.stop()
 
-        self.assertIn(('queue_changed', 'playing'), events)
+        self.assertIn(('queue_changed', 'preparing'), events)
         self.assertIn(('playback_started', 'playing'), events)
         self.assertIn(('progress_tick', 'playing'), events)
         self.assertIn(('playback_paused', 'paused'), events)

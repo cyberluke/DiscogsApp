@@ -1,6 +1,11 @@
 import re
+import socket
 import time
+from concurrent.futures import ThreadPoolExecutor, as_completed
+from ipaddress import ip_network
 from typing import Any, Mapping
+import logging
+from urllib.parse import urljoin, urlparse
 
 import requests
 
@@ -16,6 +21,7 @@ CD_OPERATION_ENABLE_CONTINUOUS_STATUS = 25
 CD_OPERATION_DISABLE_CONTINUOUS_STATUS = 26
 CD_OPERATION_PLAY = 50
 DEFAULT_TRACK_DURATION = "3:20"
+LOGGER = logging.getLogger(__name__)
 
 
 def duration_to_seconds(duration: str) -> int:
@@ -101,13 +107,14 @@ def build_transport_command(operation: int, deck_number: int = 1) -> str:
 
 class SLinkClient:
     def __init__(self, server_url: str | None):
-        self.server_url = server_url
+        self.server_url = None if not server_url or str(server_url).lower() == 'auto' else server_url
+        self.auto_discover = not self.server_url
 
     def send(self, slink_data: str):
-        if not self.server_url:
-            raise ValueError("SONY_SLINK_SERVER is not configured")
+        self._ensure_server_url()
 
         headers = {'Content-Type': 'text/plain'}
+        LOGGER.info("Sending S-Link command to %s: %s", self.server_url, slink_data.strip())
         return self._send_request_with_retries(self.server_url, slink_data, headers)
 
     def send_track(self, track: Any):
@@ -137,11 +144,104 @@ class SLinkClient:
     def send_disable_continuous_status(self, deck_number: int = 1):
         return self.send(build_transport_command(CD_OPERATION_DISABLE_CONTINUOUS_STATUS, deck_number))
 
+    def adapter_get(self, path: str):
+        self._ensure_server_url()
+        response = requests.get(urljoin(self.server_url.rstrip('/') + '/', path.lstrip('/')), timeout=3)
+        response.raise_for_status()
+        return response.json()
+
+    def adapter_post(self, path: str, payload: Mapping[str, Any] | None = None):
+        self._ensure_server_url()
+        response = requests.post(urljoin(self.server_url.rstrip('/') + '/', path.lstrip('/')), json=payload or {}, timeout=3)
+        response.raise_for_status()
+        return response.json()
+
+    def configure_webhook_target(self, port: int = 5000, path: str = '/webhook', host: str | None = None, scheme: str = 'http'):
+        self._ensure_server_url()
+
+        webhook_host = host or self._local_ip_for_server()
+        webhook_url = f'{scheme}://{webhook_host}:{port}{path}'
+        endpoint = urljoin(self.server_url.rstrip('/') + '/', 'webhook-target')
+        LOGGER.info("Configuring S-Link webhook target %s -> %s", endpoint, webhook_url)
+        response = requests.post(endpoint, json={'webhook_url': webhook_url}, timeout=3)
+        response.raise_for_status()
+        try:
+            payload = response.json()
+        except ValueError as exc:
+            raise RuntimeError('ESP32 webhook-target endpoint did not return JSON; flash updated firmware first') from exc
+        if payload.get('webhook_url') != webhook_url:
+            raise RuntimeError(f"ESP32 webhook target confirmation mismatch: {payload}")
+        return response
+
+    def discover(self) -> str:
+        candidates = self._candidate_adapter_urls()
+        LOGGER.info("Discovering ESP32 S-Link adapter across %d candidates", len(candidates))
+        with ThreadPoolExecutor(max_workers=64) as executor:
+            futures = {executor.submit(self._probe_adapter, url): url for url in candidates}
+            for future in as_completed(futures):
+                payload = future.result()
+                if payload:
+                    self.server_url = futures[future]
+                    LOGGER.info("Discovered ESP32 S-Link adapter at %s: %s", self.server_url, payload)
+                    return self.server_url
+        raise RuntimeError("Could not discover ESP32 S-Link adapter on local networks")
+
+    def _ensure_server_url(self) -> None:
+        if not self.server_url:
+            self.discover()
+
+    def _probe_adapter(self, url: str) -> Mapping[str, Any] | None:
+        try:
+            response = requests.get(urljoin(url.rstrip('/') + '/', 'status'), timeout=0.5)
+            response.raise_for_status()
+            payload = response.json()
+        except (requests.RequestException, ValueError):
+            return None
+        if payload.get('device') == 'sony_slink_esp32':
+            return payload
+        return None
+
+    def _candidate_adapter_urls(self) -> list[str]:
+        addresses = set()
+        for host in ('192.168.137.1', '192.168.1.1', '8.8.8.8'):
+            try:
+                with socket.socket(socket.AF_INET, socket.SOCK_DGRAM) as probe_socket:
+                    probe_socket.connect((host, 80))
+                    addresses.add(probe_socket.getsockname()[0])
+            except OSError:
+                pass
+        try:
+            for address in socket.gethostbyname_ex(socket.gethostname())[2]:
+                if not address.startswith('127.'):
+                    addresses.add(address)
+        except OSError:
+            pass
+
+        candidates = []
+        for address in sorted(addresses):
+            try:
+                network = ip_network(f'{address}/24', strict=False)
+            except ValueError:
+                continue
+            candidates.extend(f'http://{host}:8080' for host in network.hosts())
+        return candidates
+
+    def _local_ip_for_server(self) -> str:
+        parsed = urlparse(self.server_url or '')
+        host = parsed.hostname
+        port = parsed.port or (443 if parsed.scheme == 'https' else 80)
+        if not host:
+            raise ValueError("SONY_SLINK_SERVER host is not configured")
+
+        with socket.socket(socket.AF_INET, socket.SOCK_DGRAM) as probe_socket:
+            probe_socket.connect((host, port))
+            return probe_socket.getsockname()[0]
+
     def _send_request_with_retries(self, url: str, data: str, headers: dict[str, str], max_retries: int = 20):
         retries = 0
         while retries < max_retries:
             try:
-                response = requests.post(url, data=data, headers=headers)
+                response = requests.post(url, data=data, headers=headers, timeout=3)
                 response.raise_for_status()
                 return response
             except (requests.RequestException, OSError) as exc:

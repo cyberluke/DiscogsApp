@@ -11,7 +11,7 @@ const DEFAULTS = {
   tpm: 500000,
   concurrency: 32,
   maxRetries: 6,
-  aiVersion: 1,
+  aiVersion: 2,
   responseTokenReserve: 1200,
 };
 

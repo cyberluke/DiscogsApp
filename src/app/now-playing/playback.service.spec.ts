@@ -23,6 +23,8 @@ describe('PlaybackService', () => {
     last_update_timestamp: 0,
     load_delay_seconds: 0,
     load_delay_remaining: 0,
+    playback_start_delay_seconds: 0,
+    playback_start_delay_enabled: true,
     error: null
   };
 
@@ -64,6 +66,14 @@ describe('PlaybackService', () => {
     });
 
     httpMock.expectOne(`${environment.serviceUrl}/playlist/resume`).flush({ ...status, playback_state: 'playing' });
+  });
+
+  it('toggles playback start delay through the runtime endpoint', () => {
+    service.setStartDelayEnabled(false).subscribe(response => {
+      expect(response.playback_start_delay_enabled).toBeFalse();
+    });
+
+    httpMock.expectOne(`${environment.serviceUrl}/playback/start-delay`).flush({ ...status, playback_start_delay_enabled: false });
   });
 
   it('skips to next and previous tracks through runtime endpoints', () => {

@@ -1,6 +1,7 @@
 from collections import Counter
 import json
 import re
+import unicodedata
 from typing import Any, Mapping
 
 
@@ -27,9 +28,12 @@ class ConversationContextBuilder:
     def _playlist_summaries(self) -> list[dict[str, Any]]:
         if not hasattr(self.repository, 'all_playlists'):
             return []
+        playlists = list(self.repository.all_playlists())
+        if hasattr(self.repository, 'favourite_tracks_playlist'):
+            playlists.append(self.repository.favourite_tracks_playlist())
         return [
             {'name': playlist.get('name'), 'track_count': len(playlist.get('tracks') or [])}
-            for playlist in self.repository.all_playlists()
+            for playlist in playlists
             if isinstance(playlist, Mapping) and playlist.get('name')
         ][:50]
 
@@ -129,9 +133,22 @@ class IntentAnalyzer:
             'forgotten classic': ('forgotten_classic',),
             'female vocal': ('female_vocals',),
             'female vocals': ('female_vocals',),
+            'proper eurodance': ('style', 'dj_eurodance'),
+            'dj eurodance': ('style', 'dj_eurodance'),
+            'club eurodance': ('style', 'dj_eurodance'),
+            'rave-pop': ('style', 'dj_eurodance'),
+            'poradny eurodance': ('style', 'dj_eurodance'),
+            'pořádný eurodance': ('style', 'dj_eurodance'),
+            'tancni eurodance': ('style', 'dj_eurodance'),
+            'taneční eurodance': ('style', 'dj_eurodance'),
+            'euro house': ('style',),
+            'dance-pop': ('style',),
+            'dance pop': ('style',),
+            'hard trance': ('style',),
+            'vocal trance': ('style',),
             'trance': ('style',),
             'house': ('style',),
-            'eurodance': ('style',),
+            'eurodance': ('style', 'dj_eurodance'),
             'germany': ('country',),
             'german': ('country',),
         }
@@ -191,6 +208,20 @@ class CandidateDiversifier:
 
 class MusicRecommendationService:
     SCORE_FIELDS = ('energy', 'danceability', 'euphoria', 'nostalgia', 'commercial', 'club', 'radio', 'cheese')
+    PRODUCTION_SCORE_FIELDS = (
+        'energy', 'drive', 'groove', 'rhythm_complexity', 'rap_presence', 'vocal_balance',
+        'harmony_density', 'dynamic_range', 'production_density', 'commercial_polish',
+        'club_focus', 'radio_focus', 'emotional_intensity'
+    )
+    SONGWRITING_SCORE_FIELDS = ('hook_strength', 'chorus_focus', 'verse_focus', 'instrumental_focus', 'build_up', 'breakdown')
+    PRODUCTION_TEXT_FIELDS = ('percussion_style', 'bass_style', 'synth_style', 'vocal_style', 'atmosphere')
+    DJ_EURODANCE_TOKENS = (
+        'eurodance', 'club mix', 'hard mix', 'extended', 'rave-pop', 'rave pop',
+        'dancefloor', 'dj-friendly', 'dj friendly', 'club', 'anthem', 'four-on-the-floor',
+        'four on the floor', 'high-energy', 'high energy', 'german', 'dutch', 'italo',
+    )
+    NON_EURODANCE_STYLES = {'euro house', 'dance-pop', 'dance pop'}
+    SOFT_EURODANCE_TOKENS = ('radio pop', 'ballad', 'downtempo', 'soft')
 
     def __init__(self, repository, parser: IntentAnalyzer | None = None, diversifier: CandidateDiversifier | None = None):
         self.repository = repository
@@ -269,6 +300,11 @@ class MusicRecommendationService:
             for keyword in keywords:
                 if keyword in text:
                     score += 30
+        if 'dj_eurodance' in intents:
+            eurodance_score = self._dj_eurodance_score(release, ai, text)
+            score += eurodance_score
+            if eurodance_score >= 35:
+                shared.append('DJ-friendly 90s Eurodance club energy')
         if 'country' in intents and any(keyword in text for keyword in ('germany', 'german')):
             score += 25
             shared.append('German collection context')
@@ -410,22 +446,60 @@ class MusicRecommendationService:
 
     def _similarity_score(self, release: Mapping[str, Any], current_release: Mapping[str, Any], shared: list[str]) -> float:
         score = 0.0
-        for field in ('genres', 'styles'):
-            overlap = set(self._lower_list(release.get(field))).intersection(self._lower_list(current_release.get(field)))
-            if overlap:
-                score += len(overlap) * 18
-                shared.extend(sorted(overlap))
         ai = release.get('ai') if isinstance(release.get('ai'), dict) else {}
         current_ai = current_release.get('ai') if isinstance(current_release.get('ai'), dict) else {}
         if ai and current_ai:
+            score += self._production_similarity_score(ai, current_ai, shared)
             for field in self.SCORE_FIELDS:
                 distance = abs(self._score_value(ai, field) - self._score_value(current_ai, field))
-                score += max(0, 12 - distance / 5)
+                score += max(0, 5 - distance / 12)
             overlap = set(self._lower_list(ai.get('keywords'))).intersection(self._lower_list(current_ai.get('keywords')))
             if overlap:
-                score += len(overlap) * 12
+                score += len(overlap) * 6
+                shared.extend(sorted(overlap))
+        for field in ('genres', 'styles'):
+            overlap = set(self._lower_list(release.get(field))).intersection(self._lower_list(current_release.get(field)))
+            if overlap:
+                score += len(overlap) * 6
                 shared.extend(sorted(overlap))
         return score
+
+    def _production_similarity_score(self, ai: Mapping[str, Any], current_ai: Mapping[str, Any], shared: list[str]) -> float:
+        score = 0.0
+        signature_overlap = set(self._lower_list(ai.get('production_signature'))).intersection(self._lower_list(current_ai.get('production_signature')))
+        if signature_overlap:
+            score += len(signature_overlap) * 34
+            shared.extend(f'production signature: {signature}' for signature in sorted(signature_overlap))
+
+        production = ai.get('production') if isinstance(ai.get('production'), Mapping) else {}
+        current_production = current_ai.get('production') if isinstance(current_ai.get('production'), Mapping) else {}
+        for field in self.PRODUCTION_SCORE_FIELDS:
+            distance = abs(self._score_value(production, field) - self._score_value(current_production, field))
+            score += max(0, 10 - distance / 6)
+
+        songwriting = ai.get('songwriting') if isinstance(ai.get('songwriting'), Mapping) else {}
+        current_songwriting = current_ai.get('songwriting') if isinstance(current_ai.get('songwriting'), Mapping) else {}
+        for field in self.SONGWRITING_SCORE_FIELDS:
+            distance = abs(self._score_value(songwriting, field) - self._score_value(current_songwriting, field))
+            score += max(0, 6 - distance / 8)
+
+        text_overlap = self._production_text_overlap(production, current_production)
+        if text_overlap:
+            score += len(text_overlap) * 10
+            shared.extend(text_overlap)
+        return score
+
+    def _production_text_overlap(self, production: Mapping[str, Any], current_production: Mapping[str, Any]) -> list[str]:
+        shared = []
+        for field in self.PRODUCTION_TEXT_FIELDS:
+            left = self._normalize_text(production.get(field))
+            right = self._normalize_text(current_production.get(field))
+            if left and right and (left in right or right in left):
+                shared.append(f'{field.replace("_", " ")}: {production.get(field)}')
+        return shared
+
+    def _normalize_text(self, value: Any) -> str:
+        return re.sub(r'\s+', ' ', str(value or '').strip().lower())
 
     def _shared_metadata(self, release: Mapping[str, Any], current_release: Mapping[str, Any] | None) -> list[str]:
         if not current_release:
@@ -446,7 +520,30 @@ class MusicRecommendationService:
         parts.extend(release.get('styles') or [])
         for field in ('keywords', 'mood', 'recommended_after', 'similar_artists'):
             parts.extend(ai.get(field) or [])
+        parts.extend(ai.get('production_signature') or [])
+        production = ai.get('production') if isinstance(ai.get('production'), Mapping) else {}
+        parts.extend(production.get(field) for field in self.PRODUCTION_TEXT_FIELDS)
+        artist_context = ai.get('artist_context') if isinstance(ai.get('artist_context'), Mapping) else {}
+        parts.extend(artist_context.values())
         return ' '.join(str(part) for part in parts if part).lower()
+
+    def _dj_eurodance_score(self, release: Mapping[str, Any], ai: Mapping[str, Any], text: str) -> float:
+        styles = set(self._lower_list(release.get('styles')))
+        has_eurodance_base = 'eurodance' in styles
+        if not has_eurodance_base or styles.intersection(self.NON_EURODANCE_STYLES):
+            return 0.0
+        score = 20.0
+        score += self._score_value(ai, 'energy') * 0.22
+        score += self._score_value(ai, 'danceability') * 0.22
+        score += self._score_value(ai, 'club') * 0.18
+        score += max(0, self._score_value(ai, 'club') - self._score_value(ai, 'radio')) * 0.2
+        score += self._token_count(text, self.DJ_EURODANCE_TOKENS) * 8
+        score -= self._token_count(text, self.SOFT_EURODANCE_TOKENS) * 10
+        score -= max(0, self._score_value(ai, 'radio') - self._score_value(ai, 'club')) * 0.15
+        return max(0.0, score)
+
+    def _token_count(self, text: str, tokens: tuple[str, ...]) -> int:
+        return sum(1 for token in tokens if token in text)
 
     def _list_match(self, ai: Mapping[str, Any], fields: tuple[str, ...], tokens: tuple[str, ...]) -> int:
         text = ' '.join(str(value) for field in fields for value in self._field_values(ai.get(field))).lower()
@@ -528,6 +625,8 @@ class PlaylistActionService:
         normalized_request = self._normalize(request_text)
         if not normalized_request or not hasattr(self.repository, 'all_playlists'):
             return None
+        if self._wants_favourite_tracks(normalized_request) and hasattr(self.repository, 'favourite_tracks_playlist'):
+            return self.repository.favourite_tracks_playlist()
         exact = None
         contained = None
         for playlist in self.repository.all_playlists():
@@ -599,7 +698,13 @@ class PlaylistActionService:
             return None
 
     def _normalize(self, value: str) -> str:
-        return re.sub(r'\s+', ' ', value.strip().lower())
+        ascii_value = unicodedata.normalize('NFKD', value).encode('ascii', 'ignore').decode('ascii')
+        return re.sub(r'\s+', ' ', ascii_value.strip().lower())
+
+    def _wants_favourite_tracks(self, normalized: str) -> bool:
+        favourite_tokens = ('favourite', 'favorite', 'obliben', 'oblub', 'fav')
+        track_tokens = ('track', 'tracks', 'skladb', 'pisn', 'song')
+        return any(token in normalized for token in favourite_tokens) and any(token in normalized for token in track_tokens)
 
 
 class PromptBuilder:
@@ -617,18 +722,24 @@ class PromptBuilder:
             'You curate from the supplied candidate list only. Never invent tracks, never mention external services, and never perform internet lookup. '
             'Recognize playlist momentum and explain transitions like a practical DJ. You can discuss saved playlists, recommend playlist creation, '
             'and suggest CD player actions, but executable playlist and transport commands are handled by the application API. '
+            'When the user asks for Eurodance, keep Eurodance narrow: do not merge Euro House or Dance-pop into it. Prefer true high-energy 90s Eurodance with club/extended/hard mixes, strong four-on-the-floor drive, and dancefloor utility. '
             'Use precise dance-music taxonomy: do not call vocal trance, Euro House, hard trance, hard house, hands-up, happy hardcore, techno, or commercial rave "Eurodance" unless the candidate primaryStyle is Eurodance. '
             'Respect candidate primaryStyle and Discogs styles; Lasgo is vocal trance, Le Click - Call Me is Euro House, and Scooter should be described by its actual rave/trance/hard-house/happy-hardcore context. Return JSON only.'
         )
         user_prompt = json.dumps({
-            'task': 'Choose 3-10 recommendations from the local candidate tracks and answer the user as AI DJ.',
+            'task': 'Choose 6-10 recommendations from the local candidate tracks and answer the user as AI DJ.',
             'rules': [
                 'Use only candidate_id values from candidate_tracks.',
                 'Do not search beyond candidate_tracks.',
                 'If no candidate fits, return an empty suggested_tracks list and say so clearly.',
-                'Explain confidence, transition fit, shared musical DNA, and what changes from the current track.',
+                'Explain confidence, transition fit, shared production DNA, and what changes from the current track.',
                 'Notice collection and playlist patterns when they are musically relevant.',
+                'Prioritize production signature, groove, energy flow, arrangement, mixability, dance floor impact, and production philosophy over artist name similarity.',
+                'Do not assume two tracks by the same artist are similar; compare their production eras and production metadata independently.',
+                'Use DJ/producer language rather than consumer mood language.',
                 'Use candidate primaryStyle as the main style label; do not flatten precise styles into Eurodance.',
+                'Treat Eurodance, Euro House, Dance-pop, vocal trance, hard trance, hands-up, and commercial rave as separate selectable lanes.',
+                'For Eurodance requests, favor true DJ-useful 90s Eurodance club, extended, and hard mixes; for Euro House or Dance-pop requests, choose those labels explicitly instead.',
             ],
             'response_schema': {
                 'response': 'string',
@@ -699,6 +810,10 @@ class PromptBuilder:
             'drivingMusic': ai.get('driving_music'),
             'festival': ai.get('festival'),
             'keywords': ai.get('keywords') or [],
+            'production': ai.get('production') or {},
+            'productionSignature': ai.get('production_signature') or [],
+            'songwriting': ai.get('songwriting') or {},
+            'artistContext': ai.get('artist_context') or {},
             'mood': ai.get('mood') or [],
             'similarArtists': ai.get('similar_artists') or [],
             'localGroup': candidate.get('candidate_group'),
@@ -729,6 +844,10 @@ class PromptBuilder:
             'radio': ai.get('radio'),
             'cheese': ai.get('cheese'),
             'keywords': ai.get('keywords') or [],
+            'production': ai.get('production') or {},
+            'productionSignature': ai.get('production_signature') or [],
+            'songwriting': ai.get('songwriting') or {},
+            'artistContext': ai.get('artist_context') or {},
             'mood': ai.get('mood') or [],
         }
 
@@ -1084,16 +1203,29 @@ class ChatService:
     def _recommendations_from_ai(self, ai_response: Mapping[str, Any], candidates: list[dict[str, Any]]) -> list[dict[str, Any]]:
         candidate_map = {self.prompt_builder.candidate_id(candidate): candidate for candidate in candidates}
         selected = []
+        selected_ids = set()
         for item in ai_response.get('suggested_tracks') or []:
             if not isinstance(item, dict):
                 continue
-            candidate = candidate_map.get(str(item.get('candidate_id') or ''))
+            candidate_id = str(item.get('candidate_id') or '')
+            candidate = candidate_map.get(candidate_id)
             if not candidate:
                 continue
             selected.append(self._merge_ai_recommendation(candidate, item))
+            selected_ids.add(candidate_id)
             if len(selected) >= 10:
                 break
-        return selected or candidates[:5]
+        target_count = min(8, len(candidates))
+        if len(selected) < target_count:
+            for candidate in candidates:
+                candidate_id = self.prompt_builder.candidate_id(candidate)
+                if candidate_id in selected_ids:
+                    continue
+                selected.append(candidate)
+                selected_ids.add(candidate_id)
+                if len(selected) >= target_count:
+                    break
+        return selected or candidates[:target_count]
 
     def _merge_ai_recommendation(self, candidate: dict[str, Any], item: Mapping[str, Any]) -> dict[str, Any]:
         merged = dict(candidate)

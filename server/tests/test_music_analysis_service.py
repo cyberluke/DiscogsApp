@@ -71,7 +71,7 @@ class MusicAnalysisServiceTest(unittest.TestCase):
 
             self.assertEqual(client.calls, 1)
             self.assertEqual(first, second)
-            self.assertEqual(saved_release['ai']['version'], 1)
+            self.assertEqual(saved_release['ai']['version'], 2)
             self.assertEqual(saved_release['ai']['scene'], 'German Eurodance')
             self.assertIn('Artist', client.user_prompt)
             self.assertNotIn('images', client.user_prompt.lower())
@@ -90,7 +90,7 @@ class MusicAnalysisServiceTest(unittest.TestCase):
     def test_cached_ai_is_synced_to_duplicate_release_rows(self):
         with tempfile.TemporaryDirectory() as temp_dir:
             repository = self.make_repository(temp_dir, releases=[
-                {**self.release(), 'id': 1, 'title': 'Title (CD 1)', 'ai': {'version': 1, 'scene': 'Cached Scene'}},
+                {**self.release(), 'id': 1, 'title': 'Title (CD 1)', 'ai': {'version': 2, 'scene': 'Cached Scene'}},
                 {**self.release(), 'id': 2, 'title': 'Title (CD 2)'},
             ])
             client = FakeAIClient()

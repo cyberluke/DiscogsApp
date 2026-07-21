@@ -1,12 +1,11 @@
 // release.component.ts
 
-import { Component, OnInit, HostListener, ViewChild } from '@angular/core';
+import { Component, OnInit, HostListener } from '@angular/core';
 import { ReleaseService } from './release.service';
 import { PlaylistService } from '../playlist/playlist.service';
-import { CarouselControlComponent } from '@coreui/angular';
 import { AiMetadata, Track } from '../dao/track';
-import { map, startWith, take } from 'rxjs/operators';
-import { Observable, Subject } from 'rxjs';
+import { map, startWith } from 'rxjs/operators';
+import { Observable } from 'rxjs';
 import { ChipColor } from '../app.module';
 import { FormControl } from '@angular/forms';
 
@@ -16,15 +15,11 @@ import { FormControl } from '@angular/forms';
   styleUrls: ['./release.component.css']
 })
 export class ReleaseComponent implements OnInit {
-  @ViewChild('prevControl')
-  prevControl!: CarouselControlComponent;
-  @ViewChild('nextControl')
-  nextControl!: CarouselControlComponent;
   release: any;
   releases: any[] = [];
+  currentSlideIndex: number = 0;
   currentCdIndex: number = 1;
   currentDeckNumber: number = 1;
-  private readonly indexUpdated = new Subject<void>();
   carouselButtonSelected: boolean = false;
   aiMetadata: AiMetadata | null = null;
   aiLoading: boolean = false;
@@ -53,79 +48,34 @@ export class ReleaseComponent implements OnInit {
   }
 
   prevSlide() {
-    if (this.prevControl) {
-      this.prevControl['play'](); // Using bracket notation to access the method
-    }
+    this.goToReleaseIndex(this.currentSlideIndex <= 0 ? this.releases.length - 1 : this.currentSlideIndex - 1);
   }
 
   nextSlide() {
-    if (this.nextControl) {
-      this.nextControl['play'](); // Using bracket notation to access the method
-    }
+    this.goToReleaseIndex(this.currentSlideIndex >= this.releases.length - 1 ? 0 : this.currentSlideIndex + 1);
   }
 
-  async releaseGoToSlide(release: any): Promise<void> {
-    if (release.cd_position == this.currentCdIndex && release.deck_number == this.currentDeckNumber) {
-      this.hideCarousel();
+  releaseGoToSlide(release: any): void {
+    const targetIndex = this.releases.findIndex(item => item.release_id === release.release_id);
+    if (targetIndex < 0) {
       return;
     }
-    let finalPosition = release;
-    let difference = Math.abs(release.cd_position - this.currentCdIndex);
 
-    if (finalPosition.deck_number > this.currentDeckNumber) {
-      difference += 300 - this.currentDeckNumber + 1;
-    } else if (finalPosition.deck_number < this.currentDeckNumber) {
-      difference += 300 - this.currentDeckNumber + 1;
-    }
-
-    if (finalPosition.cd_position > this.currentCdIndex) {
-      for (let i = 0; i < difference; i++) {
-        let oldIndex = this.currentCdIndex;
-        this.nextSlide();
-        // Wait for the currentCdIndex to be updated
-        let waitTime = 0;
-        const maxWaitTime = 400; // Maximum wait time in milliseconds
-        while (this.currentCdIndex === oldIndex && waitTime < maxWaitTime) {
-          await this.delay(1); // Delay for a short period (10 ms)
-          waitTime += 1;
-        }
-
-        // Break the loop if currentCdIndex didn't change within the maxWaitTime
-        if (this.currentCdIndex === oldIndex) {
-          console.error('Failed to update currentCdIndex after waiting');
-          break;
-        }
-      }
-    } else {
-      for (let i = 0; i < difference; i++) {
-        let oldIndex = this.currentCdIndex;
-        this.prevSlide();
-        // Wait for the currentCdIndex to be updated
-        let waitTime = 0;
-        const maxWaitTime = 500; // Maximum wait time in milliseconds
-        while (this.currentCdIndex === oldIndex && waitTime < maxWaitTime) {
-          await this.delay(1); // Delay for a short period (10 ms)
-          waitTime += 1;
-        }
-
-        // Break the loop if currentCdIndex didn't change within the maxWaitTime
-        if (this.currentCdIndex === oldIndex) {
-          console.error('Failed to update currentCdIndex after waiting');
-          break;
-        }
-      }
-    }
-    this.releaseGoToSlide(finalPosition);
+    this.currentSlideIndex = targetIndex;
+    this.setCurrentRelease(this.releases[targetIndex]);
+    this.hideCarousel();
   }
 
-  async delay(ms: number): Promise<void> {
-    return new Promise(resolve => setTimeout(resolve, ms));
+  goToReleaseIndex(index: number): void {
+    if (!this.releases.length || index < 0 || index >= this.releases.length) {
+      return;
+    }
+    this.currentSlideIndex = index;
+    this.setCurrentRelease(this.releases[index]);
   }
 
-  private waitForIndexUpdate(): Promise<void> {
-    return new Promise(resolve => {
-      this.indexUpdated.pipe(take(1)).subscribe(() => resolve());
-    });
+  trackRelease(_index: number, release: any): number | string {
+    return release?.release_id || release?.id || _index;
   }
 
   addToFavourites(release: any, track: any) {
@@ -210,8 +160,8 @@ export class ReleaseComponent implements OnInit {
     });
 
     this.releases = releases;
-    this.release = this.releases[0];
-    this.loadAiForRelease(this.release);
+    this.currentSlideIndex = 0;
+    this.setCurrentRelease(this.releases[0]);
   }
 
   // Helper function to get the primary image URL
@@ -228,20 +178,11 @@ export class ReleaseComponent implements OnInit {
     }
   }
 
-  onItemChange($event: any): void {
-    console.log('Carousel onItemChange', $event);
-    var releaseIndex:number = $event;
-    if (!releaseIndex) {
-      releaseIndex = 0;
-    }
-
-    this.release = this.releases[releaseIndex];
-    this.currentCdIndex = this.release.cd_position;
-    this.currentDeckNumber = this.release.deck_number;
-    this.loadAiForRelease(this.release);
-
-    // Notify that the index has been updated
-    this.indexUpdated.next();
+  private setCurrentRelease(release: any): void {
+    this.release = release;
+    this.currentCdIndex = release?.cd_position || 1;
+    this.currentDeckNumber = release?.deck_number || 1;
+    this.loadAiForRelease(release);
   }
 
   loadAiForRelease(release: any): void {

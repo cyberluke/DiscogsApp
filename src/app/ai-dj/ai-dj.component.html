@@ -4,11 +4,9 @@
       <img class="now-artwork" [src]="primaryImageUrl()" alt="Current release artwork" />
     </div>
     <div class="now-copy">
-      <span class="eyebrow">Now Playing / AI DJ</span>
+      <span class="eyebrow">On Air / Live Radio</span>
       <h1>{{ trackName(context?.current_track) }}</h1>
-      <p *ngIf="context?.current_release as release">
-        {{ release.artists_sort }} · {{ release.year || 'Unknown year' }} · {{ release.country || 'Unknown country' }}
-      </p>
+      <p *ngIf="currentTrackSubtitle() as subtitle">{{ subtitle }}</p>
       <div class="now-meta" *ngIf="context?.now_playing as playback">
         <span>{{ playback.playback_state }}</span>
         <span *ngIf="playback.hardware_state_verified === false">Restored snapshot</span>
@@ -54,15 +52,242 @@
       <span>{{ collection.release_count }}</span>
       <small>releases</small>
       <span>{{ collection.ai_enriched_release_count }}</span>
-      <small>AI enriched</small>
+      <small>AI metadata</small>
     </div>
   </section>
 
-  <section class="youtube-panel" aria-label="Native synchronized video">
+  <section class="programming-grid" aria-label="AI radio programming">
+    <section class="recommendation-panel" aria-label="AI DJ recommendations">
+      <div class="panel-header">
+        <div>
+          <span class="eyebrow">Up next</span>
+          <h2>Program queue</h2>
+        </div>
+        <button mat-icon-button type="button" (click)="loadCurrentRecommendations()" matTooltip="Refresh recommendations" aria-label="Refresh recommendations">
+          <mat-icon>refresh</mat-icon>
+        </button>
+      </div>
+
+      <div class="error" *ngIf="error">{{ error }}</div>
+      <div class="loading" *ngIf="chatLoading">Asking Azure AI DJ...</div>
+      <div class="loading" *ngIf="recommendationLoading && !chatLoading">Loading local recommendations...</div>
+
+      <article class="next-pick" *ngIf="recommendations[0] as recommendation">
+        <div class="recommendation-artwork">
+          <img [src]="recommendationImageUrl(recommendation)" [alt]="recommendation.release.title" />
+          <span>{{ matchLabel(recommendation).split(' ')[0] }}</span>
+        </div>
+        <div class="recommendation-copy">
+          <span class="match-label">{{ matchLabel(recommendation).split(' ').slice(1).join(' ') }}</span>
+          <h3>{{ trackName(recommendation.track) }}</h3>
+          <p>{{ recommendation.reason }}</p>
+          <div class="dna">
+            <span *ngIf="recommendation.musical_dna.shared.length">Shared: {{ dnaText(recommendation.musical_dna.shared) }}</span>
+            <span *ngIf="recommendation.musical_dna.differs.length">Moves: {{ dnaText(recommendation.musical_dna.differs) }}</span>
+          </div>
+        </div>
+        <div class="actions">
+          <button mat-flat-button color="primary" type="button" (click)="playRecommendation(recommendation)">
+            <mat-icon>play_arrow</mat-icon>
+            Play now
+          </button>
+          <button mat-icon-button type="button" (click)="queueRecommendation(recommendation)" matTooltip="Queue next" aria-label="Queue recommendation">
+            <mat-icon>playlist_add</mat-icon>
+          </button>
+          <button mat-icon-button type="button" (click)="openRelease(recommendation)" matTooltip="Open release" aria-label="Open release">
+            <mat-icon>album</mat-icon>
+          </button>
+          <button mat-icon-button type="button" (click)="explain(recommendation)" matTooltip="Explain" aria-label="Explain recommendation">
+            <mat-icon>info</mat-icon>
+          </button>
+        </div>
+      </article>
+
+      <div class="candidate-stack" *ngIf="recommendations.length > 1">
+        <article class="recommendation" *ngFor="let recommendation of recommendations | slice:1:6">
+          <div class="recommendation-thumb">
+            <img [src]="recommendationImageUrl(recommendation)" [alt]="recommendation.release.title" />
+          </div>
+          <div class="recommendation-copy">
+            <span class="match-label">{{ matchLabel(recommendation).split(' ').slice(1).join(' ') }}</span>
+            <h3>{{ trackName(recommendation.track) }}</h3>
+            <p>{{ recommendation.reason }}</p>
+          </div>
+          <div class="actions">
+            <button mat-icon-button type="button" (click)="playRecommendation(recommendation)" matTooltip="Play" aria-label="Play recommendation">
+              <mat-icon>play_arrow</mat-icon>
+            </button>
+            <button mat-icon-button type="button" (click)="queueRecommendation(recommendation)" matTooltip="Queue next" aria-label="Queue recommendation">
+              <mat-icon>playlist_add</mat-icon>
+            </button>
+            <button mat-icon-button type="button" (click)="explain(recommendation)" matTooltip="Explain" aria-label="Explain recommendation">
+              <mat-icon>info</mat-icon>
+            </button>
+          </div>
+        </article>
+      </div>
+
+      <aside class="explanation" *ngIf="explainedRecommendation as explained">
+        <button mat-icon-button type="button" (click)="explainedRecommendation = null" aria-label="Close explanation">
+          <mat-icon>close</mat-icon>
+        </button>
+        <h3>{{ trackName(explained.track) }}</h3>
+        <p>{{ explained.reason }}</p>
+        <p *ngIf="explained.musical_dna.shared.length">Shared characteristics: {{ dnaText(explained.musical_dna.shared) }}</p>
+        <p *ngIf="explained.musical_dna.differs.length">Different direction: {{ dnaText(explained.musical_dna.differs) }}</p>
+      </aside>
+    </section>
+
+    <section class="conversation-panel" aria-label="AI DJ conversation">
+      <div class="panel-header compact">
+        <div>
+          <span class="eyebrow">AI Director</span>
+          <h2>Direction</h2>
+        </div>
+        <button mat-stroked-button type="button" (click)="clearChatHistory()" [disabled]="!messages.length && !inputText" aria-label="Clear AI DJ chat history">
+          <mat-icon>delete_sweep</mat-icon>
+          Clear chat
+        </button>
+      </div>
+      <div class="conversation-log">
+        <article class="message assistant" *ngIf="!messages.length">
+          <span>AI DJ</span>
+          <p>Ask for a movement through your own collection. I will only suggest tracks that are actually in this library.</p>
+        </article>
+        <article class="message" *ngFor="let message of messages" [class.user]="message.role === 'user'" [class.assistant]="message.role === 'assistant'">
+          <span>{{ message.role === 'user' ? 'You' : 'AI DJ' }}</span>
+          <p>{{ message.content }}</p>
+          <div class="message-recommendations" *ngIf="message.suggested_tracks?.length">
+            <button class="message-track" type="button" *ngFor="let recommendation of message.suggested_tracks" (click)="playRecommendation(recommendation)">
+              <strong>{{ trackName(recommendation.track) }}</strong>
+              <small>{{ matchLabel(recommendation) }} · {{ recommendation.reason }}</small>
+            </button>
+          </div>
+        </article>
+      </div>
+
+      <form class="input-row" (ngSubmit)="sendMessage()">
+        <mat-form-field appearance="outline">
+          <mat-label>Ask about your music...</mat-label>
+          <textarea
+            id="ai-dj-input"
+            matInput
+            name="aiDjInput"
+            rows="3"
+            [(ngModel)]="inputText"
+            (ngModelChange)="persistDraft()"
+            autocomplete="off"
+            aria-label="Ask about your music"
+            (keydown.enter)="submitChatFromEnter($event)"
+            (keydown.control.enter)="sendMessage()"
+          ></textarea>
+        </mat-form-field>
+        <button mat-fab color="primary" type="submit" [disabled]="chatLoading || !inputText.trim()" aria-label="Send AI DJ request">
+          <mat-icon>send</mat-icon>
+        </button>
+      </form>
+
+      <div class="suggestions" aria-label="Quick suggestions">
+        <button mat-stroked-button type="button" *ngFor="let suggestion of quickSuggestions" (click)="useSuggestion(suggestion)" [disabled]="chatLoading">
+          {{ suggestion }}
+        </button>
+      </div>
+    </section>
+  </section>
+
+  <section class="library-grid" aria-label="Library controls">
+    <section class="library-panel" aria-label="Library search">
+      <div class="panel-header compact">
+        <div>
+          <span class="eyebrow">Library</span>
+          <h2>Search</h2>
+        </div>
+        <span class="library-count">{{ releases.length }} releases</span>
+      </div>
+      <mat-form-field appearance="outline" class="library-search-field" subscriptSizing="dynamic">
+        <mat-label>Find artist, release, style, CD...</mat-label>
+        <input matInput name="aiDjLibrarySearch" [(ngModel)]="librarySearch" autocomplete="off" />
+      </mat-form-field>
+      <div class="library-results" *ngIf="librarySearchResults().length; else searchHint">
+        <article class="library-result" *ngFor="let release of librarySearchResults()">
+          <img [src]="releaseImageUrl(release)" [alt]="release.title" />
+          <div>
+            <strong>{{ release.artists_sort }} - {{ release.title }}</strong>
+            <small>Deck {{ release.deck_number }} · CD {{ release.cd_position }} · {{ release.year || 'Unknown year' }}</small>
+          </div>
+          <button mat-icon-button type="button" (click)="playTrackFromRelease(release, release.tracklist[0])" [disabled]="!release.tracklist?.length" aria-label="Play first track">
+            <mat-icon>play_arrow</mat-icon>
+          </button>
+          <button mat-icon-button type="button" (click)="openRelease({ release, track: release.tracklist[0], reason: '', confidence: 0, musical_dna: { shared: [], differs: [] }, actions: [] })" aria-label="Open release">
+            <mat-icon>album</mat-icon>
+          </button>
+        </article>
+      </div>
+      <ng-template #searchHint>
+        <div class="library-empty">{{ librarySearch ? 'No matching release.' : 'Type to search the CD library.' }}</div>
+      </ng-template>
+    </section>
+
+    <section class="library-panel" aria-label="Current CD tracks">
+      <div class="panel-header compact">
+        <div>
+          <span class="eyebrow">Current CD</span>
+          <h2>{{ currentCdRelease()?.title || 'Tracklist' }}</h2>
+        </div>
+        <span class="library-count" *ngIf="currentCdRelease() as release">Deck {{ release.deck_number }} · CD {{ release.cd_position }}</span>
+      </div>
+      <div class="track-rows" *ngIf="currentCdTracks().length; else noCurrentCdTracks">
+        <article class="track-row" *ngFor="let track of currentCdTracks()">
+          <span>{{ track.position }}</span>
+          <strong>{{ track.title }}</strong>
+          <small>{{ track.duration || '?:??' }}</small>
+          <button mat-icon-button type="button" (click)="playTrackFromRelease(currentCdRelease()!, track)" aria-label="Play track">
+            <mat-icon>play_arrow</mat-icon>
+          </button>
+          <button mat-icon-button type="button" (click)="queueTrackFromRelease(currentCdRelease()!, track)" aria-label="Queue track">
+            <mat-icon>playlist_add</mat-icon>
+          </button>
+        </article>
+      </div>
+      <ng-template #noCurrentCdTracks>
+        <div class="library-empty">No current CD tracklist available.</div>
+      </ng-template>
+    </section>
+
+    <section class="library-panel" aria-label="Saved playlists">
+      <div class="panel-header compact">
+        <div>
+          <span class="eyebrow">Playlists</span>
+          <h2>Saved sets</h2>
+        </div>
+        <span class="library-count">{{ savedPlaylists.length }}</span>
+      </div>
+      <div class="playlist-rows" *ngIf="savedPlaylists.length; else noPlaylists">
+        <article class="playlist-row" *ngFor="let playlist of savedPlaylists">
+          <div>
+            <strong>{{ playlist.name }}</strong>
+            <small>{{ playlist.tracks.length }} tracks</small>
+          </div>
+          <button mat-icon-button type="button" (click)="useSavedPlaylist(playlist)" aria-label="Load playlist">
+            <mat-icon>edit_note</mat-icon>
+          </button>
+          <button mat-icon-button type="button" (click)="playSavedPlaylist(playlist)" aria-label="Play playlist">
+            <mat-icon>play_arrow</mat-icon>
+          </button>
+        </article>
+      </div>
+      <ng-template #noPlaylists>
+        <div class="library-empty">No saved playlists found.</div>
+      </ng-template>
+    </section>
+  </section>
+
+  <section class="signals-grid" aria-label="Radio signals">
+    <section class="youtube-panel" aria-label="Native synchronized video">
     <div class="panel-header">
       <div>
-        <span class="eyebrow">Synchronized visual companion</span>
-        <h2>Native Video Player</h2>
+        <span class="eyebrow">Signals / Video</span>
+        <h2>Visual sync</h2>
       </div>
       <button mat-icon-button type="button" (click)="loadVideoSync(true)" matTooltip="Refresh video" aria-label="Refresh video">
         <mat-icon>refresh</mat-icon>
@@ -138,106 +363,24 @@
         <span>{{ videoLoading ? 'Loading video...' : (videoSync?.message || videoError || 'No suitable local video found.') }}</span>
       </div>
     </ng-template>
-  </section>
+    </section>
 
-  <section class="conversation-panel" aria-label="AI DJ conversation">
-    <div class="conversation-log">
-      <article class="message assistant" *ngIf="!messages.length">
-        <span>AI DJ</span>
-        <p>Ask for a movement through your own collection. I will only suggest tracks that are actually in this library.</p>
-      </article>
-      <article class="message" *ngFor="let message of messages" [class.user]="message.role === 'user'" [class.assistant]="message.role === 'assistant'">
-        <span>{{ message.role === 'user' ? 'You' : 'AI DJ' }}</span>
-        <p>{{ message.content }}</p>
-        <div class="message-recommendations" *ngIf="message.suggested_tracks?.length">
-          <button class="message-track" type="button" *ngFor="let recommendation of message.suggested_tracks" (click)="playRecommendation(recommendation)">
-            <strong>{{ trackName(recommendation.track) }}</strong>
-            <small>{{ matchLabel(recommendation) }} · {{ recommendation.reason }}</small>
-          </button>
-        </div>
-      </article>
-    </div>
-
-    <form class="input-row" (ngSubmit)="sendMessage()">
-      <mat-form-field appearance="outline">
-        <mat-label>Ask about your music...</mat-label>
-        <textarea
-          id="ai-dj-input"
-          matInput
-          name="aiDjInput"
-          rows="3"
-          [(ngModel)]="inputText"
-          (ngModelChange)="persistDraft()"
-          autocomplete="off"
-          aria-label="Ask about your music"
-          (keydown.control.enter)="sendMessage()"
-        ></textarea>
-      </mat-form-field>
-      <button mat-fab color="primary" type="submit" [disabled]="chatLoading || !inputText.trim()" aria-label="Send AI DJ request">
-        <mat-icon>send</mat-icon>
-      </button>
-    </form>
-
-    <div class="suggestions" aria-label="Quick suggestions">
-      <button mat-stroked-button type="button" *ngFor="let suggestion of quickSuggestions" (click)="useSuggestion(suggestion)" [disabled]="chatLoading">
-        {{ suggestion }}
-      </button>
-    </div>
-  </section>
-
-  <section class="recommendation-panel" aria-label="AI DJ recommendations">
-    <div class="panel-header">
-      <div>
-        <span class="eyebrow">Discogs Music Intelligence</span>
-        <h2>Recommended next</h2>
-      </div>
-      <button mat-icon-button type="button" (click)="loadCurrentRecommendations()" matTooltip="Refresh recommendations" aria-label="Refresh recommendations">
-        <mat-icon>refresh</mat-icon>
-      </button>
-    </div>
-
-    <div class="error" *ngIf="error">{{ error }}</div>
-    <div class="loading" *ngIf="chatLoading">Asking Azure AI DJ...</div>
-    <div class="loading" *ngIf="recommendationLoading && !chatLoading">Loading local recommendations...</div>
-
-    <article class="recommendation" *ngFor="let recommendation of recommendations">
-      <div class="recommendation-artwork">
-        <img [src]="recommendationImageUrl(recommendation)" [alt]="recommendation.release.title" />
-        <span>{{ matchLabel(recommendation).split(' ')[0] }}</span>
-      </div>
-      <div class="recommendation-copy">
-        <span class="match-label">{{ matchLabel(recommendation).split(' ').slice(1).join(' ') }}</span>
-        <h3>{{ trackName(recommendation.track) }}</h3>
-        <p>{{ recommendation.reason }}</p>
-        <div class="dna">
-          <span *ngIf="recommendation.musical_dna.shared.length">Shared: {{ dnaText(recommendation.musical_dna.shared) }}</span>
-          <span *ngIf="recommendation.musical_dna.differs.length">Moves: {{ dnaText(recommendation.musical_dna.differs) }}</span>
+    <section class="current-ai-metadata" *ngIf="currentAiMetadata() as metadata">
+      <span class="eyebrow">Signals / AI Metadata</span>
+      <h3>{{ metadata.scene }}</h3>
+      <p>{{ metadata.summary }}</p>
+      <div class="ai-score-grid compact">
+        <div class="ai-score" *ngFor="let score of aiScoreEntries(metadata)">
+          <span>{{ score.label }}</span>
+          <strong>{{ score.value }}</strong>
+          <div class="ai-meter"><i [style.width.%]="score.value"></i></div>
         </div>
       </div>
-      <div class="actions">
-        <button mat-icon-button type="button" (click)="playRecommendation(recommendation)" matTooltip="Play" aria-label="Play recommendation">
-          <mat-icon>play_arrow</mat-icon>
-        </button>
-        <button mat-icon-button type="button" (click)="queueRecommendation(recommendation)" matTooltip="Queue next" aria-label="Queue recommendation">
-          <mat-icon>playlist_add</mat-icon>
-        </button>
-        <button mat-icon-button type="button" (click)="openRelease(recommendation)" matTooltip="Open release" aria-label="Open release">
-          <mat-icon>album</mat-icon>
-        </button>
-        <button mat-icon-button type="button" (click)="explain(recommendation)" matTooltip="Explain" aria-label="Explain recommendation">
-          <mat-icon>info</mat-icon>
-        </button>
+      <div class="ai-tags" *ngIf="metadata.mood?.length">
+        <span *ngFor="let mood of metadata.mood">{{ mood }}</span>
       </div>
-    </article>
-
-    <aside class="explanation" *ngIf="explainedRecommendation as explained">
-      <button mat-icon-button type="button" (click)="explainedRecommendation = null" aria-label="Close explanation">
-        <mat-icon>close</mat-icon>
-      </button>
-      <h3>{{ trackName(explained.track) }}</h3>
-      <p>{{ explained.reason }}</p>
-      <p *ngIf="explained.musical_dna.shared.length">Shared characteristics: {{ dnaText(explained.musical_dna.shared) }}</p>
-      <p *ngIf="explained.musical_dna.differs.length">Different direction: {{ dnaText(explained.musical_dna.differs) }}</p>
-    </aside>
+      <p class="ai-recommendations" *ngIf="metadata.recommended_after?.length">Recommended after: {{ dnaText(metadata.recommended_after) }}</p>
+      <p class="ai-recommendations" *ngIf="metadata.similar_artists?.length">Similar DNA: {{ dnaText(metadata.similar_artists) }}</p>
+    </section>
   </section>
 </section>

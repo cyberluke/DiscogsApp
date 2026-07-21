@@ -1,83 +1,61 @@
 {
   "snapshot": {
     "current_track": {
-      "position": "1",
-      "type_": "track",
-      "title": "The Summer Is Magic (Alex Party Mix)",
-      "extraartists": [
-        {
-          "name": "Alex Party",
-          "anv": "",
-          "join": "",
-          "role": "Remix",
-          "tracks": "",
-          "id": 7282,
-          "resource_url": "https://api.discogs.com/artists/7282"
-        }
-      ],
-      "duration": "3:57",
-      "release_id": 213461,
+      "album_title": "Wrap Me Up",
+      "artist": "Alex Party",
+      "artwork_url": "https://i.discogs.com/Zp7eu4e3MXSVUIv2jV4W1xy1oOwdCOJA8drmgDkfThk/rs:fit/g:sm/q:90/h:518/w:600/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTM1NzA3/Mi0xMTk2MTg2OTc5/LmpwZWc.jpeg",
+      "cd_position": 80,
       "deck_number": 1,
-      "cd_position": 26,
-      "artist": "Playahitty",
-      "full_name": "Playahitty - The Summer Is Magic (Alex Party Mix)",
-      "album_title": "The Summer Is Magic (Remix)",
-      "artwork_url": "https://i.discogs.com/Uf5EXDcrV5zpphVNi9wmgfNVfDfpCu3r6Xpw6rTqEc0/rs:fit/g:sm/q:90/h:519/w:591/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTIxMzQ2/MS0xMjIxMTkyNDkw/LmpwZWc.jpeg"
+      "duration": "3:55",
+      "full_name": "Alex Party - Wrap Me Up (Radio Version)",
+      "position": "1",
+      "release_id": 357072,
+      "title": "Wrap Me Up (Radio Version)",
+      "type_": "track"
     },
     "current_playlist": null,
     "queue": [
       {
-        "album_title": "The Summer Is Magic (Remix)",
-        "artist": "Playahitty",
-        "artwork_url": "https://i.discogs.com/Uf5EXDcrV5zpphVNi9wmgfNVfDfpCu3r6Xpw6rTqEc0/rs:fit/g:sm/q:90/h:519/w:591/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTIxMzQ2/MS0xMjIxMTkyNDkw/LmpwZWc.jpeg",
-        "cd_position": 26,
+        "album_title": "Wrap Me Up",
+        "artist": "Alex Party",
+        "artwork_url": "https://i.discogs.com/Zp7eu4e3MXSVUIv2jV4W1xy1oOwdCOJA8drmgDkfThk/rs:fit/g:sm/q:90/h:518/w:600/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTM1NzA3/Mi0xMTk2MTg2OTc5/LmpwZWc.jpeg",
+        "cd_position": 80,
         "deck_number": 1,
-        "duration": "3:57",
-        "extraartists": [
-          {
-            "anv": "",
-            "id": 7282,
-            "join": "",
-            "name": "Alex Party",
-            "resource_url": "https://api.discogs.com/artists/7282",
-            "role": "Remix",
-            "tracks": ""
-          }
-        ],
-        "full_name": "Playahitty - The Summer Is Magic (Alex Party Mix)",
+        "duration": "3:55",
+        "full_name": "Alex Party - Wrap Me Up (Radio Version)",
         "position": "1",
-        "release_id": 213461,
-        "title": "The Summer Is Magic (Alex Party Mix)",
+        "release_id": 357072,
+        "title": "Wrap Me Up (Radio Version)",
         "type_": "track"
       }
     ],
     "upcoming": [],
     "elapsed": 0,
-    "duration": 237,
-    "remaining": 237,
+    "duration": 235,
+    "remaining": 235,
     "progress": 0,
     "current_deck": 1,
-    "current_cd": 26,
-    "playback_state": "stopped",
-    "last_update_timestamp": 1784578965.850673,
+    "current_cd": 80,
+    "playback_state": "preparing",
+    "last_update_timestamp": 1784616262.4760523,
     "load_delay_seconds": 0,
     "load_delay_remaining": 0,
-    "mechanical_state": "ready",
-    "hardware_ready": true,
-    "display_disc": 26,
-    "loaded_disc": 26,
+    "mechanical_state": "unknown",
+    "hardware_ready": false,
+    "display_disc": null,
+    "loaded_disc": null,
     "door_open": false,
     "power_state": "unknown",
     "model": null,
-    "player_status_raw": "9D 70 00 C0 00 07 00",
-    "last_hardware_event": "PLAYER_STATUS",
+    "player_status_raw": null,
+    "last_hardware_event": null,
     "error": null,
     "playback_start_delay_seconds": 0,
     "playback_start_delay_enabled": false,
     "hardware_sync_state": "live",
     "hardware_state_verified": true,
-    "hardware_state_source": "stop"
+    "hardware_state_source": "player_status"
   },
   "current_index": 0,
-  "saved_at": 1784578965.8506856
+  "saved_at": 1784616262.477144
 }

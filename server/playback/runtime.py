@@ -437,6 +437,10 @@ class PlaybackRuntime:
 
     def _observe_playing_status(self) -> dict[str, Any]:
         with self._lock:
+            if self._state.playback_state == PLAYBACK_PREPARING:
+                self._state.mark_updated()
+                self._publish_locked(EVENT_PROGRESS_TICK)
+                return self.status_locked()
             if self._state.current_track:
                 resume_elapsed = self._state.paused_elapsed if self._state.playback_state == PLAYBACK_PAUSED else self._state.elapsed
                 self._mark_playing_locked(resume_elapsed)

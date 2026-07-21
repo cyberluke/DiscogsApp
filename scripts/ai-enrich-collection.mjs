@@ -120,6 +120,36 @@ function releaseId(release) {
   return release?.release_id ?? release?.id;
 }
 
+function releaseIdKey(release) {
+  const id = releaseId(release);
+  return id == null ? null : String(id);
+}
+
+function releaseIdSnapshot(releases) {
+  const ids = releases.map(releaseIdKey).filter(Boolean).sort();
+  return {
+    count: releases.length,
+    ids,
+    uniqueCount: new Set(ids).size,
+  };
+}
+
+function assertReleaseIntegrity(before, after) {
+  const missing = before.ids.filter(id => !after.ids.includes(id));
+  const added = after.ids.filter(id => !before.ids.includes(id));
+  const countChanged = before.count !== after.count;
+  const duplicateChanged = before.uniqueCount !== after.uniqueCount;
+
+  if (!countChanged && !duplicateChanged && missing.length === 0 && added.length === 0) {
+    return;
+  }
+
+  throw new Error(`Release integrity check failed after enrichment. `
+    + `before=${before.count}/${before.uniqueCount} after=${after.count}/${after.uniqueCount} `
+    + `missing=[${missing.join(', ')}] added=[${added.join(', ')}]. `
+    + `The script never intentionally removes or adds releases; restore the DB before continuing.`);
+}
+
 function estimateTokens(release, responseReserve) {
   const compact = {
     artist: release.artists_sort,
@@ -261,6 +291,7 @@ function printProgress(stats, total, startedAt) {
 async function main() {
   const options = parseArgs(process.argv.slice(2));
   const { releases, absolutePath } = await loadReleases(options.db);
+  const beforeSnapshot = releaseIdSnapshot(releases);
   const missingId = releases.filter(release => releaseId(release) == null).length;
   const uncached = releases.filter(release => releaseId(release) != null && (options.force || !isCached(release, options.aiVersion)));
   const pending = options.limit === null ? uncached : uncached.slice(0, options.limit);
@@ -290,6 +321,10 @@ async function main() {
     printProgress(stats, pending.length, startedAt);
     process.stdout.write('\n');
   }
+
+  const { releases: afterReleases } = await loadReleases(options.db);
+  assertReleaseIntegrity(beforeSnapshot, releaseIdSnapshot(afterReleases));
+  console.log(`release integrity: OK (${afterReleases.length} releases)`);
 
   if (stats.errors.length) {
     console.error(JSON.stringify({ errors: stats.errors.slice(0, 50), omitted: Math.max(0, stats.errors.length - 50) }, null, 2));

@@ -2,9 +2,10 @@ import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/co
 import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { PlaylistService } from '../playlist/playlist.service';
-import { AiTrackRecommendation, ChatContext, ChatResponse, PlaybackStatus, Track, VideoSyncState } from '../dao/track';
+import { AiMetadata, AiTrackRecommendation, ChatContext, ChatResponse, PlaybackStatus, Playlist, RecommendationResult, Track, VideoSyncState } from '../dao/track';
 import { PlaybackService } from '../now-playing/playback.service';
 import { AiDjChatMessage, AiDjService } from './ai-dj.service';
+import { ReleaseService } from '../release/release.service';
 
 const NATIVE_VIDEO_CLOCK_COMPENSATION_SECONDS = -1;
 const NATIVE_VIDEO_RATE_CORRECTION_THRESHOLD_SECONDS = 0.75;
@@ -55,6 +56,10 @@ export class AiDjComponent implements OnInit, OnDestroy {
   videoError = '';
   useNativeVideoOffset = true;
   nativeVideoManualOffsetSeconds = 0;
+  releases: RecommendationResult[] = [];
+  savedPlaylists: Playlist[] = [];
+  librarySearch = '';
+  libraryLoading = false;
   private playbackSubscription?: Subscription;
   private videoAssetId = '';
   private lastVideoSeek = 0;
@@ -69,11 +74,14 @@ export class AiDjComponent implements OnInit, OnDestroy {
   private programmaticVideoEventUntil = 0;
   private forceNextVideoSeek = false;
   private resetVideoOnNextStoppedStatus = false;
+  private lastRecommendationPlayKey = '';
+  private lastRecommendationPlayAt = 0;
 
   constructor(
     private readonly aiDjService: AiDjService,
     private readonly playbackService: PlaybackService,
     private readonly playlistService: PlaylistService,
+    private readonly releaseService: ReleaseService,
     private readonly router: Router
   ) {}
 
@@ -90,6 +98,7 @@ export class AiDjComponent implements OnInit, OnDestroy {
     if (!this.recommendations.length) {
       this.loadCurrentRecommendations();
     }
+    this.loadLibraryPanels();
     this.playbackSubscription = this.playbackService.status$.subscribe(status => {
       this.applyPlaybackStatus(status);
       const needsVideoRefresh = this.shouldRefreshVideoSync(status);
@@ -155,11 +164,35 @@ export class AiDjComponent implements OnInit, OnDestroy {
     this.sendMessage(suggestion);
   }
 
+  clearChatHistory(): void {
+    this.messages = [];
+    this.inputText = '';
+    this.error = '';
+    this.persistState();
+  }
+
+  submitChatFromEnter(event: Event): void {
+    const keyboardEvent = event as KeyboardEvent;
+    if (keyboardEvent.shiftKey) {
+      return;
+    }
+    keyboardEvent.preventDefault();
+    this.sendMessage();
+  }
+
   persistDraft(): void {
     this.persistState();
   }
 
   playRecommendation(recommendation: AiTrackRecommendation): void {
+    const playKey = this.trackSyncKey(recommendation.track);
+    const now = Date.now();
+    if (playKey === this.lastRecommendationPlayKey && now - this.lastRecommendationPlayAt < 3000) {
+      return;
+    }
+    this.lastRecommendationPlayKey = playKey;
+    this.lastRecommendationPlayAt = now;
+
     this.playbackService.playTrack(recommendation.track).subscribe({
       next: status => this.applyPlaybackStatus(status),
       error: () => this.error = 'Playback command failed'
@@ -312,6 +345,30 @@ export class AiDjComponent implements OnInit, OnDestroy {
     this.playlistService.addToPlaylist(recommendation.track);
   }
 
+  playTrackFromRelease(release: RecommendationResult, track: Track): void {
+    const hydratedTrack = this.hydrateReleaseTrack(release, track);
+    this.playbackService.playTrack(hydratedTrack).subscribe({
+      next: status => this.applyPlaybackStatus(status),
+      error: () => this.error = 'Playback command failed'
+    });
+  }
+
+  queueTrackFromRelease(release: RecommendationResult, track: Track): void {
+    this.playlistService.addToPlaylist(this.hydrateReleaseTrack(release, track));
+  }
+
+  playSavedPlaylist(playlist: Playlist): void {
+    this.playbackService.playPlaylist(playlist).subscribe({
+      next: status => this.applyPlaybackStatus(status),
+      error: () => this.error = 'Playlist playback failed'
+    });
+  }
+
+  useSavedPlaylist(playlist: Playlist): void {
+    this.playlistService.setPlaylist(playlist);
+    this.savedPlaylists = this.playlistService.getPlaylists();
+  }
+
   openRelease(recommendation: AiTrackRecommendation): void {
     this.router.navigate(['/'], { queryParams: { release_id: recommendation.release.release_id } });
   }
@@ -341,6 +398,23 @@ export class AiDjComponent implements OnInit, OnDestroy {
     return track.full_name || `${track.artist || ''} ${track.title}`.trim() || track.title;
   }
 
+  currentTrackSubtitle(): string {
+    const track = this.context?.current_track;
+    if (!track) {
+      return '';
+    }
+
+    const release = this.currentReleaseMatchesTrack(track) ? this.context?.current_release : null;
+    const details = [
+      track.artist,
+      release?.year,
+      release?.country,
+      !release ? track.album_title : null
+    ].filter(value => value !== undefined && value !== null && value !== '');
+
+    return details.join(' · ');
+  }
+
   primaryImageUrl(): string {
     return this.context?.current_track?.artwork_url || '/assets/default.png';
   }
@@ -348,6 +422,65 @@ export class AiDjComponent implements OnInit, OnDestroy {
   recommendationImageUrl(recommendation: AiTrackRecommendation): string {
     const image = (recommendation.release.images || [])[0] as { uri?: string; primary_image?: string } | undefined;
     return recommendation.track.artwork_url || image?.primary_image || image?.uri || '/assets/default.png';
+  }
+
+  currentCdRelease(): RecommendationResult | null {
+    const playback = this.context?.now_playing;
+    const currentDeck = Number(playback?.current_deck || playback?.current_track?.deck_number || 0);
+    const currentCd = Number(playback?.current_cd || playback?.current_track?.cd_position || 0);
+    if (!currentDeck || !currentCd) {
+      return null;
+    }
+    return this.releases.find(release => Number(release.deck_number) === currentDeck && Number(release.cd_position) === currentCd) || null;
+  }
+
+  currentCdTracks(): Track[] {
+    return this.currentCdRelease()?.tracklist?.filter(track => track.type_ !== 'heading') || [];
+  }
+
+  librarySearchResults(): RecommendationResult[] {
+    const query = this.librarySearch.trim().toLowerCase();
+    if (!query) {
+      return [];
+    }
+    return this.releases.filter(release => {
+      const haystack = [
+        release.artists_sort,
+        release.title,
+        String(release.year || ''),
+        String(release.cd_position || ''),
+        String(release.deck_number || ''),
+        ...(release.styles || []),
+        ...(release.genres || []),
+        ...(release.tracklist || []).map(track => track.title)
+      ].join(' ').toLowerCase();
+      return haystack.includes(query);
+    }).slice(0, 8);
+  }
+
+  currentAiMetadata(): AiMetadata | null {
+    const track = this.context?.current_track;
+    if (!track || !this.currentReleaseMatchesTrack(track)) {
+      return null;
+    }
+    return this.context?.current_release?.ai || null;
+  }
+
+  aiScoreEntries(metadata: AiMetadata | null): Array<{ label: string; value: number }> {
+    if (!metadata) {
+      return [];
+    }
+    return [
+      ['Energy', metadata.energy],
+      ['Danceability', metadata.danceability],
+      ['Euphoria', metadata.euphoria],
+      ['Club', metadata.club],
+      ['Radio', metadata.radio],
+      ['Nostalgia', metadata.nostalgia],
+      ['Cheese', metadata.cheese]
+    ]
+      .filter((entry): entry is [string, number] => typeof entry[1] === 'number')
+      .map(([label, value]) => ({ label, value }));
   }
 
   dnaText(values: string[] | undefined): string {
@@ -641,11 +774,66 @@ export class AiDjComponent implements OnInit, OnDestroy {
     this.persistState();
   }
 
+  private loadLibraryPanels(): void {
+    this.libraryLoading = true;
+    this.releaseService.getReleases().subscribe({
+      next: releases => {
+        this.releases = releases.map(release => this.hydrateRelease(release));
+        this.libraryLoading = false;
+      },
+      error: () => {
+        this.libraryLoading = false;
+        this.error = 'Library search is unavailable';
+      }
+    });
+    this.playlistService.loadAll$().subscribe({
+      next: playlists => this.savedPlaylists = this.prioritizeDynamicPlaylists(playlists),
+      error: () => this.error = 'Playlists are unavailable'
+    });
+  }
+
+  private prioritizeDynamicPlaylists(playlists: Playlist[]): Playlist[] {
+    return [...playlists].sort((left, right) => {
+      const leftFavourite = left.name === 'Favourite Tracks' ? 0 : 1;
+      const rightFavourite = right.name === 'Favourite Tracks' ? 0 : 1;
+      return leftFavourite - rightFavourite || left.name.localeCompare(right.name);
+    });
+  }
+
+  private hydrateRelease(release: RecommendationResult): RecommendationResult {
+    return {
+      ...release,
+      tracklist: (release.tracklist || []).map(track => this.hydrateReleaseTrack(release, track))
+    };
+  }
+
+  private hydrateReleaseTrack(release: RecommendationResult, track: Track): Track {
+    return {
+      ...track,
+      release_id: release.release_id,
+      deck_number: release.deck_number,
+      cd_position: release.cd_position,
+      artist: release.artists_sort === 'Various' && track.artists?.length ? track.artists[0].name : release.artists_sort,
+      full_name: track.full_name || `${release.artists_sort} - ${track.title}`,
+      album_title: release.title,
+      artwork_url: track.artwork_url || this.releaseImageUrl(release)
+    };
+  }
+
+  releaseImageUrl(release: RecommendationResult): string {
+    const image = (release.images || [])[0] as { uri?: string; primary_image?: string } | undefined;
+    return image?.primary_image || image?.uri || '/assets/default.png';
+  }
+
   private applyPlaybackStatus(status: PlaybackStatus): void {
     if (this.context) {
+      const currentRelease = status.current_track && this.currentReleaseMatchesTrack(status.current_track)
+        ? this.context.current_release
+        : null;
       this.context = {
         ...this.context,
         now_playing: status,
+        current_release: currentRelease,
         current_track: status.current_track,
         current_playlist: status.current_playlist
       };
@@ -653,6 +841,18 @@ export class AiDjComponent implements OnInit, OnDestroy {
     } else {
       this.refreshContext();
     }
+  }
+
+  private currentReleaseMatchesTrack(track: Track | null | undefined): boolean {
+    const release = this.context?.current_release;
+    if (!track || !release) {
+      return false;
+    }
+    if (track.release_id && release.release_id) {
+      return track.release_id === release.release_id;
+    }
+    return Number(track.cd_position) === Number(release.cd_position)
+      && Number(track.deck_number) === Number(release.deck_number);
   }
 
   private persistState(): void {

@@ -410,7 +410,7 @@ def enrich_hardware_payload(data):
 def resolve_observed_track(data):
     if data.get('status') == 'PREPARE_TRACK':
         return resolve_prepared_track(data.get('track'))
-    if data.get('status') == 'PLAY' or {'device', 'cd', 'track'}.issubset(data.keys()):
+    if {'device', 'cd', 'track'}.issubset(data.keys()):
         return resolve_observed_play_track(data)
     return None
 
@@ -536,12 +536,11 @@ def decode_deck_number(device):
 
 def find_release_track(release, track_position):
     search_positions = [str(track_position)]
-    if release.get('format_quantity', 1) and int(release.get('format_quantity', 1)) > 1:
-        search_positions.append(f"1-{track_position}")
-
     match = re.search(r'\(CD (\d+)\)$', release.get('title', ''))
     if match:
         search_positions.append(f"{int(match.group(1))}-{track_position}")
+    if release.get('format_quantity', 1) and int(release.get('format_quantity', 1)) > 1:
+        search_positions.append(f"1-{track_position}")
 
     for search_position in search_positions:
         for track in release.get('tracklist') or []:

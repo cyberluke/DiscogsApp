@@ -296,6 +296,18 @@ class PlaybackRuntimeTest(unittest.TestCase):
         self.assertEqual(status['playback_state'], 'playing')
         self.assertEqual(fake_slink.sent_transport, [])
 
+    def test_observed_play_during_preparing_waits_for_track_status(self):
+        runtime, fake_slink = self.make_runtime()
+        runtime.play_track(make_track(duration='1:00'))
+
+        status = runtime.handle_transport_status('PLAY', {'raw': '98 00'})
+
+        self.assertEqual(status['playback_state'], 'preparing')
+        self.assertEqual(status['elapsed'], 0)
+        self.assertEqual(status['progress'], 0)
+        self.assertEqual(fake_slink.sent_tracks, [make_track(duration='1:00')])
+        self.assertEqual(fake_slink.sent_transport, [])
+
     def test_observed_next_advances_queue_without_sending_track_command(self):
         runtime, fake_slink = self.make_runtime()
         first = make_track(position='1', title='First')

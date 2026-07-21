@@ -117,6 +117,50 @@ class AppCompatibilityTest(unittest.TestCase):
         self.assertEqual(runtime.observed_tracks[0]['deck_number'], 1)
         self.assertEqual(runtime.observed_tracks[0]['artwork_url'], 'https://example.test/cover.jpg')
 
+    def test_webhook_raw_play_state_does_not_default_to_cd_one_track_one(self):
+        runtime = FakeRuntime()
+        app_module.playback_runtime = runtime
+        original_use_kodi = app_module.USE_KODI
+        app_module.USE_KODI = False
+        self.addCleanup(lambda: setattr(app_module, 'USE_KODI', original_use_kodi))
+
+        response = app_module.process_webhook({'status': 'PLAY', 'raw': '98 00'})
+
+        self.assertEqual(response, ('OK', 200))
+        self.assertEqual(runtime.observed_tracks, [])
+        self.assertEqual(runtime.transport_statuses, [('PLAY', {'status': 'PLAY', 'raw': '98 00'})])
+
+    def test_webhook_multidisc_release_prefers_title_cd_number(self):
+        runtime = FakeRuntime()
+        app_module.playback_runtime = runtime
+        original_repository = app_module.data_repository
+        original_use_kodi = app_module.USE_KODI
+        app_module.USE_KODI = False
+        self.addCleanup(lambda: setattr(app_module, 'data_repository', original_repository))
+        self.addCleanup(lambda: setattr(app_module, 'USE_KODI', original_use_kodi))
+
+        class FakeRepository:
+            def find_releases_by_deck_cd(self, deck_number, cd_position):
+                return [{
+                    'release_id': 464972,
+                    'title': 'Bravo Hits 10 (CD 2)',
+                    'artists_sort': 'Various',
+                    'format_quantity': 2,
+                    'images': [],
+                    'tracklist': [
+                        {'position': '1-5', 'title': 'Find Another Way (Single Mix)', 'duration': '3:55'},
+                        {'position': '2-5', 'title': 'If I Give You My Number (100% Radio Mix)', 'duration': '3:13'},
+                    ],
+                }]
+
+        app_module.data_repository = FakeRepository()
+
+        response = app_module.process_webhook({'status': 'PLAY', 'device': '98', 'cd': '84', 'track': '05', 'duration': '193'})
+
+        self.assertEqual(response, ('OK', 200))
+        self.assertEqual(runtime.observed_tracks[0]['title'], 'If I Give You My Number (100% Radio Mix)')
+        self.assertEqual(runtime.observed_tracks[0]['position'], '2-5')
+
     def test_webhook_prepare_track_updates_runtime_from_esp32_playlist_command(self):
         runtime = FakeRuntime()
         app_module.playback_runtime = runtime

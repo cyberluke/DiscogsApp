@@ -969,6 +969,7 @@ class ChatService:
             return action_response
 
         candidates = self.pipeline.local_candidates(message, context, limit=self._candidate_limit(payload))
+        candidates = self._without_recent_recommendations(candidates, payload)
         if not candidates:
             return {
                 'response': 'I could not find a suitable local track in this collection for that request.',
@@ -1051,6 +1052,15 @@ class ChatService:
             if recommendations:
                 return recommendations
         return []
+
+    def _without_recent_recommendations(self, candidates: list[dict[str, Any]], payload: Mapping[str, Any]) -> list[dict[str, Any]]:
+        recent_recommendations = self._recent_recommendations_from_payload(payload)
+        if not recent_recommendations:
+            return candidates
+
+        recent_ids = {self.prompt_builder.candidate_id(recommendation) for recommendation in recent_recommendations}
+        filtered = [candidate for candidate in candidates if self.prompt_builder.candidate_id(candidate) not in recent_ids]
+        return filtered or candidates
 
     def _valid_recommendations(self, value: Any) -> list[dict[str, Any]]:
         if not isinstance(value, list):

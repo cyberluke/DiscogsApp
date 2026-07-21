@@ -122,6 +122,7 @@ export interface Artist {
     cd_position: number;
     images: unknown[];
     tracklist: Track[];
+    ai?: AiMetadata;
   }
 
   export interface RecommendationResponse {

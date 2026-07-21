@@ -5,6 +5,7 @@ import { HttpClient } from '@angular/common/http';
 import { Playlist, Track } from '../dao/track'; // Assuming Track is a class or interface
 import { environment } from '../../environments/environment';
 import { PlaybackService } from '../now-playing/playback.service';
+import { Observable, tap } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -54,15 +55,16 @@ export class PlaylistService {
   }
   
   loadAll(): void {
-    this.http.get<Playlist[]>(`${this.serviceUrl}/playlists`)
+    this.loadAll$()
     .subscribe({
-      next: (response) => {
-        this.playlists = response;
-      },
-      error: (error) => {
-        console.error('Error fetching playlists:', error);
-      }
+      error: error => console.error('Error fetching playlists:', error)
     });
+  }
+
+  loadAll$(): Observable<Playlist[]> {
+    return this.http.get<Playlist[]>(`${this.serviceUrl}/playlists`).pipe(
+      tap(response => this.playlists = response)
+    );
   }
 
   getPlaylists(): Playlist[] {

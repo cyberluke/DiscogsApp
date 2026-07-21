@@ -176,7 +176,7 @@ class SLinkClient:
     def discover(self) -> str:
         candidates = self._candidate_adapter_urls()
         LOGGER.info("Discovering ESP32 S-Link adapter across %d candidates", len(candidates))
-        with ThreadPoolExecutor(max_workers=64) as executor:
+        with ThreadPoolExecutor(max_workers=32) as executor:
             futures = {executor.submit(self._probe_adapter, url): url for url in candidates}
             for future in as_completed(futures):
                 payload = future.result()
@@ -192,7 +192,7 @@ class SLinkClient:
 
     def _probe_adapter(self, url: str) -> Mapping[str, Any] | None:
         try:
-            response = requests.get(urljoin(url.rstrip('/') + '/', 'status'), timeout=0.5)
+            response = requests.get(urljoin(url.rstrip('/') + '/', 'status'), timeout=2)
             response.raise_for_status()
             payload = response.json()
         except (requests.RequestException, ValueError):
@@ -224,7 +224,8 @@ class SLinkClient:
             except ValueError:
                 continue
             candidates.extend(f'http://{host}:8080' for host in network.hosts())
-        return candidates
+        unique_candidates = sorted(set(candidates), key=lambda url: (not url.startswith('http://192.168.137.'), url))
+        return unique_candidates
 
     def _local_ip_for_server(self) -> str:
         parsed = urlparse(self.server_url or '')

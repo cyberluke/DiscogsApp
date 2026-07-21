@@ -294,6 +294,38 @@ class ChatAPITest(unittest.TestCase):
         self.assertNotIn('identifiers', candidates[0])
         self.assertNotIn('release', candidates[0])
 
+    def test_chat_followup_excludes_recent_recommendations_from_candidate_pool(self):
+        repository = LargeFakeRepository()
+        runtime = FakePlaybackRuntime()
+        ai_client = FakeAIClient()
+        app = Flask(__name__)
+        app.register_blueprint(create_chat_api(repository, runtime, ai_client=ai_client))
+        client = app.test_client()
+
+        response = client.post('/api/chat', json={
+            'message': 'Continue this vibe',
+            'recent_recommendations': [
+                {
+                    'track': {
+                        'release_id': 200,
+                        'position': '1',
+                        'title': 'Protect Your Mind',
+                        'artist': 'DJ Sakin',
+                        'full_name': 'DJ Sakin - Protect Your Mind',
+                        'deck_number': 1,
+                        'cd_position': 11,
+                    },
+                    'release': {'release_id': 200, 'title': 'German Trance Memory', 'artists_sort': 'DJ Sakin'},
+                }
+            ],
+        })
+
+        self.assertEqual(response.status_code, 200)
+        prompt = json.loads(ai_client.user_prompt)
+        candidate_ids = {candidate['candidate_id'] for candidate in prompt['candidate_tracks']}
+        self.assertNotIn('200:1', candidate_ids)
+        self.assertNotEqual(response.get_json()['suggested_tracks'][0]['track']['release_id'], 200)
+
     def test_chat_prompt_preserves_precise_dance_taxonomy(self):
         response = self.client.post('/api/chat', json={'message': 'More Eurodance'})
 

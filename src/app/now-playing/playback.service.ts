@@ -190,6 +190,10 @@ export class PlaybackService implements OnDestroy {
       return;
     }
 
+    if (this.socket && (this.socket.readyState === WebSocket.CONNECTING || this.socket.readyState === WebSocket.OPEN)) {
+      return;
+    }
+
     try {
       this.socket = new WebSocket(this.websocketUrl());
       this.socket.onopen = () => this.zone.run(() => this.liveConnectedSubject.next(true));
@@ -254,9 +258,16 @@ export class PlaybackService implements OnDestroy {
   }
 
   private websocketUrl(): string {
-    const url = new URL(this.serviceUrl);
+    const configuredUrl = (environment as { websocketUrl?: string }).websocketUrl;
+    if (configuredUrl) {
+      return configuredUrl;
+    }
+
+    const url = new URL(this.serviceUrl, window.location.origin);
     url.protocol = url.protocol === 'https:' ? 'wss:' : 'ws:';
     url.pathname = '/playback/events';
+    url.search = '';
+    url.hash = '';
     return url.toString();
   }
 }

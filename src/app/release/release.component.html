@@ -53,15 +53,15 @@
         <c-container>
           <c-row>
             <c-col class="custom-width">
-                <c-carousel (itemChange)="onItemChange($event)" [interval]="0" *ngIf="releases && releases.length">
-                  <c-carousel-inner>
-                    <c-carousel-item *ngFor="let release of releases">
-                      <img loading="lazy" [src]="getPrimaryImageUrl(release)" [alt]="release.title" class="d-block w-600"  />
-                    </c-carousel-item>
-                  </c-carousel-inner>
-                  <c-carousel-control #prevControl [routerLink] caption="Previous" direction="prev"></c-carousel-control>
-                  <c-carousel-control #nextControl [routerLink] caption="Next" direction="next"></c-carousel-control>
-                </c-carousel>
+                <div class="release-viewer" *ngIf="release">
+                  <img loading="lazy" [src]="getPrimaryImageUrl(release)" [alt]="release.title" class="release-viewer-image" />
+                  <button class="release-viewer-control previous" type="button" (click)="prevSlide()" aria-label="Previous release">
+                    <mat-icon>chevron_left</mat-icon>
+                  </button>
+                  <button class="release-viewer-control next" type="button" (click)="nextSlide()" aria-label="Next release">
+                    <mat-icon>chevron_right</mat-icon>
+                  </button>
+                </div>
             </c-col>
             <c-col class="release-info">
               <div *ngIf="release">

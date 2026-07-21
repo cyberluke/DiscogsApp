@@ -114,7 +114,11 @@ BACKEND_WEBHOOK_PORT = int(os.getenv('BACKEND_WEBHOOK_PORT', '5000'))
 BACKEND_WEBHOOK_SCHEME = os.getenv('BACKEND_WEBHOOK_SCHEME', 'http')
 
 slink_client = SLinkClient(SONY_SLINK_SERVER)
-data_repository = LocalDataRepository()
+data_repository = LocalDataRepository(
+    releases_path=os.path.join('server', 'discogs_data_all.json'),
+    playlists_path=os.path.join('server', 'playlists.json'),
+    video_offsets_path='video_offsets.json',
+)
 playback_runtime = PlaybackRuntime(
     slink_client,
     advance_lead_seconds=PLAYBACK_ADVANCE_LEAD_SECONDS,

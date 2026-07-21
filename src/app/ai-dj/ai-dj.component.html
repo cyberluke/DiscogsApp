@@ -215,7 +215,7 @@
             <strong>{{ release.artists_sort }} - {{ release.title }}</strong>
             <small>Deck {{ release.deck_number }} · CD {{ release.cd_position }} · {{ release.year || 'Unknown year' }}</small>
           </div>
-          <button mat-icon-button type="button" (click)="playTrackFromRelease(release, release.tracklist[0])" [disabled]="!release.tracklist?.length" aria-label="Play first track">
+          <button mat-icon-button type="button" (click)="playTrackFromRelease(release, release.tracklist[0])" [disabled]="!release.tracklist.length" aria-label="Play first track">
             <mat-icon>play_arrow</mat-icon>
           </button>
           <button mat-icon-button type="button" (click)="openRelease({ release, track: release.tracklist[0], reason: '', confidence: 0, musical_dna: { shared: [], differs: [] }, actions: [] })" aria-label="Open release">

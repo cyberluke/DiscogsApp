@@ -507,6 +507,13 @@ class PlaybackRuntime:
 
     def _advance_locked(self, send_hardware: bool = True):
         if not self.queue_manager.advance(self._state):
+            adjacent_track = self._resolve_adjacent_track_locked('next')
+            if adjacent_track is not None:
+                self._set_current_track_from_metadata_locked(adjacent_track)
+                self._publish_locked(EVENT_QUEUE_CHANGED)
+                self._publish_locked(EVENT_PLAYBACK_STARTED)
+                return
+
             self._state.playback_state = PLAYBACK_STOPPED
             self._state.elapsed = self._state.duration
             self._state.remaining = 0

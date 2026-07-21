@@ -576,6 +576,37 @@ class PlaybackRuntimeTest(unittest.TestCase):
         self.assertEqual(status['error'], 'Unsupported duration format: bad')
         self.assertIn(('playback_error', 'error'), events)
 
+    def test_scheduler_auto_advances_single_track_via_adjacent_resolver(self):
+        """Seamless CD playback without a playlist: scheduler should resolve
+        the next track from the CD tracklist instead of stopping."""
+        first = make_track(position='1', title='First', duration='0:01')
+        second = make_track(position='2', title='Second', duration='0:30')
+        runtime, fake_slink = self.make_runtime_with_adjacent([first, second])
+        self.start_playback(runtime, first)
+
+        with runtime._lock:
+            runtime._state.started_at -= runtime.playback_start_offset_seconds + 2
+        runtime._scheduler.tick()
+
+        status = runtime.status()
+        self.assertEqual(status['current_track']['title'], 'Second')
+        self.assertEqual(status['playback_state'], 'playing')
+        self.assertEqual(status['progress'], 0)
+
+    def test_scheduler_stops_at_end_of_cd_without_adjacent_resolver(self):
+        """When there is no next track and no resolver, playback stops."""
+        track = make_track(position='1', title='Only', duration='0:01')
+        runtime, fake_slink = self.make_runtime()
+        self.start_playback(runtime, track)
+
+        with runtime._lock:
+            runtime._state.started_at -= runtime.playback_start_offset_seconds + 2
+        runtime._scheduler.tick()
+
+        status = runtime.status()
+        self.assertEqual(status['playback_state'], 'stopped')
+        self.assertEqual(status['progress'], 100)
+
 
 if __name__ == '__main__':
     unittest.main()

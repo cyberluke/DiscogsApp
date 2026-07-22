@@ -1,0 +1,31 @@
+{
+  "dolphin_recognizability": 6,
+  "dolphin_dominance": 7,
+  "dolphin_organic_quality": 4,
+  "waveform_subordination": 7,
+  "fft_subordination": 7,
+  "composition_order": 7,
+  "glow_quality": 5,
+  "bloom_appropriateness": 4,
+  "persistence_quality": 6,
+  "overall_fidelity": 5,
+  "issues": [
+    "Blown-out white hotspot on the dolphin's dorsal/back region reads as a whiteout blob rather than a lit phosphor surface",
+    "Dolphin silhouette is blocky and pixel-stepped with hard bitmap edges, looking like a low-res sprite instead of a graceful organic creature",
+    "Lack of body shading/gradient and rim light makes the dolphin appear flat and CAD-like",
+    "Tail fluke and pectoral fin are muddy and merge into the body, weakening the silhouette",
+    "Water-surface line includes one relatively bright continuous wave that competes slightly with the lower dolphin body",
+    "Bottom-right status text (164BPM / PHR) is fairly bright and pulls the eye away from the intended hierarchy",
+    "Bottom-left VU segments look like scattered bright blocks rather than clean meter segments"
+  ],
+  "suggestions": [
+    "Clamp the dolphin's peak luminance so the back no longer whites out; replace the hotspot with a soft gradient and a thin crisp rim-light edge",
+    "Smooth the dolphin outline (anti-aliasing or a higher-resolution mask) to remove stair-stepping and give an organic, arcing form",
+    "Add internal phosphor shading (brighter belly/edge, dimmer mid-body) so the dolphin reads as a 3D lit object, not a flat fill",
+    "Clarify the tail fluke and pectoral fin with a few defining dark gaps so the silhouette is unmistakable",
+    "Lower the contrast/brightness of the brightest water line so all wave rows stay subordinate and low-contrast",
+    "Dim the bottom-right telemetry text to match the low-contrast FFT/VU layer",
+    "Tidy the VU meter into evenly spaced segments with consistent low brightness",
+    "Add a short, clean persistence trail behind the dolphin (1-2 frame falloff) to evoke OEL afterglow without foggy smear"
+  ]
+}

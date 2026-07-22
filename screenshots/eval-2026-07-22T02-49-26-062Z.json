@@ -1,0 +1,28 @@
+{
+  "dolphin_recognizability": 7,
+  "dolphin_dominance": 8,
+  "dolphin_organic_quality": 5,
+  "waveform_subordination": 6,
+  "fft_subordination": 5,
+  "composition_order": 6,
+  "glow_quality": 6,
+  "bloom_appropriateness": 7,
+  "persistence_quality": 6,
+  "overall_fidelity": 6,
+  "issues": [
+    "Stray pixel 'spray' scattered above the dorsal fin and around the body muddies the silhouette, reading as noise/particles rather than a solid lit phosphor creature.",
+    "Dolphin lacks the subtle rim-light edge from the reference; the interior is a uniform dither with hard blocky pixel steps, hurting organic quality.",
+    "A bright full-width segmented bar along the very bottom plus right-side metadata text (128BPM / PHR / MIN) is not in the spec and competes with the dolphin, giving a modern-visualizer feel.",
+    "The left tail fluke looks fragmented and partly disconnected from the body, weakening the silhouette read.",
+    "The water band contains a fairly bright straight horizontal line that pushes wave contrast above the 'subtle, low-contrast' target.",
+    "The FFT reads as a random scatter of dots rather than a clean, low, graded bar graph."
+  ],
+  "suggestions": [
+    "Clean the dolphin silhouette: delete the stray spray pixels, join the tail fluke smoothly to the body, and add a 1px brighter rim-light outline so it reads as one solid lit object.",
+    "Cut bottom clutter: remove or strongly dim the full-width segmented bar and the right-side metadata text so the FFT stays a short low-contrast graph and the dolphin clearly dominates.",
+    "Lower wave-line brightness (especially the straight horizontal line) and constrain waves to two thin low-contrast rows within 15% of display height.",
+    "Give the dolphin organic volume with a gentle vertical dither gradient (brighter back edge / belly shading) instead of a flat uniform fill.",
+    "Tighten the glow: keep crisp pixel edges with a 1-2px halo and ensure bloom does not bleed the body or spray into fog.",
+    "Render the FFT as discrete vertical bars of graded height at low brightness rather than scattered dots, matching a real OEL spectrum readout."
+  ]
+}

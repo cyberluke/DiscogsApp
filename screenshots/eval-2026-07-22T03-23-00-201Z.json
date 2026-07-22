@@ -1,0 +1,28 @@
+{
+  "dolphin_recognizability": 6,
+  "dolphin_dominance": 7,
+  "dolphin_organic_quality": 3,
+  "waveform_subordination": 7,
+  "fft_subordination": 5,
+  "composition_order": 6,
+  "glow_quality": 4,
+  "bloom_appropriateness": 3,
+  "persistence_quality": 3,
+  "overall_fidelity": 4,
+  "issues": [
+    "Dolphin core is blown out to near-white, erasing internal body detail, pectoral fin, and rim light — reads as a glowing cloud rather than a lit phosphor creature",
+    "Bloom is far too aggressive on the dolphin; silhouette edges dissolve into a fuzzy halo instead of staying crisp with a gentle glow",
+    "Bottom-left VU/blob area is a foggy amorphous smear that competes visually with the dolphin and breaks the layout hierarchy",
+    "Persistence/afterglow looks like whole-object fog rather than short clean motion trails",
+    "Dolphin lacks a clearly defined pectoral fin and dorsal-fin edge; tail fluke merges into the body blob",
+    "Right-side status text and FFT bars are acceptable but the bright smear at lower-left draws the eye away from the intended dolphin-first reading order"
+  ],
+  "suggestions": [
+    "Drastically reduce bloom/gain on the dolphin so the body reads as a crisp phosphor outline with visible internal shading, defined dorsal fin, pectoral fin, and tail fluke",
+    "Add a subtle rim-light stroke along the dolphin's back to give it organic, three-dimensional form instead of a flat white mass",
+    "Tighten the persistence decay so trails are short and directional, eliminating the foggy smear at the bottom-left VU region",
+    "Cap peak pixel brightness (clamp the whiteout) so the brightest phosphor is cyan-white, not pure blown-out white",
+    "Lower the contrast/brightness of the bottom-left VU blob so it stops competing with the dolphin",
+    "Slightly reduce wave-line brightness so the water surface stays fully subordinate to the dolphin"
+  ]
+}

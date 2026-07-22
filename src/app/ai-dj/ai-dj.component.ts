@@ -1,11 +1,13 @@
 import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { Router } from '@angular/router';
-import { Subscription } from 'rxjs';
+import { ActivatedRoute, Router } from '@angular/router';
+import { Subscription, interval, switchMap } from 'rxjs';
 import { PlaylistService } from '../playlist/playlist.service';
-import { AiMetadata, AiTrackRecommendation, ChatContext, ChatResponse, PlaybackStatus, Playlist, RecommendationResult, Track, VideoSyncState } from '../dao/track';
+import { AiMetadata, AiTrackRecommendation, ChatContext, ChatResponse, PlaybackStatus, Playlist, QueueState, RecommendationResult, Track, VideoSyncState } from '../dao/track';
 import { PlaybackService } from '../now-playing/playback.service';
 import { AiDjChatMessage, AiDjService } from './ai-dj.service';
 import { ReleaseService } from '../release/release.service';
+import { CaptureService, CaptureStatus, CaptureProgress } from './capture.service';
+import { QueueService } from '../queue/queue.service';
 
 const NATIVE_VIDEO_CLOCK_COMPENSATION_SECONDS = -1;
 const NATIVE_VIDEO_RATE_CORRECTION_THRESHOLD_SECONDS = 0.75;
@@ -44,6 +46,10 @@ export class AiDjComponent implements OnInit, OnDestroy {
   context: ChatContext | null = null;
   messages: AiDjChatMessage[] = [];
   recommendations: AiTrackRecommendation[] = [];
+  djRecommendations: AiTrackRecommendation[] = [];
+  programQueueTab: 'queue' | 'dj' = 'queue';
+  queueState: QueueState | null = null;
+  private queueSubscription?: Subscription;
   inputText = '';
   chatLoading = false;
   recommendationLoading = false;
@@ -60,6 +66,15 @@ export class AiDjComponent implements OnInit, OnDestroy {
   savedPlaylists: Playlist[] = [];
   librarySearch = '';
   libraryLoading = false;
+
+  // CD Audio Capture (Experimental)
+  captureEnabled = false;
+  captureExpanded = false;
+  captureStatus: CaptureStatus | null = null;
+  captureProgress: CaptureProgress | null = null;
+  captureLoading = false;
+  private capturePollSub?: Subscription;
+
   private playbackSubscription?: Subscription;
   private videoAssetId = '';
   private lastVideoSeek = 0;
@@ -81,15 +96,20 @@ export class AiDjComponent implements OnInit, OnDestroy {
     private readonly aiDjService: AiDjService,
     private readonly playbackService: PlaybackService,
     private readonly playlistService: PlaylistService,
+    private readonly queueService: QueueService,
     private readonly releaseService: ReleaseService,
-    private readonly router: Router
+    private readonly captureService: CaptureService,
+    private readonly router: Router,
+    private readonly route: ActivatedRoute
   ) {}
 
   ngOnInit(): void {
+    this.initCaptureGate();
     const state = this.aiDjService.stateSnapshot();
     this.context = state.context;
     this.messages = state.messages;
     this.recommendations = state.recommendations;
+    this.djRecommendations = state.djRecommendations || [];
     this.inputText = state.inputText;
     this.aiUsed = state.aiUsed;
     this.useNativeVideoOffset = state.useNativeVideoOffset;
@@ -99,6 +119,9 @@ export class AiDjComponent implements OnInit, OnDestroy {
       this.loadCurrentRecommendations();
     }
     this.loadLibraryPanels();
+    if (this.captureEnabled) {
+      this.refreshCaptureStatus();
+    }
     this.playbackSubscription = this.playbackService.status$.subscribe(status => {
       this.applyPlaybackStatus(status);
       const needsVideoRefresh = this.shouldRefreshVideoSync(status);
@@ -108,10 +131,80 @@ export class AiDjComponent implements OnInit, OnDestroy {
         this.syncVideoToPlaybackStatus(status);
       }
     });
+    this.queueSubscription = this.queueService.queue$.subscribe(state => this.queueState = state);
+    this.queueService.refresh().subscribe({ error: () => undefined });
   }
 
   ngOnDestroy(): void {
     this.playbackSubscription?.unsubscribe();
+    this.queueSubscription?.unsubscribe();
+    this.stopCapturePolling();
+  }
+
+  // ------------------------------------------------------------------
+  // Live queue rail
+  // ------------------------------------------------------------------
+  get queueTracks(): Track[] {
+    return this.queueState?.queue ?? [];
+  }
+
+  get queueCurrentIndex(): number {
+    return this.queueState?.current_index ?? -1;
+  }
+
+  get queueUpcoming(): number {
+    return this.queueState?.queue_stats?.upcoming ?? 0;
+  }
+
+  get queueTotal(): number {
+    return this.queueState?.queue_stats?.total ?? 0;
+  }
+
+  get queueShuffle(): boolean {
+    return this.queueState?.shuffle ?? false;
+  }
+
+  get queueRepeat(): string {
+    return this.queueState?.repeat ?? 'off';
+  }
+
+  queueRepeatIcon(): string {
+    return this.queueRepeat === 'one' ? 'repeat_one' : 'repeat';
+  }
+
+  queueRepeatLabel(): string {
+    const labels: Record<string, string> = { off: 'Repeat off', one: 'Repeat one', all: 'Repeat all' };
+    return labels[this.queueRepeat] ?? 'Repeat off';
+  }
+
+  queueIsCurrent(index: number): boolean {
+    return index === this.queueCurrentIndex;
+  }
+
+  queuePlayIndex(index: number): void {
+    this.queueService.playIndex(index).subscribe({ error: () => this.error = 'Queue command failed' });
+  }
+
+  queueRemove(index: number): void {
+    this.queueService.remove(index).subscribe({ error: () => this.error = 'Queue command failed' });
+  }
+
+  queueMoveToTop(index: number): void {
+    this.queueService.moveToTop(index).subscribe({ error: () => this.error = 'Queue command failed' });
+  }
+
+  queueToggleShuffle(): void {
+    this.queueService.setShuffle(!this.queueShuffle).subscribe({ error: () => this.error = 'Queue command failed' });
+  }
+
+  queueCycleRepeat(): void {
+    const modes: Array<'off' | 'one' | 'all'> = ['off', 'all', 'one'];
+    const next = modes[(modes.indexOf(this.queueRepeat as 'off' | 'one' | 'all') + 1) % modes.length];
+    this.queueService.setRepeat(next).subscribe({ error: () => this.error = 'Queue command failed' });
+  }
+
+  queueClear(): void {
+    this.queueService.clear().subscribe({ error: () => this.error = 'Queue command failed' });
   }
 
   refreshContext(): void {
@@ -342,7 +435,9 @@ export class AiDjComponent implements OnInit, OnDestroy {
   }
 
   queueRecommendation(recommendation: AiTrackRecommendation): void {
-    this.playlistService.addToPlaylist(recommendation.track);
+    this.queueService.add(recommendation.track, 'end').subscribe({
+      error: () => this.error = 'Failed to add track to queue'
+    });
   }
 
   playTrackFromRelease(release: RecommendationResult, track: Track): void {
@@ -354,7 +449,21 @@ export class AiDjComponent implements OnInit, OnDestroy {
   }
 
   queueTrackFromRelease(release: RecommendationResult, track: Track): void {
-    this.playlistService.addToPlaylist(this.hydrateReleaseTrack(release, track));
+    this.queueService.add(this.hydrateReleaseTrack(release, track), 'end').subscribe({
+      error: () => this.error = 'Failed to add track to queue'
+    });
+  }
+
+  queueReleaseTracks(release: RecommendationResult): void {
+    const tracks = (release.tracklist || [])
+      .filter(track => track.type_ !== 'heading')
+      .map(track => this.hydrateReleaseTrack(release, track));
+    if (!tracks.length) {
+      return;
+    }
+    this.queueService.addMany(tracks, 'end').subscribe({
+      error: () => this.error = 'Failed to add tracks to queue'
+    });
   }
 
   playSavedPlaylist(playlist: Playlist): void {
@@ -761,6 +870,9 @@ export class AiDjComponent implements OnInit, OnDestroy {
   private applyResponse(response: ChatResponse, appendAssistant: boolean): void {
     this.context = response.context;
     this.recommendations = response.suggested_tracks || [];
+    if (response.dj_recommendations?.length) {
+      this.djRecommendations = response.dj_recommendations;
+    }
     this.aiUsed = !!response.ai_used;
     if (appendAssistant) {
       this.messages = [...this.messages, {
@@ -772,6 +884,175 @@ export class AiDjComponent implements OnInit, OnDestroy {
     this.chatLoading = false;
     this.recommendationLoading = false;
     this.persistState();
+  }
+
+  // ===================================================================
+  // CD Audio Capture (Experimental)
+  // ===================================================================
+
+  /**
+   * Feature gate for the experimental capture panel.
+   * Enabled via the `?experimental=true` URL param (persisted to
+   * localStorage) or by visiting with `?experimental=false` to disable.
+   */
+  private initCaptureGate(): void {
+    const param = this.route.snapshot.queryParamMap.get('experimental');
+    if (param !== null) {
+      const enabled = param === 'true' || param === '1';
+      try {
+        localStorage.setItem('aiDj.experimentalCapture', String(enabled));
+      } catch { /* storage unavailable */ }
+      this.captureEnabled = enabled;
+    } else {
+      try {
+        this.captureEnabled = localStorage.getItem('aiDj.experimentalCapture') === 'true';
+      } catch {
+        this.captureEnabled = false;
+      }
+    }
+  }
+
+  get captureActive(): boolean {
+    return this.captureStatus?.state === 'running' || this.captureStatus?.state === 'paused';
+  }
+
+  get captureStateLabel(): string {
+    switch (this.captureStatus?.state) {
+      case 'running': return 'Recording';
+      case 'paused': return 'Paused';
+      case 'stopping': return 'Stopping...';
+      default: return 'Idle';
+    }
+  }
+
+  get captureToggleLabel(): string {
+    if (this.captureStatus?.state === 'stopping') { return 'Stopping…'; }
+    if (this.captureActive) { return this.captureStatus?.state === 'paused' ? 'Recorder Paused' : 'Recorder On'; }
+    return this.captureStatus?.has_unfinished ? 'Resume Recorder' : 'Enable Recorder';
+  }
+
+  /** Master switch: flips the background recorder on or off. */
+  toggleCapture(): void {
+    if (this.captureActive) {
+      this.stopCapture();
+    } else {
+      this.startCapture();
+    }
+  }
+
+  /** Record the currently playing track via SPDIF. Auto-stops on track change. */
+  recordCurrentTrack(): void {
+    if (this.captureActive) {
+      // Already recording — treat as stop
+      this.stopCapture();
+      return;
+    }
+    this.captureLoading = true;
+    this.captureService.recordCurrent().subscribe({
+      next: res => {
+        this.captureLoading = false;
+        if (res.error) {
+          this.error = res.error;
+        } else {
+          this.refreshCaptureStatus();
+          this.startCapturePolling();
+        }
+      },
+      error: () => {
+        this.captureLoading = false;
+        this.error = 'Failed to start track recording';
+      }
+    });
+  }
+
+  startCapture(): void {
+    this.captureLoading = true;
+    this.captureService.start().subscribe({
+      next: () => {
+        this.captureLoading = false;
+        this.refreshCaptureStatus();
+        this.startCapturePolling();
+      },
+      error: () => {
+        this.captureLoading = false;
+        this.error = 'Failed to start capture';
+      }
+    });
+  }
+
+  stopCapture(): void {
+    this.captureService.stop().subscribe({
+      next: () => this.refreshCaptureStatus(),
+      error: () => this.error = 'Failed to stop capture'
+    });
+  }
+
+  pauseCapture(): void {
+    this.captureService.pause().subscribe({
+      next: () => this.refreshCaptureStatus(),
+      error: () => this.error = 'Failed to pause capture'
+    });
+  }
+
+  resumeCapture(): void {
+    this.captureService.resume().subscribe({
+      next: () => this.refreshCaptureStatus(),
+      error: () => this.error = 'Failed to resume capture'
+    });
+  }
+
+  refreshCaptureStatus(): void {
+    this.captureService.status().subscribe({
+      next: status => {
+        this.captureStatus = status;
+        if (status.state === 'running' || status.state === 'paused') {
+          this.startCapturePolling();
+        } else {
+          this.stopCapturePolling();
+        }
+      },
+      error: () => { /* capture API may not be available */ }
+    });
+    this.captureService.progress().subscribe({
+      next: progress => this.captureProgress = progress,
+      error: () => {}
+    });
+  }
+
+  formatCaptureTime(seconds: number): string {
+    if (!seconds || seconds <= 0) { return '0:00'; }
+    const h = Math.floor(seconds / 3600);
+    const m = Math.floor((seconds % 3600) / 60);
+    const s = Math.floor(seconds % 60);
+    if (h > 0) { return `${h}:${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`; }
+    return `${m}:${String(s).padStart(2, '0')}`;
+  }
+
+  private startCapturePolling(): void {
+    if (this.capturePollSub) { return; }
+    this.capturePollSub = interval(3000).pipe(
+      switchMap(() => this.captureService.status())
+    ).subscribe({
+      next: status => {
+        this.captureStatus = status;
+        if (status.state === 'idle' || status.state === 'stopping') {
+          this.stopCapturePolling();
+        }
+      },
+      error: () => this.stopCapturePolling()
+    });
+    // Also poll progress
+    interval(3000).pipe(
+      switchMap(() => this.captureService.progress())
+    ).subscribe({
+      next: progress => this.captureProgress = progress,
+      error: () => {}
+    });
+  }
+
+  private stopCapturePolling(): void {
+    this.capturePollSub?.unsubscribe();
+    this.capturePollSub = undefined;
   }
 
   private loadLibraryPanels(): void {
@@ -860,6 +1141,7 @@ export class AiDjComponent implements OnInit, OnDestroy {
       context: this.context,
       messages: this.messages,
       recommendations: this.recommendations,
+      djRecommendations: this.djRecommendations,
       inputText: this.inputText,
       aiUsed: this.aiUsed,
       useNativeVideoOffset: this.useNativeVideoOffset,

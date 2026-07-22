@@ -1,0 +1,28 @@
+{
+  "dolphin_recognizability": 6,
+  "dolphin_dominance": 6,
+  "dolphin_organic_quality": 4,
+  "waveform_subordination": 3,
+  "fft_subordination": 7,
+  "composition_order": 5,
+  "glow_quality": 4,
+  "bloom_appropriateness": 4,
+  "persistence_quality": 4,
+  "overall_fidelity": 5,
+  "issues": [
+    "Dolphin is rendered as a noisy dithered dot field rather than a solid lit-phosphor silhouette, so the body, fins and tail read as scattered static instead of a coherent creature.",
+    "The water/reflection band directly below the dolphin is far too bright, dense and noisy; it competes with the dolphin for the eye and blows past the 15% height budget for subordinate waves.",
+    "No clean rim light or defined edge on the dolphin — the outline dissolves into stray pixels, killing the crisp lit-object look the reference demands.",
+    "Phosphor glow reads as grainy per-pixel dither rather than a soft OEL bloom with a gentle halo; it looks like static, not lit phosphor.",
+    "No perceptible short persistence trail on the dolphin; the dithering creates a foggy/static impression instead of a clean motion afterglow.",
+    "Vertical balance is off — the dolphin sits high while the lower half is dominated by the bright water noise, weakening the dolphin -> text -> waves -> FFT hierarchy."
+  ],
+  "suggestions": [
+    "Replace the dithered dolphin fill with a solid (or smoothly gradient-shaded) phosphor body plus a crisp 1px rim-light outline so the silhouette (head, dorsal fin, pectoral fin, tail fluke) reads instantly and organically.",
+    "Drastically dim and thin the water surface to 2-3 low-contrast wavy lines confined to <=15% of display height, and delete the bright noisy reflection band that currently competes with the dolphin.",
+    "Add a real subtle gaussian bloom halo around the dolphin edges instead of per-pixel dither noise, so objects are crisp with a gentle glow rather than speckled.",
+    "Implement a true short persistence/afterglow buffer (1-2 frame exponential decay) on moving elements rather than relying on static dither, giving a clean trail without whole-scene smear.",
+    "Re-balance the composition so the dolphin occupies the central 50-60% of height and clearly dominates; push track text, waves, FFT and VU/info readouts firmly into low-contrast supporting roles.",
+    "Cut overall speckle/noise across the panel — genuine OEL phosphor is smooth and continuous, not a dithered static field; reserve dithering only for soft gradients, not the main subject."
+  ]
+}

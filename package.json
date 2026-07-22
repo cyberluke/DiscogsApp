@@ -43,7 +43,10 @@
     "classlist.js": "^1.1.20150312",
     "core-js": "^3.36.0",
     "express": "^4.18.2",
+    "gsap": "^3.15.0",
     "papaparse": "^5.4.1",
+    "pixi-filters": "^6.1.5",
+    "pixi.js": "^8.19.0",
     "rxjs": "~7.8.0",
     "tslib": "^2.3.0",
     "web-animations-js": "^2.3.2",
@@ -59,6 +62,7 @@
     "@types/jasmine": "~4.3.0",
     "@types/node": "^18.18.0",
     "@types/papaparse": "^5.3.10",
+    "@types/pngjs": "^6.0.5",
     "browser-sync": "^3.0.0",
     "com.hughisaacs2.cordova.plugins.androidtvplugin": "github:hughisaacs2/Cordova-Android-TV-Plugin",
     "cordova-android": "^12.0.1",
@@ -73,6 +77,8 @@
     "karma-coverage": "~2.2.0",
     "karma-jasmine": "~5.1.0",
     "karma-jasmine-html-reporter": "~2.1.0",
+    "playwright": "^1.61.1",
+    "pngjs": "^7.0.0",
     "typescript": "~5.2.2"
   },
   "cordova": {

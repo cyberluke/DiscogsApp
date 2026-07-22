@@ -1,0 +1,30 @@
+{
+  "dolphin_recognizability": 4,
+  "dolphin_dominance": 6,
+  "dolphin_organic_quality": 3,
+  "waveform_subordination": 6,
+  "fft_subordination": 5,
+  "composition_order": 6,
+  "glow_quality": 4,
+  "bloom_appropriateness": 3,
+  "persistence_quality": 4,
+  "overall_fidelity": 4,
+  "issues": [
+    "Dolphin core is blown out to near-white; the phosphor reads as a whiteout hotspot rather than a lit object with a gentle halo",
+    "Dolphin silhouette is fragmented into two disconnected masses (an upper arc and a separate lower streak) instead of one coherent body, so dorsal fin, tail fluke and pectoral fin are not legible",
+    "Heavy dithered noise across the dolphin makes it look like static/smeared cloud, not a graceful living creature or a crisp OEL sprite",
+    "Bottom strip is cluttered with extra readouts (73BPM, PHR 13/32, 11%) plus bright VU blocks that compete with the centerpiece and break the dolphin-first hierarchy",
+    "Bloom radius is too large and uniform, bleeding the dolphin edges into the background and erasing rim-light definition",
+    "Water-surface lines are nearly indistinguishable from the horizontal divider line, so the 'waves' layer does not read as its own subtle element",
+    "Persistence reads as random grain rather than a short directional afterglow trail behind the leap"
+  ],
+  "suggestions": [
+    "Cut peak luminance of the dolphin body so the brightest pixels sit at a soft cyan, not white; reserve full brightness only for a thin rim-light edge",
+    "Redraw the dolphin as a single closed silhouette with clearly shaped snout, dorsal fin, pectoral fin and tail fluke, then apply glow as a post pass so the form stays crisp underneath",
+    "Reduce bloom kernel size and intensity by roughly half so the halo is a tight 1-2px aura instead of a foggy cloud",
+    "Replace the noisy dither fill with a smooth phosphor gradient plus a sparse, ordered dither only at the silhouette edges for the OEL texture",
+    "Dim or remove the secondary telemetry (BPM/PHR/percentage) and lower the VU/FFT segment brightness so the bottom band stays subordinate",
+    "Render the water as exactly 2-3 thin, low-contrast horizontal wave lines with their own vertical gap, clearly separated from both the dolphin and the FFT row",
+    "Implement persistence as a 2-3 frame decaying trail offset along the leap arc, not as full-frame grain, so motion feels like phosphor decay"
+  ]
+}

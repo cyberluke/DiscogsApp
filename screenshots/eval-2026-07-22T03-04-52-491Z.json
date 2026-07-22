@@ -1,0 +1,30 @@
+{
+  "dolphin_recognizability": 7,
+  "dolphin_dominance": 6,
+  "dolphin_organic_quality": 4,
+  "waveform_subordination": 7,
+  "fft_subordination": 5,
+  "composition_order": 6,
+  "glow_quality": 5,
+  "bloom_appropriateness": 7,
+  "persistence_quality": 6,
+  "overall_fidelity": 5,
+  "issues": [
+    "Dolphin body is filled with a heavy halftone/dither pattern, reading as static or noise rather than a smooth lit phosphor creature; the clean silhouette and rim light are lost in the speckle.",
+    "Dolphin is compressed into the top ~40% of the frame and oriented nearly horizontally, so it never becomes the arcing centerpiece occupying the middle 50-60% of display height.",
+    "The leap arc is weak: the body looks like a flat glide, the tail fluke is ambiguous, and the pectoral fin barely registers, hurting the graceful leaping pose.",
+    "The bottom third is over-busy: full-width FFT segments, the left VU meter, and right-side telemetry text together form a bright band that competes with the dolphin for attention.",
+    "Right-side metadata (128BPM, PHR 16/32, etc.) is not part of the reference OEL layout and pulls the eye away from the dolphin toward the corner.",
+    "Phosphor glow on the dolphin is flat because the dither breaks up the surface; there is no soft halo or back rim light to make it read as a glowing 3D object.",
+    "Scattered stray pixels around and below the dolphin read as random noise rather than intentional water splash or short persistence trails."
+  ],
+  "suggestions": [
+    "Replace the halftone dither fill on the dolphin with a mostly solid phosphor fill plus a brighter 1px rim light along the back/head and a slightly dimmer interior, so the body reads as a lit, rounded creature instead of a noise field.",
+    "Enlarge the dolphin and shift it into the vertical center, raising its height to roughly 50-60% of the display, and strengthen the leap arc by lifting the tail and curving the spine into a clear crescent.",
+    "Sharpen the anatomy: a distinct triangular dorsal fin, a forked tail fluke, a visible pectoral fin, and a defined rostrum with a single eye pixel, all joined by smooth curves rather than blocky steps.",
+    "Dim the FFT bars and confine them to the bottom ~13% at low contrast, and remove or heavily dim the right-side telemetry text so the lower band stops competing with the dolphin.",
+    "Add a short, directional persistence trail fading behind the tail and pectoral fin to imply motion, keeping it 2-3 frames long so it never fogs the whole scene.",
+    "Apply a gentle bloom halo around the dolphin silhouette only, keeping the core edges crisp, to sell the authentic OEL phosphor glow without a whiteout.",
+    "Drop the water-surface lines to an even lower contrast and thinner stroke so they sit unambiguously beneath and behind the dolphin as a subordinate layer."
+  ]
+}

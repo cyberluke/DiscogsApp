@@ -1,0 +1,320 @@
+{
+  "frameWidth": 167,
+  "frameHeight": 64,
+  "frameCount": 61,
+  "cols": 8,
+  "rows": 8,
+  "fps": 12,
+  "phosphor": {
+    "r": 255,
+    "g": 255,
+    "b": 255
+  },
+  "frames": [
+    {
+      "file": "frame-0001.dither.png",
+      "width": 93,
+      "height": 64
+    },
+    {
+      "file": "frame-0002.dither.png",
+      "width": 97,
+      "height": 64
+    },
+    {
+      "file": "frame-0003.dither.png",
+      "width": 99,
+      "height": 64
+    },
+    {
+      "file": "frame-0004.dither.png",
+      "width": 101,
+      "height": 64
+    },
+    {
+      "file": "frame-0005.dither.png",
+      "width": 102,
+      "height": 64
+    },
+    {
+      "file": "frame-0006.dither.png",
+      "width": 103,
+      "height": 64
+    },
+    {
+      "file": "frame-0007.dither.png",
+      "width": 105,
+      "height": 64
+    },
+    {
+      "file": "frame-0008.dither.png",
+      "width": 107,
+      "height": 64
+    },
+    {
+      "file": "frame-0009.dither.png",
+      "width": 109,
+      "height": 64
+    },
+    {
+      "file": "frame-0010.dither.png",
+      "width": 109,
+      "height": 64
+    },
+    {
+      "file": "frame-0011.dither.png",
+      "width": 111,
+      "height": 64
+    },
+    {
+      "file": "frame-0012.dither.png",
+      "width": 113,
+      "height": 64
+    },
+    {
+      "file": "frame-0013.dither.png",
+      "width": 114,
+      "height": 64
+    },
+    {
+      "file": "frame-0014.dither.png",
+      "width": 114,
+      "height": 64
+    },
+    {
+      "file": "frame-0015.dither.png",
+      "width": 116,
+      "height": 64
+    },
+    {
+      "file": "frame-0016.dither.png",
+      "width": 119,
+      "height": 64
+    },
+    {
+      "file": "frame-0017.dither.png",
+      "width": 120,
+      "height": 64
+    },
+    {
+      "file": "frame-0018.dither.png",
+      "width": 122,
+      "height": 64
+    },
+    {
+      "file": "frame-0019.dither.png",
+      "width": 123,
+      "height": 64
+    },
+    {
+      "file": "frame-0020.dither.png",
+      "width": 124,
+      "height": 64
+    },
+    {
+      "file": "frame-0021.dither.png",
+      "width": 125,
+      "height": 64
+    },
+    {
+      "file": "frame-0022.dither.png",
+      "width": 123,
+      "height": 64
+    },
+    {
+      "file": "frame-0023.dither.png",
+      "width": 121,
+      "height": 64
+    },
+    {
+      "file": "frame-0024.dither.png",
+      "width": 120,
+      "height": 64
+    },
+    {
+      "file": "frame-0025.dither.png",
+      "width": 119,
+      "height": 64
+    },
+    {
+      "file": "frame-0026.dither.png",
+      "width": 117,
+      "height": 64
+    },
+    {
+      "file": "frame-0027.dither.png",
+      "width": 116,
+      "height": 64
+    },
+    {
+      "file": "frame-0028.dither.png",
+      "width": 115,
+      "height": 64
+    },
+    {
+      "file": "frame-0029.dither.png",
+      "width": 114,
+      "height": 64
+    },
+    {
+      "file": "frame-0030.dither.png",
+      "width": 113,
+      "height": 64
+    },
+    {
+      "file": "frame-0031.dither.png",
+      "width": 112,
+      "height": 64
+    },
+    {
+      "file": "frame-0032.dither.png",
+      "width": 111,
+      "height": 64
+    },
+    {
+      "file": "frame-0033.dither.png",
+      "width": 110,
+      "height": 64
+    },
+    {
+      "file": "frame-0034.dither.png",
+      "width": 110,
+      "height": 64
+    },
+    {
+      "file": "frame-0035.dither.png",
+      "width": 109,
+      "height": 64
+    },
+    {
+      "file": "frame-0036.dither.png",
+      "width": 109,
+      "height": 64
+    },
+    {
+      "file": "frame-0037.dither.png",
+      "width": 109,
+      "height": 64
+    },
+    {
+      "file": "frame-0038.dither.png",
+      "width": 108,
+      "height": 64
+    },
+    {
+      "file": "frame-0039.dither.png",
+      "width": 108,
+      "height": 64
+    },
+    {
+      "file": "frame-0040.dither.png",
+      "width": 108,
+      "height": 64
+    },
+    {
+      "file": "frame-0041.dither.png",
+      "width": 108,
+      "height": 64
+    },
+    {
+      "file": "frame-0042.dither.png",
+      "width": 109,
+      "height": 64
+    },
+    {
+      "file": "frame-0043.dither.png",
+      "width": 111,
+      "height": 64
+    },
+    {
+      "file": "frame-0044.dither.png",
+      "width": 111,
+      "height": 64
+    },
+    {
+      "file": "frame-0045.dither.png",
+      "width": 112,
+      "height": 64
+    },
+    {
+      "file": "frame-0046.dither.png",
+      "width": 116,
+      "height": 64
+    },
+    {
+      "file": "frame-0047.dither.png",
+      "width": 119,
+      "height": 64
+    },
+    {
+      "file": "frame-0048.dither.png",
+      "width": 121,
+      "height": 64
+    },
+    {
+      "file": "frame-0049.dither.png",
+      "width": 120,
+      "height": 64
+    },
+    {
+      "file": "frame-0050.dither.png",
+      "width": 129,
+      "height": 64
+    },
+    {
+      "file": "frame-0051.dither.png",
+      "width": 130,
+      "height": 64
+    },
+    {
+      "file": "frame-0052.dither.png",
+      "width": 134,
+      "height": 64
+    },
+    {
+      "file": "frame-0053.dither.png",
+      "width": 136,
+      "height": 64
+    },
+    {
+      "file": "frame-0054.dither.png",
+      "width": 155,
+      "height": 64
+    },
+    {
+      "file": "frame-0055.dither.png",
+      "width": 142,
+      "height": 64
+    },
+    {
+      "file": "frame-0056.dither.png",
+      "width": 167,
+      "height": 64
+    },
+    {
+      "file": "frame-0057.dither.png",
+      "width": 125,
+      "height": 64
+    },
+    {
+      "file": "frame-0058.dither.png",
+      "width": 124,
+      "height": 64
+    },
+    {
+      "file": "frame-0059.dither.png",
+      "width": 124,
+      "height": 64
+    },
+    {
+      "file": "frame-0060.dither.png",
+      "width": 123,
+      "height": 64
+    },
+    {
+      "file": "frame-0061.dither.png",
+      "width": 122,
+      "height": 64
+    }
+  ]
+}

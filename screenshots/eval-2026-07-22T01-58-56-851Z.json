@@ -1,0 +1,30 @@
+{
+  "dolphin_recognizability": 5,
+  "dolphin_dominance": 5,
+  "dolphin_organic_quality": 3,
+  "waveform_subordination": 5,
+  "fft_subordination": 7,
+  "composition_order": 4,
+  "glow_quality": 4,
+  "bloom_appropriateness": 5,
+  "persistence_quality": 3,
+  "overall_fidelity": 4,
+  "issues": [
+    "Dolphin is clipped by the top edge of the display — the tail fluke / upper fin is cut off, breaking the silhouette",
+    "Dolphin is shoved into the upper-right quadrant instead of arcing across the centered middle 50-60% of the panel",
+    "Dolphin body is a flat solid teal fill with a single thin outline — reads as a CAD/vector shape, not a lit phosphor creature; no internal shading, no pectoral fin, no real rim-light gradient",
+    "No visible phosphor bloom halo around the dolphin; it looks pasted-on rather than glowing",
+    "No persistence / afterglow trails visible anywhere, so the OEL motion character is missing",
+    "Water-surface band is too tall and too high-contrast (multiple stacked wavy lines spanning full width), competing with the dolphin",
+    "Right-side status text (120BPM / PHR / MEM) is bright cyan and pulls the eye away from the centerpiece",
+    "Overall palette/render feels like a flat modern vector graphic rather than a 320x128 monochrome phosphor panel"
+  ],
+  "suggestions": [
+    "Re-center the dolphin and shrink/rotate it so the entire body (head, dorsal fin, pectoral fin, tail fluke) fits inside the frame and arcs gracefully across the middle 50-60% of height",
+    "Replace the flat fill with a phosphor treatment: darker interior, bright rim-light edge, and a soft outer glow halo so it reads as a lit OEL object",
+    "Add short, clean persistence trails behind the dolphin to convey motion without fogging the scene",
+    "Reduce the waveform to 2 thin, low-contrast rows occupying <=15% of height so it stays subordinate",
+    "Dim the right-hand status text and the FFT/VU blocks so the visual hierarchy becomes dolphin -> top track text -> waves -> FFT",
+    "Apply a subtle global phosphor bloom and slight pixel-grid softness to sell the 320x128 OEL look instead of crisp vector edges"
+  ]
+}

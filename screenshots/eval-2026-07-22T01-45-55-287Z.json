@@ -1,0 +1,28 @@
+{
+  "dolphin_recognizability": 6,
+  "dolphin_dominance": 5,
+  "dolphin_organic_quality": 3,
+  "waveform_subordination": 5,
+  "fft_subordination": 4,
+  "composition_order": 5,
+  "glow_quality": 5,
+  "bloom_appropriateness": 6,
+  "persistence_quality": 6,
+  "overall_fidelity": 5,
+  "issues": [
+    "Dolphin reads as a flat CAD polygon: horizontal scanline fill with hard triangular dorsal fin and tail, no rim light, no phosphor shading gradient, and no clearly visible pectoral fin.",
+    "Dolphin is too small and pinned to the top band instead of arcing across the middle 50-60% of the display, so it fails to act as the absolute centerpiece.",
+    "Dolphin pose is flat and horizontal rather than a graceful leaping arc, killing the organic 'living creature' feel the reference demands.",
+    "Bottom zone (FFT bars + L/R VU blocks + status text) is too bright and heavy; the solid high-contrast cyan FFT rectangles compete with the dolphin for the eye.",
+    "Phosphor glow is flat: elements are crisp cyan-on-black with scanlines but lack the soft lit-phosphor halo that sells the OEL look.",
+    "Waveform rows are a touch too luminous and tall, edging past the 'subtle, subordinate' brief."
+  ],
+  "suggestions": [
+    "Redraw the dolphin as a curved leaping silhouette with a smooth organic outline, add a brighter rim-light edge, an internal phosphor brightness gradient, and a distinct pectoral fin so it looks lit rather than filled.",
+    "Scale the dolphin up and recenter it vertically so its arc spans the middle ~55% of the 128px height, making it the unambiguous focal point.",
+    "Drop FFT bar brightness and contrast substantially (dimmer, thinner, lower fill) and shrink the VU segments so the bottom strip recedes behind the dolphin.",
+    "Add a gentle, tight bloom halo around the dolphin body only — enough to read as glowing phosphor without blowing out the silhouette edges.",
+    "Reduce waveform line luminance and clamp the wave band to <=15% of display height so it stays a quiet subordinate layer.",
+    "Introduce a short, clean persistence trail behind the dolphin (a few fading ghost frames) to imply motion and reinforce the OEL afterglow character without fogging the whole scene."
+  ]
+}

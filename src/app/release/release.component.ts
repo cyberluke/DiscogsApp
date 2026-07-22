@@ -1,11 +1,13 @@
 // release.component.ts
 
-import { Component, OnInit, HostListener } from '@angular/core';
+import { Component, OnInit, OnDestroy, HostListener } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
 import { ReleaseService } from './release.service';
 import { PlaylistService } from '../playlist/playlist.service';
+import { QueueService } from '../queue/queue.service';
 import { AiMetadata, Track } from '../dao/track';
 import { map, startWith } from 'rxjs/operators';
-import { Observable } from 'rxjs';
+import { Observable, Subscription } from 'rxjs';
 import { ChipColor } from '../app.module';
 import { FormControl } from '@angular/forms';
 
@@ -14,7 +16,7 @@ import { FormControl } from '@angular/forms';
   templateUrl: './release.component.html',
   styleUrls: ['./release.component.css']
 })
-export class ReleaseComponent implements OnInit {
+export class ReleaseComponent implements OnInit, OnDestroy {
   release: any;
   releases: any[] = [];
   currentSlideIndex: number = 0;
@@ -25,6 +27,8 @@ export class ReleaseComponent implements OnInit {
   aiLoading: boolean = false;
   aiEnriching: boolean = false;
   aiError: string = '';
+  private releasesLoaded = false;
+  private queryParamSub?: Subscription;
 
   availableColors: ChipColor[] = [
     {name: 'none', color: undefined},
@@ -36,7 +40,12 @@ export class ReleaseComponent implements OnInit {
   myControl = new FormControl('');
   filteredOptions!: Observable<any[]>;
 
-  constructor(private readonly releaseService: ReleaseService, private readonly playlistService: PlaylistService) {}
+  constructor(
+    private readonly releaseService: ReleaseService,
+    private readonly playlistService: PlaylistService,
+    private readonly queueService: QueueService,
+    private readonly route: ActivatedRoute
+  ) {}
 
   @HostListener('window:keydown', ['$event'])
   handleKeyboardEvent(event: KeyboardEvent) {
@@ -95,13 +104,13 @@ export class ReleaseComponent implements OnInit {
     );
   }
 
-  // Use this method in your template to add to the playlist
+  // Use this method in your template to add to the queue
   addTrackToPlaylist(release: any, track: any) {
     track["cd_position"] = release.cd_position;
     track["full_name"] = release.artists_sort + " - " + track.title;
     track["album_title"] = release.title;
     track["artwork_url"] = this.getPrimaryImageUrl(release);
-    this.playlistService.addToPlaylist(track);
+    this.queueService.add(track, 'end').subscribe();
   }
 
   switchCarousel(): void {
@@ -132,6 +141,16 @@ export class ReleaseComponent implements OnInit {
       startWith(''),
       map(value => this._filter(value || '')),
     );
+    this.queryParamSub = this.route.queryParamMap.subscribe(params => {
+      const releaseId = params.get('release_id');
+      if (releaseId && this.releasesLoaded) {
+        this.showReleaseById(releaseId);
+      }
+    });
+  }
+
+  ngOnDestroy() {
+    this.queryParamSub?.unsubscribe();
   }
 
   getReleases(): void {
@@ -160,8 +179,21 @@ export class ReleaseComponent implements OnInit {
     });
 
     this.releases = releases;
+    this.releasesLoaded = true;
     this.currentSlideIndex = 0;
     this.setCurrentRelease(this.releases[0]);
+
+    const requestedReleaseId = this.route.snapshot.queryParamMap.get('release_id');
+    if (requestedReleaseId) {
+      this.showReleaseById(requestedReleaseId);
+    }
+  }
+
+  private showReleaseById(releaseId: string): void {
+    const targetIndex = this.releases.findIndex(item => String(item.release_id) === releaseId);
+    if (targetIndex >= 0) {
+      this.goToReleaseIndex(targetIndex);
+    }
   }
 
   // Helper function to get the primary image URL

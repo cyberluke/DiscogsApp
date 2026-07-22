@@ -1,14 +1,20 @@
+import json
 import re
 import socket
 import time
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from ipaddress import ip_network
+from pathlib import Path
 from typing import Any, Mapping
 import logging
 from urllib.parse import urljoin, urlparse
 
 import requests
 
+
+# Persists the last successfully discovered ESP32 adapter URL so subsequent
+# sessions can probe it first instead of scanning the whole subnet.
+LAST_ADAPTER_CACHE_FILE = Path(__file__).resolve().parent / 'last_adapter.json'
 
 CD_PLAYER_DECK_1 = 90
 CD_PLAYER_DECK_2 = 92
@@ -109,6 +115,27 @@ class SLinkClient:
     def __init__(self, server_url: str | None):
         self.server_url = None if not server_url or str(server_url).lower() == 'auto' else server_url
         self.auto_discover = not self.server_url
+        self._last_adapter_url: str | None = self._load_cached_adapter()
+
+    @staticmethod
+    def _load_cached_adapter() -> str | None:
+        try:
+            data = json.loads(LAST_ADAPTER_CACHE_FILE.read_text(encoding='utf-8'))
+            url = data.get('url')
+            if url and isinstance(url, str):
+                return url
+        except (OSError, ValueError, KeyError):
+            pass
+        return None
+
+    @staticmethod
+    def _save_cached_adapter(url: str) -> None:
+        try:
+            LAST_ADAPTER_CACHE_FILE.write_text(
+                json.dumps({'url': url}), encoding='utf-8'
+            )
+        except OSError:
+            LOGGER.debug("Could not persist last adapter URL to %s", LAST_ADAPTER_CACHE_FILE)
 
     def send(self, slink_data: str):
         self._ensure_server_url()
@@ -174,6 +201,20 @@ class SLinkClient:
         return response
 
     def discover(self) -> str:
+        # Probe the last known adapter first for a fast reconnect.
+        # Retry a few times in case the ESP32 or network route is still coming up.
+        if self._last_adapter_url:
+            for attempt in range(1, 6):
+                LOGGER.info("Probing cached ESP32 adapter at %s (attempt %d/5)", self._last_adapter_url, attempt)
+                payload = self._probe_adapter(self._last_adapter_url)
+                if payload:
+                    self.server_url = self._last_adapter_url
+                    LOGGER.info("Reconnected to cached ESP32 S-Link adapter at %s: %s", self.server_url, payload)
+                    return self.server_url
+                if attempt < 5:
+                    time.sleep(3)
+            LOGGER.info("Cached adapter at %s did not respond after 5 attempts, falling back to full scan", self._last_adapter_url)
+
         candidates = self._candidate_adapter_urls()
         LOGGER.info("Discovering ESP32 S-Link adapter across %d candidates", len(candidates))
         with ThreadPoolExecutor(max_workers=32) as executor:
@@ -182,6 +223,8 @@ class SLinkClient:
                 payload = future.result()
                 if payload:
                     self.server_url = futures[future]
+                    self._last_adapter_url = self.server_url
+                    self._save_cached_adapter(self.server_url)
                     LOGGER.info("Discovered ESP32 S-Link adapter at %s: %s", self.server_url, payload)
                     return self.server_url
         raise RuntimeError("Could not discover ESP32 S-Link adapter on local networks")

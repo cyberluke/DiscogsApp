@@ -1,0 +1,31 @@
+{
+  "dolphin_recognizability": 7,
+  "dolphin_dominance": 7,
+  "dolphin_organic_quality": 5,
+  "waveform_subordination": 6,
+  "fft_subordination": 8,
+  "composition_order": 7,
+  "glow_quality": 5,
+  "bloom_appropriateness": 7,
+  "persistence_quality": 6,
+  "overall_fidelity": 6,
+  "issues": [
+    "Dolphin body is rendered as a noisy dithered dot-scatter rather than a solid lit phosphor silhouette, which weakens both recognizability and the 'glowing object' read.",
+    "Internal fill noise makes the dolphin look like a pointillist/CAD stipple pattern instead of a smooth organic creature; dorsal fin, pectoral fin and tail fluke edges read as muddy clusters of pixels.",
+    "Dolphin vertical extent is too small and sits high in the frame; it does not fill the specified middle 50-60% of display height, so dominance is reduced.",
+    "Water-surface waveform band is a touch too bright and too tall (looks >15% height) and spans full width, competing with the dolphin for attention.",
+    "Bright right-side status text (128BPM / PAR / MIX) is not part of the reference layout and pulls the eye away from the dolphin->text->waves->FFT hierarchy.",
+    "Glow halo around the dolphin is weak because the dithering breaks up the edge; the lit-phosphor bloom that should wrap a crisp silhouette is largely missing.",
+    "Scattered stray dots around the tail/waterline read as random noise rather than intentional splash or short persistence trails."
+  ],
+  "suggestions": [
+    "Fill the dolphin body with a more continuous phosphor brightness and reserve dithering only for internal shading gradients, so the silhouette reads as one solid lit creature.",
+    "Add a crisp 1px rim-light outline plus a soft outer bloom halo around the dolphin to sell the 'lit phosphor object' look without blowing out the interior.",
+    "Scale the dolphin up and recenter it vertically so its arc occupies roughly 55% of display height, reinforcing it as the absolute centerpiece.",
+    "Sharpen anatomical definition: give the dorsal fin a clean triangle, the tail fluke a clear forked crescent, and the pectoral fin a distinct swept shape.",
+    "Reduce waveform contrast and clamp its height to <=15% of display height; use thinner, lower-brightness lines so it stays clearly subordinate.",
+    "Dim or remove the right-side status text (or move it into the dim FFT/VU tier) so the eye travels dolphin -> top track text -> waves -> FFT as specified.",
+    "Replace random stray dots with a deliberate short persistence trail behind the dolphin's motion path (a few fading ghost frames), keeping the rest of the scene clean and unfogged.",
+    "Tune overall phosphor response so the dolphin's brightest pixels sit at moderate brightness with a gentle halo, matching a real 1999 OEL panel rather than a flat pixel grid."
+  ]
+}

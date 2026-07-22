@@ -26,6 +26,8 @@ import { provideAnimationsAsync } from '@angular/platform-browser/animations/asy
 import { NowPlayingComponent } from './now-playing/now-playing.component';
 import { AppComponent } from './app.component';
 import { AiDjComponent } from './ai-dj/ai-dj.component';
+import { QueueComponent } from './queue/queue.component';
+import { DisplayEngineComponent } from './display-engine/display-engine.component';
 
 export interface ChipColor {
     name: string;
@@ -36,7 +38,8 @@ export interface ChipColor {
     declarations: [
       AppComponent,
         ReleaseComponent,
-        AiDjComponent
+        AiDjComponent,
+        DisplayEngineComponent
     ],
     providers: [
     provideAnimationsAsync()
@@ -52,6 +55,7 @@ export interface ChipColor {
         CommonModule,
         PlaylistComponent,
         NowPlayingComponent,
+        QueueComponent,
         CarouselModule,
         GridModule,
         MatButtonModule,
@@ -73,6 +77,7 @@ export interface ChipColor {
         RouterModule.forRoot([
           { path: '', component: ReleaseComponent },
           { path: 'now-playing', component: NowPlayingComponent },
+          { path: 'queue', component: QueueComponent },
           { path: 'ai-dj', component: AiDjComponent }
         ]),
         IonicModule.forRoot({})

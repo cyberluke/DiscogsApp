@@ -1,0 +1,31 @@
+{
+  "dolphin_recognizability": 7,
+  "dolphin_dominance": 6,
+  "dolphin_organic_quality": 5,
+  "waveform_subordination": 8,
+  "fft_subordination": 6,
+  "composition_order": 6,
+  "glow_quality": 5,
+  "bloom_appropriateness": 6,
+  "persistence_quality": 4,
+  "overall_fidelity": 5,
+  "issues": [
+    "Dolphin is undersized and sits in the upper-middle with a large empty black void to the right and below, so it does not fill the required ~50-60% of display height nor arc across the width, weakening its dominance.",
+    "Dolphin body is fragmented: the belly/pectoral region reads as a disconnected blob separated from the main torso by a black gap, breaking the silhouette.",
+    "Heavy internal dither makes the dolphin look like scattered noise / a flat bitmap fill rather than a solid lit phosphor form.",
+    "No rim light or crisp bright edge on the dolphin, so it lacks the 'lit phosphor object' character the reference demands.",
+    "Phosphor glow is flat: individual pixels have almost no soft bloom halo, so the panel reads as plain LEDs rather than an OEL screen.",
+    "No persistence / afterglow trails behind the dolphin, so the OEL motion-persistence characteristic is missing entirely.",
+    "Bottom-left VU cluster and the bottom segment bar are too bright and busy, competing with the dolphin for attention.",
+    "Solid-bright track text at top-left can pull the eye before the dithered (dimmer) dolphin, slightly inverting the intended hierarchy."
+  ],
+  "suggestions": [
+    "Scale the dolphin up so its arc spans ~55% of display height and most of the width, eliminating the dead black space on the right and below to make it the unmistakable centerpiece.",
+    "Rebuild the dolphin as one contiguous filled body (close the gap to the pectoral/belly region) and add a brighter 1px crisp outline plus a subtle rim-light edge so it reads as a glowing creature, not noise.",
+    "Reduce internal dither density and replace with a smoother phosphor fill plus a faint outer gaussian glow layer, keeping the silhouette crisp while giving a true OEL halo.",
+    "Add short persistence: 2-3 fading ghost copies of the dolphin trailing its motion path (low alpha, tight decay) to convey OEL afterglow without fogging the scene.",
+    "Dim the bottom-left VU segments, the bottom FFT/progress bar, and the right-side telemetry text so they recede below the waves in brightness.",
+    "Slightly lower track-text luminance or give the dolphin a touch more peak brightness so the dolphin is the single brightest mass and the eye lands there first.",
+    "Add a faint phosphor/scanline texture and a gentle edge vignette over the whole 320x128 frame to sell the physical late-90s OEL panel."
+  ]
+}

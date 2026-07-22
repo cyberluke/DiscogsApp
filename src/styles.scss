@@ -2,7 +2,39 @@
 /* You can add global styles to this file, and also import other style files */
 html, body { height: 100%; }
 body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; background-color: #121212 !important; }
+/* ------------------------------------------------------------------ */
+/* Console scrollbars                                                  */
+/* ------------------------------------------------------------------ */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(123, 215, 189, 0.32) rgba(255, 255, 255, 0.04);
+}
 
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.03);
+}
+
+::-webkit-scrollbar-thumb {
+  background: linear-gradient(180deg, rgba(123, 215, 189, 0.38), rgba(123, 215, 189, 0.2));
+  border-radius: 6px;
+  border: 2px solid transparent;
+  background-clip: padding-box;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(180deg, rgba(123, 215, 189, 0.6), rgba(123, 215, 189, 0.35));
+  border: 2px solid transparent;
+  background-clip: padding-box;
+}
+
+::-webkit-scrollbar-corner {
+  background: transparent;
+}
 app-ai-dj .mat-mdc-form-field,
 app-ai-dj .mat-mdc-form-field .mdc-floating-label,
 app-ai-dj .mat-mdc-form-field .mdc-text-field__input {
@@ -16,15 +48,6 @@ app-ai-dj .mat-mdc-form-field .mdc-text-field--outlined {
 
 app-ai-dj .mat-mdc-form-field .mdc-notched-outline > * {
   border-color: rgba(255, 255, 255, 0.24) !important;
-}
-
-app-ai-dj button[mat-fab] {
-  background: #7bd7bd !important;
-  color: #10201d !important;
-}
-
-app-ai-dj button[mat-fab] mat-icon {
-  color: #10201d !important;
 }
 
 app-ai-dj .suggestions button[mat-stroked-button] {
@@ -45,6 +68,18 @@ app-ai-dj .message-recommendations {
   display: grid;
   gap: 6px;
   margin-top: 10px;
+}
+
+app-ai-dj .message-track-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 4px;
+}
+
+app-ai-dj .message-track-actions {
+  display: flex;
+  align-items: center;
 }
 
 app-ai-dj .message-track {

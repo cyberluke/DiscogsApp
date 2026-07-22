@@ -1,0 +1,28 @@
+{
+  "dolphin_recognizability": 7,
+  "dolphin_dominance": 8,
+  "dolphin_organic_quality": 5,
+  "waveform_subordination": 8,
+  "fft_subordination": 7,
+  "composition_order": 7,
+  "glow_quality": 6,
+  "bloom_appropriateness": 6,
+  "persistence_quality": 5,
+  "overall_fidelity": 6,
+  "issues": [
+    "Dolphin body is filled with coarse dithered/halftone stippling, reading as a noisy point-cloud rather than a smooth lit phosphor creature; this is the single biggest deviation from a real OEL panel.",
+    "Bright foggy smudge in the bottom-left corner (around the L/R VU meters) looks like an over-bloomed persistence artifact and pulls the eye away from the dolphin, breaking the intended hierarchy.",
+    "Afterglow beneath the dolphin is a messy vertical fog smear instead of a short, directional persistence trail tied to the leap's motion.",
+    "Dolphin head/rostrum definition is weak — the snout dissolves into grain, so the front silhouette is less graceful than the tail end.",
+    "Global grain reduces the uniform per-pixel glow that characterizes genuine organic-EL displays; the panel looks digitally noisy rather than phosphor-lit.",
+    "Track text and bottom-right status text are fine but the bottom strip overall feels slightly cluttered relative to the calm reference layout."
+  ],
+  "suggestions": [
+    "Replace the halftone/dither interior of the dolphin with a solid, evenly-lit phosphor fill and reserve dithering only for a subtle shading gradient; keep a continuous bright rim-light edge so the form reads as one smooth object.",
+    "Re-draw the silhouette with crisp connected contours for rostrum, dorsal fin, pectoral fin and tail fluke so the leap looks graceful and anatomically legible at 320x128.",
+    "Eliminate or sharply attenuate the bottom-left bloom blob; render the VU segments as crisp, dim, discrete blocks consistent with the FFT bar styling.",
+    "Convert the under-dolphin fog into a short, motion-aligned persistence trail (a few fading ghost frames behind the arc) rather than a static vertical smear.",
+    "Lower overall noise and add a gentle Gaussian-style halo around crisp edges to emulate true OEL bloom — crisp core, soft surround, no interior stipple.",
+    "Nudge the dolphin's vertical extent toward 55-60% of display height to lock in dominance, while keeping the water lines at or below 15% and the FFT at ~13% as already achieved."
+  ]
+}

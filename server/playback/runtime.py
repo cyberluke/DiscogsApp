@@ -10,11 +10,15 @@ try:
     from sony.slink import SLinkClient, duration_to_seconds
     from playback.queue import PlaybackQueue
     from playback.state import (
+        PLAYBACK_IDLE,
         PLAYBACK_PAUSED,
         PLAYBACK_PLAYING,
         PLAYBACK_PREPARING,
         PLAYBACK_STOPPED,
         PLAYBACK_ERROR,
+        REPEAT_OFF,
+        REPEAT_ONE,
+        REPEAT_ALL,
         PlaybackState,
         track_value,
     )
@@ -23,11 +27,15 @@ except ImportError:
     from server.sony.slink import SLinkClient, duration_to_seconds
     from server.playback.queue import PlaybackQueue
     from server.playback.state import (
+        PLAYBACK_IDLE,
         PLAYBACK_PAUSED,
         PLAYBACK_PLAYING,
         PLAYBACK_PREPARING,
         PLAYBACK_STOPPED,
         PLAYBACK_ERROR,
+        REPEAT_OFF,
+        REPEAT_ONE,
+        REPEAT_ALL,
         PlaybackState,
         track_value,
     )
@@ -42,6 +50,7 @@ try:
         PLAYLIST_CHANGED as EVENT_PLAYLIST_CHANGED,
         PROGRESS_TICK as EVENT_PROGRESS_TICK,
         QUEUE_CHANGED as EVENT_QUEUE_CHANGED,
+        HISTORY_CHANGED as EVENT_HISTORY_CHANGED,
     )
 except ImportError:
     events_path = Path(__file__).resolve().parents[1] / 'websocket' / 'events.py'
@@ -56,6 +65,7 @@ except ImportError:
     EVENT_PLAYLIST_CHANGED = events_module.PLAYLIST_CHANGED
     EVENT_PROGRESS_TICK = events_module.PROGRESS_TICK
     EVENT_QUEUE_CHANGED = events_module.QUEUE_CHANGED
+    EVENT_HISTORY_CHANGED = events_module.HISTORY_CHANGED
 
 
 HARDWARE_SYNC_LIVE = 'live'
@@ -75,6 +85,7 @@ class PlaybackRuntime:
         playback_start_offset_seconds: float = 2,
         continuous_status_settle_seconds: float = 0.25,
         persistence_path: str | Path | None = None,
+        history_path: str | Path | None = None,
         adjacent_track_resolver: Callable[[Any, str], Any | None] | None = None,
         changer_initial_deck: Any = None,
         changer_initial_cd: Any = None,
@@ -89,6 +100,7 @@ class PlaybackRuntime:
         self.playback_start_delay_enabled = True
         self.continuous_status_settle_seconds = continuous_status_settle_seconds
         self.persistence_path = Path(persistence_path) if persistence_path else None
+        self.history_path = Path(history_path) if history_path else None
         self.adjacent_track_resolver = adjacent_track_resolver
         self.event_hub = event_hub or EventHub()
         self.queue_manager = PlaybackQueue()
@@ -404,7 +416,150 @@ class PlaybackRuntime:
             'upcoming': status['upcoming'],
             'current_playlist': status['current_playlist'],
             'playback_state': status['playback_state'],
+            'current_index': self._state.current_index,
+            'shuffle': self._state.shuffle,
+            'repeat': self._state.repeat,
+            'queue_stats': status.get('queue_stats'),
+            'recent_history': status.get('recent_history', []),
         }
+
+    # ------------------------------------------------------------------
+    # Queue mutation API
+    # ------------------------------------------------------------------
+    def queue_add(self, track: Any, position: str = 'next') -> dict[str, Any]:
+        """Add a track to the queue. position='next' inserts after current, 'end' appends."""
+        with self._lock:
+            if position == 'end':
+                self.queue_manager.append(self._state, track)
+            else:
+                self.queue_manager.insert_after_current(self._state, track)
+            self._publish_locked(EVENT_QUEUE_CHANGED)
+            return self.status_locked()
+
+    def queue_add_many(self, tracks: list[Any], position: str = 'end') -> dict[str, Any]:
+        with self._lock:
+            if position == 'next':
+                for i, track in enumerate(tracks):
+                    self.queue_manager.insert_at(self._state, self._state.current_index + 1 + i, track)
+            else:
+                self.queue_manager.append_many(self._state, tracks)
+            self._publish_locked(EVENT_QUEUE_CHANGED)
+            return self.status_locked()
+
+    def queue_remove(self, index: int) -> dict[str, Any]:
+        with self._lock:
+            removed = self.queue_manager.remove_at(self._state, index)
+            if removed is None:
+                return self.status_locked()
+            # If we removed the currently playing track, stop or advance
+            if not self._state.queue:
+                self._state.playback_state = PLAYBACK_STOPPED
+                self._state.current_track = None
+                self._state.started_at = None
+                self._publish_locked(EVENT_PLAYBACK_STOPPED)
+            elif index == self._state.current_index or (index < self._state.current_index and self._state.current_index >= len(self._state.queue)):
+                # Current track was removed, start the new track at this position
+                self._start_current_track_locked()
+                self._publish_locked(EVENT_PLAYBACK_STARTED)
+            self._publish_locked(EVENT_QUEUE_CHANGED)
+            return self.status_locked()
+
+    def queue_move(self, from_index: int, to_index: int) -> dict[str, Any]:
+        with self._lock:
+            self.queue_manager.move(self._state, from_index, to_index)
+            self._publish_locked(EVENT_QUEUE_CHANGED)
+            return self.status_locked()
+
+    def queue_move_to_top(self, index: int) -> dict[str, Any]:
+        with self._lock:
+            self.queue_manager.move_to_top(self._state, index)
+            self._publish_locked(EVENT_QUEUE_CHANGED)
+            return self.status_locked()
+
+    def queue_move_to_bottom(self, index: int) -> dict[str, Any]:
+        with self._lock:
+            self.queue_manager.move_to_bottom(self._state, index)
+            self._publish_locked(EVENT_QUEUE_CHANGED)
+            return self.status_locked()
+
+    def queue_clear(self) -> dict[str, Any]:
+        with self._lock:
+            self.queue_manager.clear(self._state)
+            self._state.playback_state = PLAYBACK_STOPPED
+            self._state.current_track = None
+            self._state.started_at = None
+            self._publish_locked(EVENT_PLAYBACK_STOPPED)
+            self._publish_locked(EVENT_QUEUE_CHANGED)
+            return self.status_locked()
+
+    def queue_play_index(self, index: int) -> dict[str, Any]:
+        with self._lock:
+            if not self.queue_manager.jump_to(self._state, index):
+                return self.status_locked()
+            self._start_current_track_locked()
+            self._publish_locked(EVENT_QUEUE_CHANGED)
+            self._publish_locked(EVENT_PLAYBACK_STARTED)
+            return self.status_locked()
+
+    def queue_set_shuffle(self, enabled: bool) -> dict[str, Any]:
+        with self._lock:
+            self._state.shuffle = bool(enabled)
+            self._state.mark_updated()
+            self._persist_locked()
+            self._publish_locked(EVENT_QUEUE_CHANGED)
+            return self.status_locked()
+
+    def queue_set_repeat(self, mode: str) -> dict[str, Any]:
+        with self._lock:
+            if mode not in (REPEAT_OFF, REPEAT_ONE, REPEAT_ALL):
+                mode = REPEAT_OFF
+            self._state.repeat = mode
+            self._state.mark_updated()
+            self._persist_locked()
+            self._publish_locked(EVENT_QUEUE_CHANGED)
+            return self.status_locked()
+
+    def play_playlist_append(self, playlist: Mapping[str, Any]) -> dict[str, Any]:
+        """Append all playlist tracks to the end of the current queue."""
+        tracks = list(playlist.get('tracks', []))
+        if not tracks:
+            raise ValueError("Playlist has no tracks")
+        with self._lock:
+            self.queue_manager.append_many(self._state, tracks)
+            # If nothing was playing, start the first appended track
+            if self._state.playback_state in (PLAYBACK_STOPPED, PLAYBACK_IDLE) and self._state.current_index < 0:
+                self._state.current_index = len(self._state.queue) - len(tracks)
+                self._start_current_track_locked()
+                self._publish_locked(EVENT_PLAYBACK_STARTED)
+            self._publish_locked(EVENT_QUEUE_CHANGED)
+            return self.status_locked()
+
+    def get_history(self, limit: int = 50, offset: int = 0) -> dict[str, Any]:
+        with self._lock:
+            history = list(self._state.history)
+        total = len(history)
+        # Return most recent first
+        history.reverse()
+        page = history[offset:offset + limit]
+        return {
+            'history': page,
+            'total': total,
+            'limit': limit,
+            'offset': offset,
+        }
+
+    def clear_history(self) -> None:
+        """Manually clear all play history (never auto-cleared)."""
+        with self._lock:
+            self._state.history = []
+            if self.history_path and self.history_path.exists():
+                try:
+                    self.history_path.write_text('[]', encoding='utf-8')
+                except OSError:
+                    pass
+            self._state.mark_updated()
+            self._persist_locked()
+            self._publish_locked(EVENT_HISTORY_CHANGED)
 
     def status_locked(self) -> dict[str, Any]:
         return {
@@ -438,8 +593,9 @@ class PlaybackRuntime:
     def _observe_playing_status(self) -> dict[str, Any]:
         with self._lock:
             if self._state.playback_state == PLAYBACK_PREPARING:
-                self._state.mark_updated()
-                self._publish_locked(EVENT_PROGRESS_TICK)
+                # Hardware confirmed PLAY — transition to playing even if
+                # observe_track() didn't resolve the track from the database.
+                self._mark_playing_locked(0)
                 return self.status_locked()
             if self._state.current_track:
                 resume_elapsed = self._state.paused_elapsed if self._state.playback_state == PLAYBACK_PAUSED else self._state.elapsed
@@ -506,6 +662,16 @@ class PlaybackRuntime:
         self._state.mark_updated()
 
     def _advance_locked(self, send_hardware: bool = True):
+        # Record the completed track in history before advancing
+        self._record_history_locked()
+
+        # Handle repeat-one: replay the same track
+        if self._state.repeat == REPEAT_ONE and self._state.current_index >= 0:
+            self._start_current_track_locked(send_hardware=send_hardware)
+            self._publish_locked(EVENT_QUEUE_CHANGED)
+            self._publish_locked(EVENT_PLAYBACK_STARTED)
+            return
+
         if not self.queue_manager.advance(self._state):
             adjacent_track = self._resolve_adjacent_track_locked('next')
             if adjacent_track is not None:
@@ -700,6 +866,62 @@ class PlaybackRuntime:
             self._persist_locked()
         self.event_hub.publish(event_type, self.status_locked())
 
+    def _record_history_locked(self):
+        """Record the current track as a completed play in history."""
+        track = self._state.current_track
+        if track is None:
+            return
+        entry = {
+            'timestamp': time.time(),
+            'release_id': track_value(track, 'release_id'),
+            'track_title': track_value(track, 'title'),
+            'track_position': track_value(track, 'position'),
+            'artist': track_value(track, 'artist') or track_value(track, 'full_name'),
+            'duration': track_value(track, 'duration'),
+            'deck': track_value(track, 'deck_number'),
+            'cd_position': track_value(track, 'cd_position'),
+            'album_title': track_value(track, 'album_title'),
+            'recommendation_source': None,
+            'queue_position': self._state.current_index,
+        }
+        self._state.history.append(entry)
+        # Keep in-memory history bounded (last 500 entries)
+        if len(self._state.history) > 500:
+            self._state.history = self._state.history[-500:]
+        self._persist_history_locked(entry)
+        self._state.mark_updated()
+
+    def _persist_history_locked(self, entry: dict[str, Any]):
+        """Append a single history entry to the persistent history file."""
+        if self.history_path is None:
+            return
+        try:
+            self.history_path.parent.mkdir(parents=True, exist_ok=True)
+            existing = []
+            if self.history_path.exists():
+                try:
+                    existing = json.loads(self.history_path.read_text(encoding='utf-8'))
+                except (OSError, json.JSONDecodeError):
+                    existing = []
+            existing.append(entry)
+            temp_path = self.history_path.with_suffix(self.history_path.suffix + '.tmp')
+            temp_path.write_text(json.dumps(existing, ensure_ascii=False, indent=2), encoding='utf-8')
+            temp_path.replace(self.history_path)
+        except OSError:
+            pass
+
+    def _load_history_from_file(self) -> list[dict[str, Any]]:
+        """Load persistent history from file."""
+        if self.history_path is None or not self.history_path.exists():
+            return []
+        try:
+            data = json.loads(self.history_path.read_text(encoding='utf-8'))
+            if isinstance(data, list):
+                return data
+        except (OSError, json.JSONDecodeError):
+            pass
+        return []
+
     def _persist_locked(self):
         if self.persistence_path is None:
             return
@@ -707,6 +929,8 @@ class PlaybackRuntime:
         payload = {
             'snapshot': self.status_locked(),
             'current_index': self._state.current_index,
+            'shuffle': self._state.shuffle,
+            'repeat': self._state.repeat,
             'saved_at': time.time(),
         }
         self.persistence_path.parent.mkdir(parents=True, exist_ok=True)
@@ -755,6 +979,10 @@ class PlaybackRuntime:
         state.player_status_raw = snapshot.get('player_status_raw')
         state.last_hardware_event = snapshot.get('last_hardware_event')
         state.error = None
+        state.shuffle = bool(payload.get('shuffle', snapshot.get('shuffle', False)))
+        state.repeat = payload.get('repeat', snapshot.get('repeat', REPEAT_OFF))
+        # Load history from persistent file (authoritative) or snapshot fallback
+        state.history = self._load_history_from_file() or list(snapshot.get('recent_history') or [])
         state.mark_updated()
         self._hardware_sync_state = HARDWARE_SYNC_RESTORED_UNVERIFIED
         self._hardware_state_source = 'persisted_snapshot'

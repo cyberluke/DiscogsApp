@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { PlaylistService } from '../playlist/playlist.service';
+import { QueueService } from '../queue/queue.service';
 import { DragDropModule } from '@angular/cdk/drag-drop';
 import {CdkDragDrop, CdkDropList, CdkDrag, moveItemInArray} from '@angular/cdk/drag-drop';
 import { GridModule } from '@coreui/angular';
@@ -27,7 +28,7 @@ export class PlaylistComponent {
   playlistName: string = '';
   playlists: any = [];
 
-  constructor(private http: HttpClient, private playlistService: PlaylistService) {
+  constructor(private http: HttpClient, private playlistService: PlaylistService, private queueService: QueueService) {
     this.playlistService.loadAll();
   }
 
@@ -36,7 +37,7 @@ export class PlaylistComponent {
   }
 
   addToPlaylist(track: Track) {
-    this.playlistService.addToPlaylist(track);
+    this.queueService.add(track, 'end').subscribe();
   }
 
   removeFromPlaylist(index: number) {

@@ -10,6 +10,7 @@ QUEUE_CHANGED = 'queue_changed'
 PLAYLIST_CHANGED = 'playlist_changed'
 PLAYBACK_PAUSED = 'playback_paused'
 PLAYBACK_ERROR = 'playback_error'
+HISTORY_CHANGED = 'history_changed'
 
 
 class EventHub:

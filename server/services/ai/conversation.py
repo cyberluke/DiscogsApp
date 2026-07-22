@@ -223,13 +223,157 @@ class MusicRecommendationService:
     NON_EURODANCE_STYLES = {'euro house', 'dance-pop', 'dance pop'}
     SOFT_EURODANCE_TOKENS = ('radio pop', 'ballad', 'downtempo', 'soft')
 
-    def __init__(self, repository, parser: IntentAnalyzer | None = None, diversifier: CandidateDiversifier | None = None):
+    def __init__(self, repository, parser: IntentAnalyzer | None = None, diversifier: CandidateDiversifier | None = None, spotify_store=None):
         self.repository = repository
         self.parser = parser or IntentAnalyzer()
         self.diversifier = diversifier or CandidateDiversifier()
+        self.spotify_store = spotify_store
 
     def recommend(self, request_text: str, playback: Mapping[str, Any] | None = None, limit: int = 5) -> list[dict[str, Any]]:
         return self.search_candidates(request_text, playback, limit=limit)
+
+    def dj_flow(self, playback: Mapping[str, Any] | None = None, limit: int = 5) -> list[dict[str, Any]]:
+        """Recommend tracks the way a real DJ would: closest subgenre match
+        with smooth BPM/key transition using Spotify audio features when available,
+        falling back to AI metadata energy scores."""
+        playback = playback or {}
+        current_track = playback.get('current_track')
+        current_release = self._current_release(current_track)
+        if not current_release:
+            return self.recommend('play something similar', playback, limit=limit)
+
+        current_ai = current_release.get('ai') if isinstance(current_release.get('ai'), dict) else {}
+        current_styles = set(self._lower_list(current_release.get('styles')))
+        current_genres = set(self._lower_list(current_release.get('genres')))
+        current_energy = self._score_value(current_ai, 'energy')
+        current_danceability = self._score_value(current_ai, 'danceability')
+
+        # Get Spotify data for current release
+        current_release_id = str(current_release.get('release_id') or current_release.get('id'))
+        current_spotify = self._spotify_entry(current_release_id)
+        current_bpm = current_spotify.get('dominant_bpm') if current_spotify else None
+        current_key = self._spotify_key_code(current_spotify)
+
+        scored = []
+        for release in self.repository.all_releases():
+            if self._same_release(release, current_release):
+                continue
+            track = self._representative_track(release, {'intents': set(), 'keywords': set()})
+            if not track:
+                continue
+            ai = release.get('ai') if isinstance(release.get('ai'), dict) else {}
+            score = 10.0
+            shared = []
+            differs = []
+
+            # Subgenre proximity: exact style match is strongest signal
+            release_styles = set(self._lower_list(release.get('styles')))
+            style_overlap = current_styles.intersection(release_styles)
+            if style_overlap:
+                score += len(style_overlap) * 22
+                shared.extend(sorted(style_overlap))
+
+            # Genre proximity as secondary signal
+            release_genres = set(self._lower_list(release.get('genres')))
+            genre_overlap = current_genres.intersection(release_genres)
+            if genre_overlap:
+                score += len(genre_overlap) * 10
+                shared.extend(sorted(genre_overlap))
+
+            # --- BPM matching (Spotify real data or AI energy fallback) ---
+            release_id = str(release.get('release_id') or release.get('id'))
+            candidate_spotify = self._spotify_entry(release_id)
+            candidate_bpm = candidate_spotify.get('dominant_bpm') if candidate_spotify else None
+
+            if current_bpm and candidate_bpm:
+                # Real BPM beatmatch scoring: within ±6 BPM is mixable
+                bpm_delta = abs(candidate_bpm - current_bpm)
+                score += max(0, 40 - bpm_delta * 2.5)
+                if bpm_delta <= 3:
+                    shared.append(f'BPM match ({candidate_bpm:.0f})')
+                elif bpm_delta <= 6:
+                    shared.append(f'BPM close ({candidate_bpm:.0f})')
+                elif candidate_bpm > current_bpm:
+                    differs.append(f'BPM up ({candidate_bpm:.0f})')
+                else:
+                    differs.append(f'BPM down ({candidate_bpm:.0f})')
+
+                # Harmonic key matching (Camelot-style: same key or ±1 semitone)
+                candidate_key = self._spotify_key_code(candidate_spotify)
+                if current_key is not None and candidate_key is not None:
+                    key_delta = abs(candidate_key - current_key)
+                    key_delta = min(key_delta, 12 - key_delta)  # circular
+                    if key_delta == 0:
+                        score += 15
+                        shared.append('same key')
+                    elif key_delta <= 2:
+                        score += 8
+                        shared.append('harmonic key')
+                    elif key_delta >= 5:
+                        differs.append('key clash')
+            else:
+                # Fallback: AI energy-based BPM approximation
+                candidate_energy = self._score_value(ai, 'energy')
+                energy_delta = abs(candidate_energy - current_energy)
+                score += max(0, 30 - energy_delta * 0.6)
+                if energy_delta <= 8:
+                    shared.append('smooth energy transition')
+                elif candidate_energy > current_energy:
+                    differs.append('energy lift')
+                else:
+                    differs.append('energy cooldown')
+
+            # Danceability continuity: DJs keep the floor moving
+            candidate_danceability = self._score_value(ai, 'danceability')
+            dance_delta = abs(candidate_danceability - current_danceability)
+            score += max(0, 20 - dance_delta * 0.4)
+
+            # AI metadata keywords overlap for deeper stylistic match
+            if ai and current_ai:
+                keyword_overlap = set(self._lower_list(ai.get('keywords'))).intersection(self._lower_list(current_ai.get('keywords')))
+                if keyword_overlap:
+                    score += len(keyword_overlap) * 8
+                    shared.extend(sorted(keyword_overlap))
+                # Mood continuity
+                mood_overlap = set(self._lower_list(ai.get('mood'))).intersection(self._lower_list(current_ai.get('mood')))
+                if mood_overlap:
+                    score += len(mood_overlap) * 6
+                    shared.extend(sorted(mood_overlap))
+
+            # Slight bonus for AI-enriched releases (richer matching)
+            if ai:
+                score += 5
+
+            if not shared:
+                shared.extend(self._shared_metadata(release, current_release))
+            if not differs:
+                differs.extend(self._different_metadata(release, current_release))
+
+            group = 'similar' if style_overlap and score >= 60 else 'adjacent'
+            scored.append((score, group, release, track, shared[:5], differs[:5]))
+
+        scored.sort(key=lambda item: item[0], reverse=True)
+        diversified = self.diversifier.select(scored, limit)
+        return [
+            self._recommendation_payload(score, release, track, shared, differs, group)
+            for score, group, release, track, shared, differs in diversified
+        ]
+
+    def _spotify_entry(self, release_id: str) -> dict[str, Any] | None:
+        if not self.spotify_store:
+            return None
+        return self.spotify_store.get_release(release_id)
+
+    @staticmethod
+    def _spotify_key_code(spotify_entry: dict[str, Any] | None) -> int | None:
+        """Get the dominant key code from Spotify tracks data."""
+        if not spotify_entry:
+            return None
+        # Use first matched track's key_code as representative
+        for track in spotify_entry.get('tracks', []):
+            if track.get('key_code') is not None and track.get('key_code') >= 0:
+                return track['key_code']
+        return None
 
     def search_candidates(self, request_text: str, playback: Mapping[str, Any] | None = None, limit: int = 100) -> list[dict[str, Any]]:
         playback = playback or {}
@@ -981,9 +1125,11 @@ class ChatService:
 
         ai_response = self.pipeline.curate(message, payload, context, candidates)
         recommendations = self._recommendations_from_ai(ai_response, candidates)
+        dj_recommendations = self.recommendation_service.dj_flow(context.get('now_playing'), limit=5)
         return {
             'response': ai_response.get('response') or self._response_text(recommendations, context),
             'suggested_tracks': recommendations,
+            'dj_recommendations': dj_recommendations,
             'actions': self._actions(recommendations),
             'context': context,
             'ai_used': True,
@@ -1170,9 +1316,11 @@ class ChatService:
     def recommendations_for_current(self, limit: int = 5) -> dict[str, Any]:
         context = self.context_builder.build()
         recommendations = self.recommendation_service.recommend('play something similar', context.get('now_playing'), limit=limit)
+        dj_recommendations = self.recommendation_service.dj_flow(context.get('now_playing'), limit=limit)
         return {
             'response': self._response_text(recommendations, context),
             'suggested_tracks': recommendations,
+            'dj_recommendations': dj_recommendations,
             'context': context,
         }
 

@@ -1,0 +1,93 @@
+[
+  {
+    "timestamp": 1784654919.2904158,
+    "release_id": 812841,
+    "track_title": "Let The Dream Come True (Day After Gold Mix)",
+    "track_position": "1",
+    "artist": "DJ Bobo",
+    "duration": "7:59",
+    "deck": 1,
+    "cd_position": 6,
+    "album_title": "Let The Dream Come True (Remix)",
+    "recommendation_source": null,
+    "queue_position": 0
+  },
+  {
+    "timestamp": 1784655258.74639,
+    "release_id": 812841,
+    "track_title": "Let The Dream Come True (Luke's Mix)",
+    "track_position": "2",
+    "artist": "DJ Bobo",
+    "duration": "5:42",
+    "deck": 1,
+    "cd_position": 6,
+    "album_title": "Let The Dream Come True (Remix)",
+    "recommendation_source": null,
+    "queue_position": 0
+  },
+  {
+    "timestamp": 1784655501.760344,
+    "release_id": 506249,
+    "track_title": "Everybody (Radioversion)",
+    "track_position": "1",
+    "artist": "DJ BoBo",
+    "duration": "3:51",
+    "deck": 2,
+    "cd_position": 38,
+    "album_title": "Everybody",
+    "recommendation_source": null,
+    "queue_position": 1
+  },
+  {
+    "timestamp": 1784670117.4833536,
+    "release_id": 506249,
+    "track_title": "Everybody (Radioversion)",
+    "track_position": "1",
+    "artist": "DJ BoBo",
+    "duration": "3:51",
+    "deck": 2,
+    "cd_position": 38,
+    "album_title": "Everybody",
+    "recommendation_source": null,
+    "queue_position": 0
+  },
+  {
+    "timestamp": 1784670487.2651227,
+    "release_id": 506249,
+    "track_title": "Everybody (Floormix)",
+    "track_position": "2",
+    "artist": "DJ BoBo",
+    "duration": "6:12",
+    "deck": 2,
+    "cd_position": 38,
+    "album_title": "Everybody",
+    "recommendation_source": null,
+    "queue_position": 0
+  },
+  {
+    "timestamp": 1784670755.2422483,
+    "release_id": 506249,
+    "track_title": "Let Yourself Be Free",
+    "track_position": "3",
+    "artist": "DJ BoBo",
+    "duration": "4:20",
+    "deck": 2,
+    "cd_position": 38,
+    "album_title": "Everybody",
+    "recommendation_source": null,
+    "queue_position": 0
+  },
+  {
+    "timestamp": 1784670985.5478814,
+    "release_id": 506249,
+    "track_title": "Everybody (First Edition)",
+    "track_position": "4",
+    "artist": "DJ BoBo",
+    "duration": "3:53",
+    "deck": 2,
+    "cd_position": 38,
+    "album_title": "Everybody",
+    "recommendation_source": null,
+    "queue_position": 0
+  }
+]

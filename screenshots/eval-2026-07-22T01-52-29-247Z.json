@@ -1,0 +1,30 @@
+{
+  "dolphin_recognizability": 6,
+  "dolphin_dominance": 4,
+  "dolphin_organic_quality": 3,
+  "waveform_subordination": 5,
+  "fft_subordination": 4,
+  "composition_order": 5,
+  "glow_quality": 3,
+  "bloom_appropriateness": 4,
+  "persistence_quality": 2,
+  "overall_fidelity": 4,
+  "issues": [
+    "Dolphin is rendered as a flat, hard-edged filled polygon with horizontal scanline striping — reads as a CAD/fish silhouette, not a lit phosphor creature; lacks smooth organic curvature, rim light, and a clear pectoral fin; tail fluke is stubby.",
+    "Dolphin is too small and parked in the upper third instead of arcing across the central 50-60% of display height, so it does not dominate; the wide bright FFT band and wave stack at the bottom pull the eye away.",
+    "No phosphor bloom/halo around any element — everything sits as crisp flat cyan on pure black, missing the soft OEL glow that defines the reference look.",
+    "No persistence/afterglow trail behind the dolphin; the characteristic short phosphor persistence of a moving OEL object is entirely absent.",
+    "FFT bar graph is too tall (closer to 20-25% of height) and too high-contrast, competing with the dolphin rather than receding to ~13% low-contrast.",
+    "Water-surface lines form a bright multi-row band that is more prominent than the 'subtle, subordinate 2-3 rows' the reference calls for.",
+    "Horizontal line texture inside the dolphin body looks like a fill artifact rather than phosphor emission, flattening the form."
+  ],
+  "suggestions": [
+    "Redraw the dolphin much larger so its arc fills the central 50-60% of the 320x128 frame, with smooth bezier body curvature, a defined dorsal fin, a swept tail fluke, a visible pectoral fin, and a brighter 1px rim-light edge to give it volume.",
+    "Add a subtle phosphor bloom: a tight bright core with a soft 2-4px falloff halo so the dolphin reads as an emitting OEL object, not a flat vector — keep it crisp, not blown out.",
+    "Introduce a short, clean persistence trail (2-3 fading ghost frames) behind the dolphin's motion path to evoke OEL afterglow without fogging the whole scene.",
+    "Replace the flat scanline fill inside the dolphin with an edge-bright / interior-dim phosphor gradient so the body looks lit rather than textured.",
+    "Shrink the FFT band to ~13% of height and drop its brightness/contrast so it sits as a quiet footer beneath the dolphin.",
+    "Reduce the water lines to 2 thin, low-contrast rows occupying <=15% height, clearly subordinate to the dolphin.",
+    "Re-balance overall luminance so the eye travels dolphin -> top track text -> waves -> FFT, with the dolphin unmistakably the brightest, largest mass."
+  ]
+}

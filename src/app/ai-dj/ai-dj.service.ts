@@ -14,6 +14,7 @@ export interface AiDjState {
   context: ChatContext | null;
   messages: AiDjChatMessage[];
   recommendations: AiTrackRecommendation[];
+  djRecommendations: AiTrackRecommendation[];
   inputText: string;
   aiUsed: boolean;
   useNativeVideoOffset: boolean;
@@ -34,7 +35,8 @@ export class AiDjService {
     return {
       ...this.state,
       messages: [...this.state.messages],
-      recommendations: [...this.state.recommendations]
+      recommendations: [...this.state.recommendations],
+      djRecommendations: [...this.state.djRecommendations]
     };
   }
 
@@ -89,6 +91,7 @@ export class AiDjService {
       context: null,
       messages: [],
       recommendations: [],
+      djRecommendations: [],
       inputText: '',
       aiUsed: false,
       useNativeVideoOffset: true,

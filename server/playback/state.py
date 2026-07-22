@@ -10,6 +10,10 @@ PLAYBACK_STOPPED = 'stopped'
 PLAYBACK_PREPARING = 'preparing'
 PLAYBACK_ERROR = 'error'
 
+REPEAT_OFF = 'off'
+REPEAT_ONE = 'one'
+REPEAT_ALL = 'all'
+
 
 @dataclass
 class PlaybackState:
@@ -39,6 +43,9 @@ class PlaybackState:
     player_status_raw: Any = None
     last_hardware_event: str | None = None
     error: str | None = None
+    history: list[dict[str, Any]] = field(default_factory=list)
+    shuffle: bool = False
+    repeat: str = REPEAT_OFF
 
     @classmethod
     def idle(cls, playback_state: str = PLAYBACK_IDLE) -> 'PlaybackState':
@@ -73,6 +80,38 @@ class PlaybackState:
             'player_status_raw': self.player_status_raw,
             'last_hardware_event': self.last_hardware_event,
             'error': self.error,
+            'recent_history': list(self.history[-20:]),
+            'shuffle': self.shuffle,
+            'repeat': self.repeat,
+            'queue_stats': self._queue_stats(),
+        }
+
+    def _queue_stats(self) -> dict[str, Any]:
+        tracks = self.queue
+        if not tracks:
+            return {
+                'track_count': 0,
+                'total_duration_seconds': 0,
+                'unique_artists': 0,
+                'unique_releases': 0,
+            }
+        artists = set()
+        releases = set()
+        total_seconds = 0
+        for t in tracks:
+            artist = track_value(t, 'artist') or track_value(t, 'full_name') or ''
+            if artist:
+                artists.add(artist)
+            release_id = track_value(t, 'release_id')
+            if release_id:
+                releases.add(release_id)
+            dur = track_value(t, 'duration') or ''
+            total_seconds += _duration_to_seconds(dur)
+        return {
+            'track_count': len(tracks),
+            'total_duration_seconds': total_seconds,
+            'unique_artists': len(artists),
+            'unique_releases': len(releases),
         }
 
 
@@ -82,3 +121,18 @@ def track_value(track: Any, name: str):
     if isinstance(track, Mapping):
         return track.get(name)
     return getattr(track, name, None)
+
+
+def _duration_to_seconds(duration_str: str) -> int:
+    """Convert 'MM:SS' or 'HH:MM:SS' duration string to total seconds."""
+    if not duration_str:
+        return 0
+    parts = str(duration_str).strip().split(':')
+    try:
+        if len(parts) == 3:
+            return int(parts[0]) * 3600 + int(parts[1]) * 60 + int(parts[2])
+        if len(parts) == 2:
+            return int(parts[0]) * 60 + int(parts[1])
+        return int(parts[0])
+    except (ValueError, TypeError):
+        return 0

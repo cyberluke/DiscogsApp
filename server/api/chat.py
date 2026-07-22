@@ -8,10 +8,10 @@ except ImportError:
     from server.services.ai import ChatService, ConversationContextBuilder, MusicRecommendationService, PlaylistActionService
 
 
-def create_chat_api(data_repository, playback_runtime, ai_client=None) -> Blueprint:
+def create_chat_api(data_repository, playback_runtime, ai_client=None, spotify_store=None) -> Blueprint:
     chat_api = Blueprint('chat_api', __name__, url_prefix='/api')
     context_builder = ConversationContextBuilder(data_repository, playback_runtime)
-    recommendation_service = MusicRecommendationService(data_repository)
+    recommendation_service = MusicRecommendationService(data_repository, spotify_store=spotify_store)
     playlist_action_service = PlaylistActionService(data_repository, playback_runtime)
     chat_service = ChatService(context_builder, recommendation_service, ai_client=ai_client, playlist_action_service=playlist_action_service)
 

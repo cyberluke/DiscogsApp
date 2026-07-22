@@ -59,7 +59,34 @@ export interface Artist {
     hardware_sync_state?: string;
     hardware_state_verified?: boolean;
     hardware_state_source?: string;
+    shuffle?: boolean;
+    repeat?: string;
+    current_index?: number;
+    queue_stats?: { total: number; upcoming: number; elapsed_tracks: number } | null;
+    recent_history?: HistoryEntry[];
     error: string | null;
+  }
+
+  export interface HistoryEntry {
+    artist: string;
+    title: string;
+    album_title?: string;
+    duration?: string;
+    played_at?: string;
+    release_id?: number;
+  }
+
+  export interface QueueState {
+    current_track: Track | null;
+    queue: Track[];
+    upcoming: Track[];
+    current_playlist: string | null;
+    playback_state: PlaybackStateName;
+    current_index: number;
+    shuffle: boolean;
+    repeat: string;
+    queue_stats?: { total: number; upcoming: number; elapsed_tracks: number } | null;
+    recent_history?: HistoryEntry[];
   }
 
   export interface PlaybackProgress {
@@ -202,6 +229,7 @@ export interface Artist {
   export interface ChatResponse {
     response: string;
     suggested_tracks: AiTrackRecommendation[];
+    dj_recommendations?: AiTrackRecommendation[];
     actions: RecommendationAction[];
     context: ChatContext;
     ai_used?: boolean;

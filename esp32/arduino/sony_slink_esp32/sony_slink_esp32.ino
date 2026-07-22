@@ -3,6 +3,8 @@
 #include <WiFi.h>
 #include <AsyncTCP.h>
 #include <HTTPClient.h>
+#include "esp_wifi.h"
+#include "esp_mac.h"
 #elif defined(ESP8266)
 #include <ESP8266WiFi.h>
 #include <ESPAsyncTCP.h>
@@ -17,10 +19,47 @@
 #include <function_objects.h>
 //#include <Process.h>
 
+#include "freertos/FreeRTOS.h"
+#include "freertos/task.h"
+#include "freertos/queue.h"
+
 #define DEBUG_PULSES
 
 // Webhook support
 String webhookUrl = "http://192.168.137.1:5000/webhook";
+
+// --- Webhook queue: offload HTTPClient to a dedicated FreeRTOS task ---
+// This prevents lwIP assert crashes when HTTPClient (loop task) and
+// ESPAsyncWebServer (AsyncTCP task) touch TCP simultaneously.
+#define WEBHOOK_QUEUE_LEN 8
+#define WEBHOOK_MSG_SIZE 256
+static QueueHandle_t webhookQueue = NULL;
+static TaskHandle_t webhookTaskHandle = NULL;
+
+struct WebhookMsg {
+  char payload[WEBHOOK_MSG_SIZE];
+};
+
+void webhookTask(void *pvParameters) {
+  WebhookMsg msg;
+  for (;;) {
+    if (xQueueReceive(webhookQueue, &msg, portMAX_DELAY) == pdTRUE) {
+      if (WiFi.status() == WL_CONNECTED) {
+        HTTPClient http;
+        http.begin(webhookUrl);
+        http.addHeader("Content-Type", "application/json");
+        http.setTimeout(3000);
+        int code = http.POST(String(msg.payload));
+        if (code > 0) {
+          Serial.printf("Webhook OK %d\n", code);
+        } else {
+          Serial.printf("Webhook err %d\n", code);
+        }
+        http.end();
+      }
+    }
+  }
+}
 
 const byte OUTPUT_PIN = 16; // 2
 const byte INPUT_PIN = 14; // 3
@@ -53,8 +92,9 @@ String pulseLengths;
 #endif
 
 AsyncWebServer server(8080);
-const char* ssid = "COREI9 4939";
-const char* password = "12345678";
+bool serverStarted = false;
+const char* ssid = "COREI9";
+const char* password = "helloworld";
 const char* PARAM_MESSAGE = "message";
 
 void notFound(AsyncWebServerRequest *request) {
@@ -124,20 +164,56 @@ void setup()
 
 
 
+  // Robust WiFi init: full stack reset to clear stale state
+  WiFi.disconnect(true, true);
+  delay(500);
+  WiFi.mode(WIFI_OFF);
+  delay(500);
   WiFi.mode(WIFI_STA);
+  delay(500);
+  WiFi.setSleep(false);   // Disable modem sleep for reliability
+
+  // Ensure valid MAC (eFuse may read zeros on some boards)
+  uint8_t mac[6];
+  esp_read_mac(mac, ESP_MAC_WIFI_STA);
+  bool macValid = false;
+  for (int i = 0; i < 6; i++) { if (mac[i] != 0) { macValid = true; break; } }
+  if (!macValid) {
+    uint8_t fallback[6] = {0x24, 0x0A, 0xC4, 0x82, 0x42, 0x68};
+    memcpy(mac, fallback, 6);
+    Serial.println("eFuse MAC is zeros, using fallback");
+  }
+  esp_wifi_set_mac(WIFI_IF_STA, mac);
+  Serial.printf("MAC: %s\n", WiFi.macAddress().c_str());
+
+  // Disable PMF (802.11w) — ESP32 rev 0 can't handle it, causes AUTH_EXPIRE
+  wifi_config_t wifi_cfg = {};
+  esp_wifi_get_config(WIFI_IF_STA, &wifi_cfg);
+  wifi_cfg.sta.pmf_cfg.capable = false;
+  wifi_cfg.sta.pmf_cfg.required = false;
+  esp_wifi_set_config(WIFI_IF_STA, &wifi_cfg);
+
   WiFi.begin(ssid, password);
-  Serial.print("Connecting WiFi");
+  Serial.print("Connecting WiFi to '");
+  Serial.print(ssid);
+  Serial.print("'");
   unsigned long wifiStart = millis();
   while (WiFi.status() != WL_CONNECTED && millis() - wifiStart < 20000) {
     delay(500);
     Serial.print('.');
+    Serial.print(WiFi.status());
   }
   Serial.println();
 
   bool wifiConnected = WiFi.status() == WL_CONNECTED;
   if (!wifiConnected) {
     Serial.print("WiFi Failed, status=");
-    Serial.println(WiFi.status());
+    Serial.print(WiFi.status());
+    // Status codes: 0=IDLE, 1=NO_SSID_AVAIL, 4=CONNECT_FAILED, 6=WRONG_PASSWORD
+    if (WiFi.status() == 1) Serial.println(" (NO_SSID_AVAIL - SSID not found)");
+    else if (WiFi.status() == 4) Serial.println(" (CONNECT_FAILED)");
+    else if (WiFi.status() == 6) Serial.println(" (WRONG_PASSWORD)");
+    else Serial.println();
   } else {
     Serial.print("IP Address: ");
     Serial.println(WiFi.localIP());
@@ -145,7 +221,8 @@ void setup()
 
   startTime = readCurrentTimestamp();
 
-  if (wifiConnected) {
+  // Register HTTP routes unconditionally so the server can start later
+  // if WiFi connects after the initial timeout.
   server.on("/", HTTP_GET, [](AsyncWebServerRequest *request){
         request->send(200, "text/plain", "Hello, world");
     });
@@ -207,7 +284,16 @@ void setup()
 
     server.onNotFound(notFound);
 
+  // Create webhook queue and dedicated task (runs on core 0, isolated from AsyncTCP)
+  webhookQueue = xQueueCreate(WEBHOOK_QUEUE_LEN, sizeof(WebhookMsg));
+  xTaskCreatePinnedToCore(webhookTask, "webhook", 4096, NULL, 3, &webhookTaskHandle, 0);
+  Serial.println("Webhook task started on core 0");
+
+  // Start the server immediately if WiFi is already connected.
+  if (wifiConnected && !serverStarted) {
     server.begin();
+    serverStarted = true;
+    Serial.println("HTTP server started");
   }
     attachInterrupt(digitalPinToInterrupt(INPUT_PIN), busChange, CHANGE);
     enableContinuousStatus();
@@ -677,10 +763,26 @@ bool sendCommand(byte command[], int commandLength)
   unsigned long waitStart = millis();
   while (!isBusIdle()) {
     if (millis() - waitStart > 250) {
+      Serial.print(F("sendCommand: BUS NOT IDLE after 250ms, cmd="));
+      for (int i = 0; i < commandLength; ++i) {
+        if (command[i] < 0x10) Serial.print('0');
+        Serial.print(command[i], HEX);
+      }
+      Serial.println(F(" — ABORTING"));
       return false;
     }
     delayMicroseconds(1000);
   }
+
+  unsigned long waitedMs = millis() - waitStart;
+  Serial.print(F("sendCommand: bus idle after "));
+  Serial.print(waitedMs);
+  Serial.print(F("ms, sending "));
+  for (int i = 0; i < commandLength; ++i) {
+    if (command[i] < 0x10) Serial.print('0');
+    Serial.print(command[i], HEX);
+  }
+  Serial.println();
 
   noInterrupts();
   sendSyncPulse();
@@ -696,6 +798,7 @@ bool sendCommand(byte command[], int commandLength)
 
   interrupts();
   idleAfterCommand();
+  Serial.println(F("sendCommand: TX complete"));
   return true;
 }
 
@@ -763,6 +866,14 @@ void enableContinuousStatus()
 void loop()
 {
   static unsigned long lastStatusPrint = 0;
+
+  // Start the HTTP server once WiFi becomes available (handles late connection).
+  if (!serverStarted && WiFi.status() == WL_CONNECTED) {
+    server.begin();
+    serverStarted = true;
+    Serial.print("HTTP server started (late WiFi), IP: ");
+    Serial.println(WiFi.localIP());
+  }
 
   processSlinkInput();
   //processSerialInput();
@@ -867,35 +978,17 @@ void readSLinkBuffer(int bytesRead) {
 }
 
 void httpPost(String jsonPayload) {
-  // Check WiFi connection status
-    if (WiFi.status() == WL_CONNECTED) {
-        HTTPClient http;
-
-        // Specify request destination
-        http.begin(webhookUrl);
-
-        // Specify content type header
-        http.addHeader("Content-Type", "application/json");
-
-        // Send HTTP POST request
-        int httpResponseCode = http.POST(jsonPayload);
-
-        // Check the returning code
-        if (httpResponseCode > 0) {
-            Serial.print("HTTP Response code: ");
-            Serial.println(httpResponseCode);
-
-            // Get the response payload
-            String response = http.getString();
-            Serial.print("Response: ");
-            Serial.println(response);
-        }
-        else {
-            Serial.print("Error code: ");
-            Serial.println(httpResponseCode);
-        }
-
-        // Free resources
-        http.end();
-    }
+  // Non-blocking: enqueue the message for the dedicated webhook task.
+  // This avoids lwIP threading conflicts with ESPAsyncWebServer.
+  if (webhookQueue == NULL) return;
+  WebhookMsg msg;
+  memset(msg.payload, 0, sizeof(msg.payload));
+  jsonPayload.toCharArray(msg.payload, sizeof(msg.payload) - 1);
+  // If queue is full, drop the oldest message to avoid blocking the caller
+  if (xQueueSend(webhookQueue, &msg, 0) != pdTRUE) {
+    WebhookMsg dropped;
+    xQueueReceive(webhookQueue, &dropped, 0);  // drop oldest
+    xQueueSend(webhookQueue, &msg, 0);          // enqueue new
+    Serial.println("Webhook queue full, dropped oldest");
+  }
 }

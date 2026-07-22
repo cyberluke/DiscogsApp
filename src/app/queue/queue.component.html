@@ -1,0 +1,69 @@
+<section class="queue-panel" *ngIf="queueState as state">
+  <header class="queue-header">
+    <div class="queue-title">
+      <mat-icon>queue_music</mat-icon>
+      <h1>Queue</h1>
+      <span class="queue-count">{{ totalCount }} tracks · {{ upcomingCount }} upcoming</span>
+    </div>
+    <div class="queue-controls">
+      <button mat-icon-button type="button" (click)="toggleShuffle()"
+              [class.active]="shuffle" matTooltip="Shuffle" aria-label="Toggle shuffle">
+        <mat-icon>shuffle</mat-icon>
+      </button>
+      <button mat-icon-button type="button" (click)="cycleRepeat()"
+              [class.active]="repeat !== 'off'" [matTooltip]="repeatLabel()" aria-label="Cycle repeat mode">
+        <mat-icon>{{ repeatIcon() }}</mat-icon>
+      </button>
+      <button mat-icon-button type="button" (click)="clearQueue()"
+              matTooltip="Clear queue" aria-label="Clear queue">
+        <mat-icon>delete_sweep</mat-icon>
+      </button>
+    </div>
+  </header>
+
+  <div class="now-playing-card" *ngIf="state.current_track as current">
+    <img *ngIf="current.artwork_url" class="np-artwork" [src]="current.artwork_url" [alt]="current.album_title || current.title" />
+    <div class="np-info">
+      <span class="np-eyebrow">Now Playing</span>
+      <strong>{{ trackName(current) }}</strong>
+      <span class="np-sub">{{ trackSubtitle(current) }}</span>
+    </div>
+    <span class="np-state">{{ state.playback_state }}</span>
+  </div>
+
+  <div class="queue-empty" *ngIf="!tracks.length">
+    <mat-icon>music_off</mat-icon>
+    <p>Queue is empty. Add tracks from the Library or AI DJ.</p>
+  </div>
+
+  <ol class="queue-list" cdkDropList (cdkDropListDropped)="onDrop($event)" *ngIf="tracks.length">
+    <li *ngFor="let track of tracks; let i = index"
+        cdkDrag
+        class="queue-item"
+        [class.current]="isCurrent(i)"
+        [class.played]="i < currentIndex">
+      <span class="drag-handle" cdkDragHandle>
+        <mat-icon>drag_indicator</mat-icon>
+      </span>
+      <span class="item-index">{{ i + 1 }}</span>
+      <img *ngIf="track.artwork_url" class="item-artwork" [src]="track.artwork_url" [alt]="track.album_title || track.title" />
+      <div class="item-info">
+        <strong>{{ trackName(track) }}</strong>
+        <span class="item-sub">{{ trackSubtitle(track) }}</span>
+      </div>
+      <span class="item-duration">{{ formatDuration(track) }}</span>
+      <div class="item-actions">
+        <button mat-icon-button type="button" *ngIf="!isCurrent(i)" (click)="playIndex(i)" matTooltip="Play" aria-label="Play track">
+          <mat-icon>play_arrow</mat-icon>
+        </button>
+        <button mat-icon-button type="button" *ngIf="!isCurrent(i)" (click)="moveToTop(i)" matTooltip="Play next" aria-label="Move to top">
+          <mat-icon>vertical_align_top</mat-icon>
+        </button>
+        <button mat-icon-button type="button" (click)="removeTrack(i)" matTooltip="Remove" aria-label="Remove track">
+          <mat-icon>close</mat-icon>
+        </button>
+      </div>
+      <mat-icon class="current-indicator" *ngIf="isCurrent(i)">graphic_eq</mat-icon>
+    </li>
+  </ol>
+</section>

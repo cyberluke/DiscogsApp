@@ -26,6 +26,7 @@ LOGGER = logging.getLogger(__name__)
 
 try:
     from api.ai import create_ai_api
+    from api.capture import create_capture_api
     from api.chat import create_chat_api
     from api.compat import create_compat_api
     from api.images import create_images_api
@@ -37,12 +38,18 @@ try:
     from playback.runtime import PlaybackRuntime
     from repository.local import LocalDataRepository
     from recommendation.engine import RecommendationEngine
+    from audio.engine import AudioEngine
+    from audio.routes import create_visualization_socket
     from services.ai import MusicAnalysisService
+    from services.capture import CaptureService
+    from services.capture.audio import discover_rme_spdif
+    from services.spotify import SpotifyStore
     from services.video import VideoCache, VideoLibraryService, VideoOffsetStore, VideoSyncService, YouTubeVideoResolver, YtDlpAcquisitionProvider
     from services.youtube import YouTubeSearchService
     from sony.slink import SLinkClient, duration_to_seconds as slink_duration_to_seconds
 except ImportError:
     from server.api.ai import create_ai_api
+    from server.api.capture import create_capture_api
     from server.api.chat import create_chat_api
     from server.api.compat import create_compat_api
     from server.api.images import create_images_api
@@ -54,7 +61,12 @@ except ImportError:
     from server.playback.runtime import PlaybackRuntime
     from server.repository.local import LocalDataRepository
     from server.recommendation.engine import RecommendationEngine
+    from server.audio.engine import AudioEngine
+    from server.audio.routes import create_visualization_socket
     from server.services.ai import MusicAnalysisService
+    from server.services.capture import CaptureService
+    from server.services.capture.audio import discover_rme_spdif
+    from server.services.spotify import SpotifyStore
     from server.services.video import VideoCache, VideoLibraryService, VideoOffsetStore, VideoSyncService, YouTubeVideoResolver, YtDlpAcquisitionProvider
     from server.services.youtube import YouTubeSearchService
     from server.sony.slink import SLinkClient, duration_to_seconds as slink_duration_to_seconds
@@ -127,11 +139,14 @@ playback_runtime = PlaybackRuntime(
     changer_load_max_seconds=CHANGER_LOAD_MAX_SECONDS,
     playback_start_offset_seconds=PLAYBACK_START_OFFSET_SECONDS,
     persistence_path=PLAYBACK_STATE_PATH,
+    history_path=os.path.join('server', 'play_history.json'),
     adjacent_track_resolver=lambda current_track, direction: resolve_adjacent_release_track(current_track, direction),
     changer_initial_deck=CHANGER_INITIAL_DECK,
     changer_initial_cd=CHANGER_INITIAL_CD,
 )
 music_analysis_service = MusicAnalysisService(data_repository)
+spotify_store = SpotifyStore(os.path.join('server', 'spotify_audio_features.json'))
+capture_service = CaptureService(slink_client, output_dir=os.getenv('CAPTURE_OUTPUT_DIR', r'D:\DiscogsAudioCapture'))
 
 kodi_music_videos = []
 youtube_search_service = YouTubeSearchService(data_repository, api_key=YOUTUBE_API_KEY)
@@ -145,12 +160,26 @@ video_sync_service = VideoSyncService(video_library_service, playback_runtime, V
 recommendation_engine = RecommendationEngine(data_repository.all_releases())
 app.register_blueprint(create_library_api(data_repository))
 app.register_blueprint(create_ai_api(data_repository, music_analysis_service))
-app.register_blueprint(create_chat_api(data_repository, playback_runtime))
+app.register_blueprint(create_chat_api(data_repository, playback_runtime, spotify_store=spotify_store))
+app.register_blueprint(create_capture_api(capture_service, playback_runtime))
 app.register_blueprint(create_compat_api(lambda: playback_runtime))
-app.register_blueprint(create_playback_api(playback_runtime, recommendation_engine))
+app.register_blueprint(create_playback_api(playback_runtime, recommendation_engine, data_repository))
 app.register_blueprint(create_video_api(video_library_service, video_sync_service))
 app.register_blueprint(create_youtube_api(youtube_search_service, video_sync_service))
 create_playback_socket(app, playback_runtime, playback_runtime.event_hub)
+
+# Real-time audio analysis engine for the Pioneer Heritage Display.
+# Taps the SPDIF capture stream when capture is active, otherwise opens a
+# dedicated lightweight input. Publishes ~60 FPS frames over WebSocket.
+audio_engine = AudioEngine(
+    status_provider=playback_runtime.status,
+    capture_audio_provider=lambda: capture_service.audio,
+    device_discoverer=discover_rme_spdif,
+)
+# Reselect shared vs dedicated SPDIF input when capture starts/stops.
+capture_service.add_state_listener(lambda _state: audio_engine.reselect_input())
+create_visualization_socket(app, audio_engine)
+
 
 def initialize_slink_adapter():
     try:
@@ -159,6 +188,16 @@ def initialize_slink_adapter():
         LOGGER.warning('Could not configure ESP32 webhook target: %s', error)
 
 threading.Thread(target=initialize_slink_adapter, daemon=True).start()
+
+
+def start_audio_engine():
+    try:
+        audio_engine.start()
+    except Exception as error:
+        LOGGER.warning('Could not start visualization audio engine: %s', error)
+
+
+threading.Thread(target=start_audio_engine, daemon=True).start()
 
 # Constants for rate limiting
 CALLS = 55
@@ -532,10 +571,10 @@ def decode_disc_position(device, encoded_cd):
     return decode_bcd_byte(encoded_cd)
 
 def decode_deck_number(device):
-    if device in (0x99, 0x9C, 0x91, 0x94):
+    # App uses Sony "CD Player 3" addressing (0x92/0x95 send, 0x9A/0x9D receive)
+    # for its logical deck 2. Sony "CD Player 2" (0x91/0x94/0x99/0x9C) is unused.
+    if device in (0x9A, 0x9D, 0x92, 0x95, 0x99, 0x9C, 0x91, 0x94):
         return 2
-    if device in (0x9A, 0x9D, 0x92, 0x95):
-        return 3
     return 1
 
 def find_release_track(release, track_position):
